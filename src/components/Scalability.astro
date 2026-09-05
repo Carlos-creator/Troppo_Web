@@ -63,6 +63,18 @@
               <stop offset="0" stop-color="#022a37" />
               <stop offset="1" stop-color="#044559" />
             </linearGradient>
+            <!-- Clip que restringe el escaneo + vehículos a la forma del polígono -->
+            <clipPath id="zoneAnalysisClip">
+              <polygon class="analysis-clip-poly" points="" />
+            </clipPath>
+            <!-- Haz del scanner LiDAR (banda cyan) -->
+            <linearGradient id="scanBeam" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="rgba(97,225,230,0)" />
+              <stop offset="0.45" stop-color="rgba(97,225,230,0.35)" />
+              <stop offset="0.5" stop-color="rgba(97,225,230,0.85)" />
+              <stop offset="0.55" stop-color="rgba(97,225,230,0.35)" />
+              <stop offset="1" stop-color="rgba(97,225,230,0)" />
+            </linearGradient>
           </defs>
 
           <!-- ================= ZONA 1: USM SAN JOAQUÍN ================= -->
@@ -165,6 +177,21 @@
 
           <!-- Polígono compartido (dinámico) -->
           <polygon class="scal-polygon" points="" fill="rgba(209, 235, 120, 0.20)" stroke="#D1EB78" stroke-width="2.5" stroke-dasharray="8 5" />
+
+          <!-- Capa de análisis (scanner + vehículos) — clipped al polígono -->
+          <g class="analysis-layer" clip-path="url(#zoneAnalysisClip)">
+            <!-- Haz del scanner (translateY animado) -->
+            <rect class="scan-beam" x="0" y="0" width="800" height="60" fill="url(#scanBeam)" />
+            <!-- Grid overlay (patrón sutil que aparece durante análisis) -->
+            <g class="scan-grid">
+              <!-- Líneas horizontales y verticales cyan tenues -->
+            </g>
+            <!-- Vehículos animados dentro de la zona -->
+            <g class="analysis-vehicles"></g>
+          </g>
+
+          <!-- Corner brackets en cada vértice del polígono (fuera del clip) -->
+          <g class="scal-brackets"></g>
 
           <!-- Puntos colocados (dinámico) -->
           <g class="scal-points"></g>
@@ -312,6 +339,59 @@
   }
   .scal-polygon.visible {
     opacity: 1;
+    animation: polygon-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes polygon-pulse {
+    0%, 100% { filter: drop-shadow(0 0 4px rgba(209, 235, 120, 0.4)); }
+    50% { filter: drop-shadow(0 0 14px rgba(209, 235, 120, 0.85)); }
+  }
+
+  /* ---- Capa de análisis (scanner + grid + vehículos) ---- */
+  .analysis-layer {
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+  .analysis-layer.active {
+    opacity: 1;
+  }
+  .scan-beam {
+    transform: translateY(-60px);
+    opacity: 0;
+  }
+  .analysis-layer.active .scan-beam {
+    animation: scan-sweep 2.4s ease-in-out infinite;
+    opacity: 1;
+  }
+  @keyframes scan-sweep {
+    0%   { transform: translateY(-60px); opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translateY(500px); opacity: 0; }
+  }
+  .analysis-vehicles :global(rect.car) {
+    fill: var(--cyan);
+    stroke: rgba(0, 0, 0, 0.35);
+    stroke-width: 0.5;
+  }
+  .analysis-vehicles :global(rect.truck) {
+    fill: var(--lime);
+    stroke: rgba(0, 0, 0, 0.35);
+    stroke-width: 0.5;
+  }
+
+  /* Corner brackets — marcadores en vértices del polígono */
+  .scal-brackets :global(path) {
+    stroke: var(--cyan);
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    filter: drop-shadow(0 0 4px rgba(97, 225, 230, 0.6));
+    transition: opacity 300ms ease;
+  }
+  .scal-brackets.visible :global(path) {
+    opacity: 1;
   }
 
   /* HUD */
@@ -399,6 +479,10 @@
   const pointsGroup = svg?.querySelector<SVGGElement>('.scal-points');
   const ripplesGroup = svg?.querySelector<SVGGElement>('.scal-ripples');
   const polygon = svg?.querySelector<SVGPolygonElement>('.scal-polygon');
+  const analysisClipPoly = svg?.querySelector<SVGPolygonElement>('.analysis-clip-poly');
+  const analysisLayer = svg?.querySelector<SVGGElement>('.analysis-layer');
+  const vehiclesGroup = svg?.querySelector<SVGGElement>('.analysis-vehicles');
+  const bracketsGroup = svg?.querySelector<SVGGElement>('.scal-brackets');
   const zoneMaps = svg?.querySelectorAll<SVGGElement>('.zone-map');
   const hudText = document.querySelector<HTMLElement>('.scal-hud [data-hud="text"]');
   const zoneName = document.querySelector<HTMLElement>('.scal-zone-name');
@@ -411,19 +495,40 @@
     sub: string;
     startCursor: { x: number; y: number };
     points: Array<{ x: number; y: number }>;
+    vehicles: Array<{
+      kind: 'car' | 'truck';
+      path: Array<{ x: number; y: number }>;
+      offset: number;
+      speed: number;
+    }>;
   }
 
-  // 3 zonas reales — cada una con diferente número de puntos
+  // 3 zonas reales — cada una con diferente número de puntos + vehículos
   const ZONES: Zone[] = [
     {
       id: 'usm',
       name: 'USM Campus San Joaquín',
       sub: 'Santiago · Zona triangular',
-      startCursor: { x: 60, y: 60 },
+      startCursor: { x: 55, y: 65 },
+      // Triángulo AMPLIADO — abarca el campus + calles circundantes
+      // (antes era muy chico y parecía solo el campus)
       points: [
-        { x: 230, y: 190 },
-        { x: 610, y: 195 },
-        { x: 420, y: 370 },
+        { x: 140, y: 155 }, // NW
+        { x: 690, y: 165 }, // NE
+        { x: 420, y: 445 }, // S (vertex inferior)
+      ],
+      // Todos los paths van SOBRE calles visibles del mapa
+      vehicles: [
+        // Blanco Encalada (y=180) — dos autos yendo al este
+        { kind: 'car', path: [{ x: 160, y: 180 }, { x: 680, y: 180 }], offset: 0.12, speed: 0.028 },
+        { kind: 'car', path: [{ x: 160, y: 180 }, { x: 680, y: 180 }], offset: 0.62, speed: 0.028 },
+        // Blanco Encalada — un auto yendo al oeste
+        { kind: 'car', path: [{ x: 680, y: 180 }, { x: 160, y: 180 }], offset: 0.35, speed: 0.028 },
+        // Cross vertical x=500 (visible en el mapa) — sur
+        { kind: 'car', path: [{ x: 500, y: 175 }, { x: 500, y: 380 }], offset: 0.20, speed: 0.024 },
+        { kind: 'car', path: [{ x: 500, y: 175 }, { x: 500, y: 380 }], offset: 0.70, speed: 0.024 },
+        // Salvador Sanfuentes (y=380) — segmento corto visible en la parte baja del triángulo
+        { kind: 'car', path: [{ x: 370, y: 380 }, { x: 480, y: 380 }], offset: 0.30, speed: 0.024 },
       ],
     },
     {
@@ -436,6 +541,18 @@
         { x: 720, y: 190 },
         { x: 720, y: 350 },
         { x: 260, y: 335 },
+      ],
+      // Solo sobre las calles visibles dentro del polígono
+      vehicles: [
+        // Corredor logístico (y=260) — 3 camiones + 1 auto al este
+        { kind: 'truck', path: [{ x: 230, y: 260 }, { x: 780, y: 260 }], offset: 0.08, speed: 0.022 },
+        { kind: 'truck', path: [{ x: 230, y: 260 }, { x: 780, y: 260 }], offset: 0.40, speed: 0.022 },
+        { kind: 'truck', path: [{ x: 230, y: 260 }, { x: 780, y: 260 }], offset: 0.72, speed: 0.022 },
+        // Corredor en sentido opuesto — 1 camión + 1 auto al oeste
+        { kind: 'car',   path: [{ x: 780, y: 260 }, { x: 230, y: 260 }], offset: 0.22, speed: 0.028 },
+        { kind: 'truck', path: [{ x: 780, y: 260 }, { x: 230, y: 260 }], offset: 0.58, speed: 0.022 },
+        // Ruta 78 vertical (x=620) — cruzan el corredor
+        { kind: 'truck', path: [{ x: 620, y: 195 }, { x: 620, y: 350 }], offset: 0.35, speed: 0.022 },
       ],
     },
     {
@@ -450,20 +567,45 @@
         { x: 470, y: 435 },
         { x: 190, y: 405 },
       ],
+      // Aproximaciones rectas de las calles curvas (Cochrane, Prat) + verticales
+      vehicles: [
+        // Cochrane aproximada (y≈260) al este
+        { kind: 'car', path: [{ x: 200, y: 260 }, { x: 630, y: 275 }], offset: 0.15, speed: 0.028 },
+        // Prat aproximada (y≈320) al este
+        { kind: 'car', path: [{ x: 200, y: 320 }, { x: 650, y: 335 }], offset: 0.50, speed: 0.028 },
+        // Prat al oeste
+        { kind: 'car', path: [{ x: 650, y: 335 }, { x: 200, y: 320 }], offset: 0.25, speed: 0.028 },
+        // Vertical x=450 (visible en el mapa) al sur
+        { kind: 'car', path: [{ x: 450, y: 250 }, { x: 450, y: 430 }], offset: 0.30, speed: 0.024 },
+        // Vertical x=220 al sur
+        { kind: 'car', path: [{ x: 220, y: 255 }, { x: 220, y: 405 }], offset: 0.60, speed: 0.024 },
+      ],
     },
   ];
 
   const MOVE_DURATION = 720;
   const WAIT_AT_POINT = 350;
-  const WAIT_AFTER_REVEAL = 3200;
-  const WAIT_BETWEEN_ZONES = 700;
+  const WAIT_RECOGNITION = 1600;    // tiempo del "análisis" antes de spawnear vehículos
+  const WAIT_TRAFFIC = 4200;        // vehículos circulando en la zona
+  const WAIT_BETWEEN_ZONES = 900;
 
   let zoneIdx = 0;
-  let stepIdx = 0; // 0 = mover al primer punto, N = mover al punto N, N+1 = reveal, N+2 = fade
+  let stepIdx = 0;
   let phase: 'moving' | 'waiting' = 'waiting';
   let phaseStart = 0;
   let placedPoints: Array<{ x: number; y: number }> = [];
   let rafId = 0;
+  let lastTs = 0;
+
+  interface RuntimeVehicle {
+    el: SVGRectElement;
+    path: Array<{ x: number; y: number }>;
+    offset: number;
+    speed: number;
+    progress: number;
+    kind: 'car' | 'truck';
+  }
+  let runtimeVehicles: RuntimeVehicle[] = [];
 
   const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
   const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -545,6 +687,78 @@
       polygon.setAttribute('points', '');
       polygon.classList.remove('visible');
     }
+    if (analysisClipPoly) analysisClipPoly.setAttribute('points', '');
+    analysisLayer?.classList.remove('active');
+    bracketsGroup?.classList.remove('visible');
+    if (bracketsGroup) bracketsGroup.innerHTML = '';
+    if (vehiclesGroup) vehiclesGroup.innerHTML = '';
+    runtimeVehicles = [];
+  };
+
+  // Longitud total de una polilínea
+  const pathLength = (path: Array<{ x: number; y: number }>) => {
+    let t = 0;
+    for (let i = 1; i < path.length; i++) t += Math.hypot(path[i].x - path[i - 1].x, path[i].y - path[i - 1].y);
+    return t;
+  };
+  // Punto e ángulo sobre una polilínea según progress 0..1
+  const pathPoint = (path: Array<{ x: number; y: number }>, progress: number) => {
+    const total = pathLength(path);
+    const target = progress * total;
+    let acc = 0;
+    for (let i = 1; i < path.length; i++) {
+      const dx = path[i].x - path[i - 1].x;
+      const dy = path[i].y - path[i - 1].y;
+      const seg = Math.hypot(dx, dy);
+      if (acc + seg >= target) {
+        const t = (target - acc) / seg;
+        return {
+          p: { x: path[i - 1].x + dx * t, y: path[i - 1].y + dy * t },
+          angle: (Math.atan2(dy, dx) * 180) / Math.PI,
+        };
+      }
+      acc += seg;
+    }
+    return { p: path[path.length - 1], angle: 0 };
+  };
+
+  // Genera los brackets (L-shapes) en cada vértice del polígono actual
+  const spawnBrackets = () => {
+    if (!bracketsGroup) return;
+    bracketsGroup.innerHTML = '';
+    placedPoints.forEach((p) => {
+      const path = document.createElementNS(SVG_NS, 'path');
+      // L-shape brackets rotadas para dar sensación de "target lock"
+      path.setAttribute('d', `M ${p.x - 8} ${p.y - 2} L ${p.x - 8} ${p.y - 8} L ${p.x - 2} ${p.y - 8} M ${p.x + 2} ${p.y - 8} L ${p.x + 8} ${p.y - 8} L ${p.x + 8} ${p.y - 2} M ${p.x + 8} ${p.y + 2} L ${p.x + 8} ${p.y + 8} L ${p.x + 2} ${p.y + 8} M ${p.x - 2} ${p.y + 8} L ${p.x - 8} ${p.y + 8} L ${p.x - 8} ${p.y + 2}`);
+      bracketsGroup.appendChild(path);
+    });
+  };
+
+  const spawnVehicles = (zone: Zone) => {
+    if (!vehiclesGroup) return;
+    vehiclesGroup.innerHTML = '';
+    runtimeVehicles = zone.vehicles.map((v) => {
+      const el = document.createElementNS(SVG_NS, 'rect');
+      el.setAttribute('class', v.kind);
+      el.setAttribute('width', v.kind === 'truck' ? '18' : '9');
+      el.setAttribute('height', v.kind === 'truck' ? '7' : '5');
+      el.setAttribute('rx', '1');
+      vehiclesGroup.appendChild(el);
+      return { el, path: v.path, offset: v.offset, speed: v.speed, progress: v.offset, kind: v.kind };
+    });
+  };
+
+  const tickVehicles = (dt: number) => {
+    runtimeVehicles.forEach((v) => {
+      v.progress += v.speed * (dt / 100);
+      if (v.progress > 1) v.progress -= 1;
+      const { p, angle } = pathPoint(v.path, v.progress);
+      const w = v.kind === 'truck' ? 18 : 9;
+      const h = v.kind === 'truck' ? 7 : 5;
+      v.el.setAttribute('x', String(p.x - w / 2));
+      v.el.setAttribute('y', String(p.y - h / 2));
+      v.el.setAttribute('transform', `rotate(${angle} ${p.x} ${p.y})`);
+    });
   };
 
   const startZone = (idx: number) => {
@@ -574,6 +788,21 @@
 
   const revealPolygon = () => {
     polygon?.classList.add('visible');
+    // Copiar el polígono al clipPath para restringir scanner + vehículos
+    if (analysisClipPoly && polygon) {
+      analysisClipPoly.setAttribute('points', polygon.getAttribute('points') ?? '');
+    }
+    // Activar capa de análisis (scanner empieza a barrer)
+    analysisLayer?.classList.add('active');
+    // Spawn brackets sobre vértices con fade
+    spawnBrackets();
+    // Pequeño delay para que el CSS transition detecte el cambio
+    requestAnimationFrame(() => bracketsGroup?.classList.add('visible'));
+  };
+
+  const startTraffic = () => {
+    const zone = ZONES[zoneIdx];
+    spawnVehicles(zone);
   };
 
   const fadeOutZone = () => {
@@ -584,14 +813,24 @@
   const tick = (ts: number) => {
     const zone = ZONES[zoneIdx];
     const elapsed = ts - phaseStart;
+    const dt = lastTs ? Math.min(ts - lastTs, 50) : 16;
+    lastTs = ts;
+
+    // Vehículos siempre se animan si hay (durante fase de tráfico)
+    if (runtimeVehicles.length > 0) tickVehicles(dt);
 
     // Steps:
     //   0..N-1  = mover al punto N y hacer click
-    //   N       = reveal polygon
-    //   N+1     = fade out, esperar, avanzar zona
+    //   N       = reveal polygon (aparece scanner + brackets)
+    //   N+1     = fase RECOGNITION (análisis visual sin vehículos aún)
+    //   N+2     = fase TRAFFIC (spawn vehículos, siguen corriendo)
+    //   N+3     = fade out, esperar, avanzar zona
+    const revealStep = zone.points.length;
+    const recognitionStep = zone.points.length + 1;
+    const trafficStep = zone.points.length + 2;
+    const fadeStep = zone.points.length + 3;
 
     if (stepIdx < zone.points.length) {
-      // Fase: mover al siguiente punto, click, esperar
       const targetPoint = zone.points[stepIdx];
       const prevPoint = stepIdx === 0 ? zone.startCursor : zone.points[stepIdx - 1];
 
@@ -606,34 +845,41 @@
           const t = easeOutCubic(elapsed / MOVE_DURATION);
           setCursorPos(lerp(prevPoint.x, targetPoint.x, t), lerp(prevPoint.y, targetPoint.y, t));
         }
-      } else {
-        if (elapsed >= WAIT_AT_POINT) {
-          stepIdx++;
-          phase = 'moving';
-          phaseStart = ts;
-        }
+      } else if (elapsed >= WAIT_AT_POINT) {
+        stepIdx++;
+        phase = 'moving';
+        phaseStart = ts;
       }
-    } else if (stepIdx === zone.points.length) {
-      // Reveal polygon step
+    } else if (stepIdx === revealStep) {
+      // Reveal polygon + activar análisis
       revealPolygon();
-      setHud(`ZONA LISTA · ${zone.points.length} VÉRTICES`);
+      cursor?.classList.add('hidden'); // ocultar cursor durante análisis
+      setHud(`ANALIZANDO ZONA · ${zone.points.length} VÉRTICES`);
       stepIdx++;
       phase = 'waiting';
       phaseStart = ts;
-    } else {
-      // Wait, then fade out, then advance
-      if (phase === 'waiting') {
-        if (elapsed >= WAIT_AFTER_REVEAL) {
-          fadeOutZone();
-          setHud('SIGUIENTE ZONA…');
-          phase = 'moving'; // reusing phase as "fading"
-          phaseStart = ts;
-        }
-      } else {
-        if (elapsed >= WAIT_BETWEEN_ZONES) {
-          const nextZone = (zoneIdx + 1) % ZONES.length;
-          startZone(nextZone);
-        }
+    } else if (stepIdx === recognitionStep) {
+      // Fase de reconocimiento visual (solo scanner + brackets, sin vehículos)
+      if (elapsed >= WAIT_RECOGNITION) {
+        startTraffic();
+        setHud('TRÁFICO DETECTADO');
+        stepIdx++;
+        phase = 'waiting';
+        phaseStart = ts;
+      }
+    } else if (stepIdx === trafficStep) {
+      // Fase de tráfico — vehículos circulando en la zona
+      if (elapsed >= WAIT_TRAFFIC) {
+        fadeOutZone();
+        setHud('SIGUIENTE ZONA…');
+        stepIdx++;
+        phase = 'waiting';
+        phaseStart = ts;
+      }
+    } else if (stepIdx === fadeStep) {
+      if (elapsed >= WAIT_BETWEEN_ZONES) {
+        const nextZone = (zoneIdx + 1) % ZONES.length;
+        startZone(nextZone);
       }
     }
 
