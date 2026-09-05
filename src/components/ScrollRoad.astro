@@ -17,9 +17,9 @@
 <div class="scroll-road" aria-hidden="true">
   <div class="road-bar"></div>
   <div class="road-fill"></div>
-  <svg class="truck" viewBox="0 0 32 16" width="32" height="16">
-    <rect x="0" y="2" width="22" height="12" fill="currentColor" />
-    <path d="M22 5 h6 l4 5 v4 h-10 z" fill="currentColor" />
+  <svg class="truck" viewBox="0 0 32 16" width="38" height="19">
+    <rect x="0" y="2" width="22" height="12" fill="currentColor" stroke="#044559" stroke-width="0.6" />
+    <path d="M22 5 h6 l4 5 v4 h-10 z" fill="currentColor" stroke="#044559" stroke-width="0.6" />
     <circle cx="7" cy="15" r="2" fill="#151B20" />
     <circle cx="17" cy="15" r="2" fill="#151B20" />
     <circle cx="27" cy="15" r="2" fill="#151B20" />
@@ -64,9 +64,15 @@
     position: absolute;
     bottom: 4px;
     left: 0;
-    color: var(--navy);
+    /* Cyan de marca: contrasta con secciones crema y navy (antes era navy
+       y se camuflaba sobre Hero/Simulation/FinalCTA) */
+    color: var(--cyan);
     transition: transform 80ms linear;
-    filter: drop-shadow(0 1px 3px rgba(4, 69, 89, 0.35));
+    /* Doble shadow: base oscura para separar del crema + halo cyan sutil
+       que refuerza la visibilidad sobre fondos oscuros */
+    filter:
+      drop-shadow(0 1px 2px rgba(4, 69, 89, 0.55))
+      drop-shadow(0 0 4px rgba(97, 225, 230, 0.45));
   }
 
   /* ---------- SEMÁFORO ---------- */
@@ -123,7 +129,7 @@
   const semaphore = document.querySelector<HTMLElement>('.semaphore');
 
   if (fill && truck) {
-    const TRUCK_WIDTH = 32;
+    const TRUCK_WIDTH = 38;
     let ticking = false;
 
     const update = () => {
