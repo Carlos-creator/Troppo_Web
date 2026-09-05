@@ -1,8 +1,11 @@
 ---
-// Escalabilidad — sección corta que muestra cómo Troppo se adapta a cualquier zona.
-// Animación auto-loop: un cursor simulado coloca 4 puntos sobre un mapa
-// urbano genérico, forma un polígono y "recorta" la zona (exactamente como
-// funciona en la app real de sumo_v2).
+// Escalabilidad — 3 zonas reales ciclando cada ~12 segundos.
+// El polígono se ajusta a la forma real (3, 4 o 5 puntos según la zona).
+//
+// Zonas:
+//   1. USM Campus San Joaquín (Santiago) — 3 puntos (triángulo, zona compacta)
+//   2. Puerto San Antonio · Corredor logístico — 4 puntos (cuadrilátero alargado)
+//   3. Centro Histórico de Valparaíso — 5 puntos (pentágono irregular)
 ---
 
 <section class="scalability" id="escalable">
@@ -12,9 +15,10 @@
         <div class="eyebrow">ESCALABLE</div>
         <h2>Funciona en cualquier zona del país.</h2>
         <p class="scal-lead">
-          El modelo no está atado a San Antonio. Realizamos un estudio previo del
+          El modelo no está atado a San Antonio. Hacemos un estudio previo del
           terreno, extraemos la red vial desde OpenStreetMap y calibramos con
-          datos de tráfico local. En días, tenés un gemelo digital operativo.
+          datos locales. <strong>El polígono se ajusta a la forma real</strong> —
+          triángulo, cuadrilátero, o irregular con más puntos.
         </p>
         <ul class="scal-steps">
           <li>
@@ -27,8 +31,8 @@
           <li>
             <span class="step-n">02</span>
             <div>
-              <strong>Delimitación de zona</strong>
-              <p>Sobre el mapa se marca el polígono de estudio.</p>
+              <strong>Delimitación libre</strong>
+              <p>Sobre el mapa se marca la zona con los puntos necesarios.</p>
             </div>
           </li>
           <li>
@@ -46,68 +50,126 @@
           class="scal-map"
           viewBox="0 0 800 500"
           preserveAspectRatio="xMidYMid meet"
-          aria-label="Demostración de delimitación de zona"
+          aria-label="Demostración de delimitación en distintas zonas del país"
         >
           <defs>
             <pattern id="scalBlocks" width="120" height="90" patternUnits="userSpaceOnUse">
-              <rect width="120" height="90" fill="transparent" />
               <rect x="10" y="10" width="40" height="30" fill="rgba(4, 69, 89, 0.08)" rx="2" />
               <rect x="60" y="10" width="50" height="30" fill="rgba(4, 69, 89, 0.06)" rx="2" />
               <rect x="10" y="50" width="55" height="35" fill="rgba(4, 69, 89, 0.05)" rx="2" />
               <rect x="75" y="50" width="35" height="35" fill="rgba(4, 69, 89, 0.07)" rx="2" />
             </pattern>
+            <linearGradient id="scalOcean" x1="0" x2="1" y1="0" y2="0.5">
+              <stop offset="0" stop-color="#022a37" />
+              <stop offset="1" stop-color="#044559" />
+            </linearGradient>
           </defs>
 
-          <!-- Base tierra -->
-          <rect x="0" y="0" width="800" height="500" fill="#f0eadc" />
-          <rect x="0" y="0" width="800" height="500" fill="url(#scalBlocks)" />
+          <!-- ================= ZONA 1: USM SAN JOAQUÍN ================= -->
+          <g class="zone-map" data-zone="usm">
+            <rect x="0" y="0" width="800" height="500" fill="#f0eadc" />
+            <rect x="0" y="0" width="800" height="500" fill="url(#scalBlocks)" />
 
-          <!-- Parque -->
-          <rect x="460" y="60" width="140" height="85" fill="#c8d99a" opacity="0.7" rx="4" />
-          <text x="530" y="108" fill="#5a6b30" font-family="Montserrat" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="0.5">PARQUE</text>
+            <!-- Línea 5 Metro -->
+            <line x1="90" y1="0" x2="90" y2="500" stroke="#88b04b" stroke-width="2.5" stroke-dasharray="8 6" opacity="0.7" />
+            <text x="95" y="24" fill="#88b04b" font-family="Montserrat" font-size="8" font-weight="700" letter-spacing="0.5">METRO L5</text>
 
-          <!-- Plaza circular -->
-          <circle cx="600" cy="330" r="32" fill="rgba(97, 225, 230, 0.25)" stroke="#61E1E6" stroke-width="1.5" opacity="0.6" />
-          <text x="600" y="335" fill="#044559" font-family="Montserrat" font-size="8" font-weight="700" text-anchor="middle" opacity="0.7">PLAZA</text>
+            <!-- Vicuña Mackenna (vertical principal) -->
+            <line x1="145" y1="0" x2="145" y2="500" stroke="#151B20" stroke-width="12" />
+            <line x1="145" y1="0" x2="145" y2="500" stroke="#FFF8EA" stroke-width="1.5" stroke-dasharray="10 8" opacity="0.55" />
+            <text x="160" y="24" fill="#044559" font-family="Montserrat" font-size="8" font-weight="700" letter-spacing="0.5">AV. VICUÑA MACKENNA</text>
 
-          <!-- Red vial -->
-          <g class="streets" stroke="#151B20" fill="none">
-            <line x1="0" y1="150" x2="800" y2="150" stroke-width="10" />
-            <line x1="0" y1="280" x2="800" y2="280" stroke-width="8" />
-            <line x1="0" y1="410" x2="800" y2="410" stroke-width="7" />
-            <line x1="180" y1="0" x2="180" y2="500" stroke-width="8" />
-            <line x1="400" y1="0" x2="400" y2="500" stroke-width="10" />
-            <line x1="680" y1="0" x2="680" y2="500" stroke-width="7" />
-            <line x1="180" y1="410" x2="400" y2="280" stroke-width="5" />
+            <!-- Cruces horizontales -->
+            <line x1="145" y1="180" x2="800" y2="180" stroke="#151B20" stroke-width="7" />
+            <line x1="145" y1="180" x2="800" y2="180" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="8 6" opacity="0.55" />
+            <line x1="145" y1="380" x2="800" y2="380" stroke="#151B20" stroke-width="7" />
+            <line x1="145" y1="380" x2="800" y2="380" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="8 6" opacity="0.55" />
+
+            <!-- Cruce vertical -->
+            <line x1="500" y1="180" x2="500" y2="500" stroke="#151B20" stroke-width="6" />
+            <line x1="700" y1="0" x2="700" y2="500" stroke="#151B20" stroke-width="6" />
+
+            <!-- Campus USM (rounded rect) -->
+            <rect x="240" y="205" width="360" height="150" fill="rgba(97, 225, 230, 0.12)" stroke="#61E1E6" stroke-width="1.5" stroke-dasharray="5 4" rx="6" />
+            <text x="420" y="278" fill="#044559" font-family="Montserrat" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">USM CAMPUS</text>
+            <text x="420" y="295" fill="#044559" font-family="Montserrat" font-size="9" font-weight="600" text-anchor="middle" opacity="0.65">SAN JOAQUÍN</text>
+
+            <text x="795" y="176" fill="#044559" font-size="8" text-anchor="end" opacity="0.55" font-family="Montserrat" font-weight="600">Blanco Encalada</text>
+            <text x="795" y="376" fill="#044559" font-size="8" text-anchor="end" opacity="0.55" font-family="Montserrat" font-weight="600">Salvador Sanfuentes</text>
           </g>
 
-          <!-- Lane dashes -->
-          <g class="lanes" stroke="#FFF8EA" fill="none" opacity="0.55">
-            <line x1="0" y1="150" x2="800" y2="150" stroke-width="1.5" stroke-dasharray="10 8" />
-            <line x1="0" y1="280" x2="800" y2="280" stroke-width="1.5" stroke-dasharray="10 8" />
-            <line x1="0" y1="410" x2="800" y2="410" stroke-width="1" stroke-dasharray="8 6" />
-            <line x1="180" y1="0" x2="180" y2="500" stroke-width="1.5" stroke-dasharray="10 8" />
-            <line x1="400" y1="0" x2="400" y2="500" stroke-width="1.5" stroke-dasharray="10 8" />
-            <line x1="680" y1="0" x2="680" y2="500" stroke-width="1" stroke-dasharray="8 6" />
+          <!-- ================= ZONA 2: PUERTO SAN ANTONIO ================= -->
+          <g class="zone-map" data-zone="sanantonio">
+            <rect x="0" y="0" width="800" height="500" fill="url(#scalOcean)" />
+            <path d="M 220 0 Q 195 90, 230 180 Q 195 260, 240 340 Q 210 420, 250 500 L 800 500 L 800 0 Z" fill="#f0eadc" />
+            <rect x="220" y="0" width="580" height="500" fill="url(#scalBlocks)" opacity="0.6" />
+
+            <!-- Terminales del puerto -->
+            <g opacity="0.7">
+              <rect x="240" y="45" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
+              <rect x="240" y="65" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
+              <rect x="240" y="85" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
+              <rect x="273" y="55" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
+              <rect x="273" y="75" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
+            </g>
+
+            <!-- Corredor logístico -->
+            <line x1="230" y1="260" x2="800" y2="260" stroke="#151B20" stroke-width="15" />
+            <line x1="230" y1="260" x2="800" y2="260" stroke="#FFF8EA" stroke-width="1.5" stroke-dasharray="12 8" opacity="0.55" />
+
+            <!-- Ruta 78 (vertical) -->
+            <line x1="620" y1="0" x2="620" y2="500" stroke="#151B20" stroke-width="9" />
+            <line x1="620" y1="0" x2="620" y2="500" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="10 8" opacity="0.55" />
+
+            <!-- Rutas secundarias -->
+            <line x1="230" y1="130" x2="800" y2="130" stroke="#151B20" stroke-width="6" opacity="0.85" />
+            <line x1="240" y1="400" x2="800" y2="400" stroke="#151B20" stroke-width="6" opacity="0.85" />
+
+            <text x="30" y="45" fill="#61E1E6" opacity="0.55" font-size="10" letter-spacing="1" font-family="Montserrat" font-weight="700">OCÉANO PACÍFICO</text>
+            <text x="245" y="35" fill="#044559" font-size="8" font-weight="700" font-family="Montserrat" letter-spacing="0.5">PUERTO SAN ANTONIO</text>
+            <text x="795" y="252" fill="#044559" font-size="8" text-anchor="end" font-weight="700" font-family="Montserrat" letter-spacing="0.5">CORREDOR LOGÍSTICO</text>
+            <text x="628" y="20" fill="#044559" font-size="8" font-weight="700" font-family="Montserrat" opacity="0.7">RUTA 78</text>
           </g>
 
-          <!-- Etiquetas de calles -->
-          <g class="labels" font-family="Montserrat" font-weight="600">
-            <text x="795" y="145" fill="#044559" font-size="8" text-anchor="end" opacity="0.55">Av. Norte</text>
-            <text x="795" y="275" fill="#044559" font-size="8" text-anchor="end" opacity="0.55">Av. Central</text>
-            <text x="795" y="405" fill="#044559" font-size="8" text-anchor="end" opacity="0.55">Av. Sur</text>
+          <!-- ================= ZONA 3: CENTRO VALPARAÍSO ================= -->
+          <g class="zone-map" data-zone="valparaiso">
+            <rect x="0" y="0" width="800" height="500" fill="url(#scalOcean)" />
+            <!-- Bahía irregular (Valparaíso frente al mar) -->
+            <path d="M 0 0 L 800 0 L 800 90 Q 640 150, 500 100 Q 340 60, 180 130 Q 90 170, 0 140 Z" fill="url(#scalOcean)" />
+            <path d="M 0 140 Q 90 170, 180 130 Q 340 60, 500 100 Q 640 150, 800 90 L 800 500 L 0 500 Z" fill="#f0eadc" />
+            <rect x="0" y="140" width="800" height="360" fill="url(#scalBlocks)" opacity="0.5" />
+
+            <!-- Calles irregulares del casco histórico -->
+            <path d="M 60 200 Q 180 190, 300 220 T 550 240 L 750 270" stroke="#151B20" stroke-width="7" fill="none" />
+            <path d="M 60 200 Q 180 190, 300 220 T 550 240 L 750 270" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="8 6" fill="none" opacity="0.55" />
+
+            <path d="M 40 320 L 250 310 Q 400 305, 500 340 L 780 370" stroke="#151B20" stroke-width="6" fill="none" />
+            <path d="M 40 320 L 250 310 Q 400 305, 500 340 L 780 370" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="8 6" fill="none" opacity="0.55" />
+
+            <path d="M 90 440 L 780 440" stroke="#151B20" stroke-width="6" />
+
+            <!-- Verticales cerros -->
+            <line x1="220" y1="140" x2="220" y2="500" stroke="#151B20" stroke-width="5" opacity="0.8" />
+            <line x1="450" y1="140" x2="450" y2="500" stroke="#151B20" stroke-width="5" opacity="0.8" />
+            <line x1="620" y1="140" x2="620" y2="500" stroke="#151B20" stroke-width="5" opacity="0.8" />
+
+            <!-- Plaza Sotomayor -->
+            <circle cx="380" cy="285" r="26" fill="rgba(209, 235, 120, 0.35)" stroke="#88b04b" stroke-width="1.5" opacity="0.7" />
+            <text x="380" y="288" fill="#044559" font-family="Montserrat" font-size="7" font-weight="700" text-anchor="middle" opacity="0.75">PLAZA</text>
+
+            <text x="30" y="50" fill="#61E1E6" opacity="0.55" font-size="10" letter-spacing="1" font-family="Montserrat" font-weight="700">BAHÍA DE VALPARAÍSO</text>
+            <text x="795" y="200" fill="#044559" font-size="8" text-anchor="end" font-weight="700" font-family="Montserrat" opacity="0.7">Cochrane</text>
+            <text x="795" y="300" fill="#044559" font-size="8" text-anchor="end" font-weight="700" font-family="Montserrat" opacity="0.7">Prat</text>
+            <text x="795" y="435" fill="#044559" font-size="8" text-anchor="end" font-weight="700" font-family="Montserrat" opacity="0.7">Blanco</text>
           </g>
 
-          <!-- Polígono (dinámico) -->
-          <polygon class="scal-polygon" points="" fill="rgba(209, 235, 120, 0.18)" stroke="#D1EB78" stroke-width="2.5" stroke-dasharray="8 5" />
-
-          <!-- Zona recortada (highlight cuando polígono completo) -->
-          <text class="scal-label" x="400" y="270" fill="#044559" font-family="Montserrat" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="1" opacity="0">ZONA DE ESTUDIO</text>
+          <!-- Polígono compartido (dinámico) -->
+          <polygon class="scal-polygon" points="" fill="rgba(209, 235, 120, 0.20)" stroke="#D1EB78" stroke-width="2.5" stroke-dasharray="8 5" />
 
           <!-- Puntos colocados (dinámico) -->
           <g class="scal-points"></g>
 
-          <!-- Ripples de click (dinámico) -->
+          <!-- Ripples (dinámico) -->
           <g class="scal-ripples"></g>
 
           <!-- Cursor -->
@@ -122,9 +184,14 @@
           </g>
         </svg>
 
+        <!-- HUD principal + nombre de zona -->
         <div class="scal-hud">
           <span class="scal-hud-dot"></span>
           <span data-hud="text">ESPERANDO</span>
+        </div>
+        <div class="scal-zone-name">
+          <span data-zone-name="name">—</span>
+          <small data-zone-name="sub">—</small>
         </div>
       </div>
     </div>
@@ -163,6 +230,10 @@
     line-height: 1.55;
     max-width: 480px;
   }
+  .scal-lead strong {
+    color: var(--navy);
+    font-weight: 700;
+  }
   .scal-steps {
     list-style: none;
     padding: 0;
@@ -200,7 +271,7 @@
     line-height: 1.45;
   }
 
-  /* ---------- Viewport / mapa ---------- */
+  /* Viewport */
   .scal-viewport {
     position: relative;
     background: var(--navy);
@@ -213,23 +284,33 @@
     width: 100%;
     height: 100%;
   }
+
+  /* Zone maps: solo el activo visible */
+  .zone-map {
+    opacity: 0;
+    transition: opacity 500ms ease;
+    pointer-events: none;
+  }
+  .zone-map.active {
+    opacity: 1;
+  }
+
   .scal-cursor {
     pointer-events: none;
     will-change: transform;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+    transition: opacity 400ms ease;
   }
+  .scal-cursor.hidden {
+    opacity: 0;
+  }
+
   .scal-polygon {
     opacity: 0;
     transition: opacity 500ms ease;
     filter: drop-shadow(0 0 6px rgba(209, 235, 120, 0.5));
   }
   .scal-polygon.visible {
-    opacity: 1;
-  }
-  .scal-label {
-    transition: opacity 500ms ease;
-  }
-  .scal-label.visible {
     opacity: 1;
   }
 
@@ -259,11 +340,48 @@
     border-radius: 50%;
     background: currentColor;
     box-shadow: 0 0 8px currentColor;
-    animation: hud-pulse 1.2s ease-in-out infinite;
+    animation: scal-hud-pulse 1.2s ease-in-out infinite;
   }
-  @keyframes hud-pulse {
+  @keyframes scal-hud-pulse {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* Nombre de zona (top-right, cambia al rotar) */
+  .scal-zone-name {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 8px 14px;
+    background: rgba(21, 27, 32, 0.78);
+    backdrop-filter: blur(8px);
+    border-radius: 8px;
+    border: 1px solid rgba(97, 225, 230, 0.25);
+    line-height: 1.2;
+    pointer-events: none;
+    transition: opacity 300ms ease;
+  }
+  .scal-zone-name span {
+    font-family: var(--font-serif);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cream);
+    letter-spacing: 0.3px;
+  }
+  .scal-zone-name small {
+    font-family: var(--font-sans);
+    font-size: 9.5px;
+    color: rgba(255, 248, 234, 0.55);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .scal-zone-name.fading {
+    opacity: 0;
   }
 
   @media (max-width: 860px) {
@@ -281,33 +399,70 @@
   const pointsGroup = svg?.querySelector<SVGGElement>('.scal-points');
   const ripplesGroup = svg?.querySelector<SVGGElement>('.scal-ripples');
   const polygon = svg?.querySelector<SVGPolygonElement>('.scal-polygon');
-  const label = svg?.querySelector<SVGTextElement>('.scal-label');
+  const zoneMaps = svg?.querySelectorAll<SVGGElement>('.zone-map');
   const hudText = document.querySelector<HTMLElement>('.scal-hud [data-hud="text"]');
+  const zoneName = document.querySelector<HTMLElement>('.scal-zone-name');
+  const zoneNameText = document.querySelector<HTMLElement>('[data-zone-name="name"]');
+  const zoneNameSub = document.querySelector<HTMLElement>('[data-zone-name="sub"]');
 
-  interface CursorStep {
-    x: number;
-    y: number;
-    wait: number;
-    action?: 'click' | 'reveal' | 'reset';
-    hud?: string;
+  interface Zone {
+    id: string;
+    name: string;
+    sub: string;
+    startCursor: { x: number; y: number };
+    points: Array<{ x: number; y: number }>;
   }
 
-  // Secuencia del cursor: 4 clicks para formar el polígono + revelar + reset
-  const PATH: CursorStep[] = [
-    { x: 40,  y: 40,  wait: 600, hud: 'DELIMITAR ZONA' },
-    { x: 170, y: 130, wait: 500, action: 'click', hud: 'PUNTO 1 / 4' },
-    { x: 640, y: 155, wait: 500, action: 'click', hud: 'PUNTO 2 / 4' },
-    { x: 680, y: 400, wait: 500, action: 'click', hud: 'PUNTO 3 / 4' },
-    { x: 190, y: 420, wait: 500, action: 'click', hud: 'PUNTO 4 / 4' },
-    { x: 400, y: 270, wait: 2600, action: 'reveal', hud: 'ZONA LISTA' },
-    { x: -30, y: -30, wait: 1200, action: 'reset', hud: 'REINICIANDO' },
+  // 3 zonas reales — cada una con diferente número de puntos
+  const ZONES: Zone[] = [
+    {
+      id: 'usm',
+      name: 'USM Campus San Joaquín',
+      sub: 'Santiago · Zona triangular',
+      startCursor: { x: 60, y: 60 },
+      points: [
+        { x: 230, y: 190 },
+        { x: 610, y: 195 },
+        { x: 420, y: 370 },
+      ],
+    },
+    {
+      id: 'sanantonio',
+      name: 'Corredor Logístico',
+      sub: 'Puerto San Antonio · 4 vértices',
+      startCursor: { x: 300, y: 30 },
+      points: [
+        { x: 240, y: 195 },
+        { x: 720, y: 190 },
+        { x: 720, y: 350 },
+        { x: 260, y: 335 },
+      ],
+    },
+    {
+      id: 'valparaiso',
+      name: 'Centro Histórico',
+      sub: 'Valparaíso · Pentágono irregular',
+      startCursor: { x: 60, y: 200 },
+      points: [
+        { x: 180, y: 250 },
+        { x: 550, y: 245 },
+        { x: 660, y: 340 },
+        { x: 470, y: 435 },
+        { x: 190, y: 405 },
+      ],
+    },
   ];
 
-  const MOVE_DURATION = 750;
-  let placedPoints: Array<{ x: number; y: number }> = [];
-  let currentIdx = 0;
+  const MOVE_DURATION = 720;
+  const WAIT_AT_POINT = 350;
+  const WAIT_AFTER_REVEAL = 3200;
+  const WAIT_BETWEEN_ZONES = 700;
+
+  let zoneIdx = 0;
+  let stepIdx = 0; // 0 = mover al primer punto, N = mover al punto N, N+1 = reveal, N+2 = fade
   let phase: 'moving' | 'waiting' = 'waiting';
   let phaseStart = 0;
+  let placedPoints: Array<{ x: number; y: number }> = [];
   let rafId = 0;
 
   const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
@@ -316,9 +471,19 @@
   const setCursorPos = (x: number, y: number) => {
     if (cursor) cursor.setAttribute('transform', `translate(${x}, ${y})`);
   };
-
   const setHud = (text: string) => {
     if (hudText) hudText.textContent = text;
+  };
+
+  const showZoneMap = (id: string) => {
+    zoneMaps?.forEach((g) => {
+      if (g.dataset.zone === id) g.classList.add('active');
+      else g.classList.remove('active');
+    });
+  };
+  const setZoneNameText = (zone: Zone) => {
+    if (zoneNameText) zoneNameText.textContent = zone.name;
+    if (zoneNameSub) zoneNameSub.textContent = zone.sub;
   };
 
   const spawnRipple = (x: number, y: number) => {
@@ -333,14 +498,11 @@
     ring.style.opacity = '0.9';
     ring.style.transition = 'r 700ms ease-out, opacity 700ms ease-out, stroke-width 700ms ease-out';
     ripplesGroup.appendChild(ring);
-
-    // Trigger animation
     requestAnimationFrame(() => {
-      ring.setAttribute('r', '40');
+      ring.setAttribute('r', '38');
       ring.style.opacity = '0';
       ring.style.strokeWidth = '0.5';
     });
-
     window.setTimeout(() => ring.remove(), 800);
   };
 
@@ -348,7 +510,7 @@
     if (!pointsGroup) return;
     const g = document.createElementNS(SVG_NS, 'g');
     g.style.opacity = '0';
-    g.style.transition = 'opacity 250ms ease';
+    g.style.transition = 'opacity 220ms ease';
 
     const circle = document.createElementNS(SVG_NS, 'circle');
     circle.setAttribute('cx', String(x));
@@ -373,73 +535,112 @@
     g.appendChild(circle);
     g.appendChild(text);
     pointsGroup.appendChild(g);
-
     requestAnimationFrame(() => { g.style.opacity = '1'; });
   };
 
-  const doClick = (x: number, y: number) => {
-    spawnRipple(x, y);
-    placedPoints.push({ x, y });
-    placePoint(x, y, placedPoints.length);
-    if (polygon) {
-      polygon.setAttribute('points', placedPoints.map((p) => `${p.x},${p.y}`).join(' '));
-    }
-  };
-
-  const doReveal = () => {
-    polygon?.classList.add('visible');
-    label?.classList.add('visible');
-  };
-
-  const doReset = () => {
+  const clearPointsAndPolygon = () => {
     if (pointsGroup) pointsGroup.innerHTML = '';
     placedPoints = [];
     if (polygon) {
       polygon.setAttribute('points', '');
       polygon.classList.remove('visible');
     }
-    label?.classList.remove('visible');
+  };
+
+  const startZone = (idx: number) => {
+    const zone = ZONES[idx];
+    zoneIdx = idx;
+    stepIdx = 0;
+    clearPointsAndPolygon();
+    setCursorPos(zone.startCursor.x, zone.startCursor.y);
+    cursor?.classList.remove('hidden');
+    zoneName?.classList.remove('fading');
+    showZoneMap(zone.id);
+    setZoneNameText(zone);
+    setHud(`ANALIZANDO · ${zone.sub.split(' · ')[0].toUpperCase()}`);
+    phase = 'waiting';
+    phaseStart = performance.now();
+  };
+
+  const doClickAt = (x: number, y: number) => {
+    spawnRipple(x, y);
+    placedPoints.push({ x, y });
+    placePoint(x, y, placedPoints.length);
+    if (polygon) polygon.setAttribute('points', placedPoints.map((p) => `${p.x},${p.y}`).join(' '));
+  };
+
+  const revealPolygon = () => {
+    polygon?.classList.add('visible');
+  };
+
+  const fadeOutZone = () => {
+    cursor?.classList.add('hidden');
+    zoneName?.classList.add('fading');
   };
 
   const tick = (ts: number) => {
-    const current = PATH[currentIdx];
-    const next = PATH[(currentIdx + 1) % PATH.length];
+    const zone = ZONES[zoneIdx];
     const elapsed = ts - phaseStart;
 
-    if (phase === 'moving') {
-      if (elapsed >= MOVE_DURATION) {
-        // Arrived
-        setCursorPos(next.x, next.y);
-        if (next.hud) setHud(next.hud);
-        if (next.action === 'click') doClick(next.x, next.y);
-        if (next.action === 'reveal') doReveal();
-        if (next.action === 'reset') doReset();
-        phase = 'waiting';
-        phaseStart = ts;
+    // Steps:
+    //   0..N-1  = mover al punto N y hacer click
+    //   N       = reveal polygon
+    //   N+1     = fade out, esperar, avanzar zona
+
+    if (stepIdx < zone.points.length) {
+      // Fase: mover al siguiente punto, click, esperar
+      const targetPoint = zone.points[stepIdx];
+      const prevPoint = stepIdx === 0 ? zone.startCursor : zone.points[stepIdx - 1];
+
+      if (phase === 'moving') {
+        if (elapsed >= MOVE_DURATION) {
+          setCursorPos(targetPoint.x, targetPoint.y);
+          doClickAt(targetPoint.x, targetPoint.y);
+          setHud(`PUNTO ${stepIdx + 1} / ${zone.points.length}`);
+          phase = 'waiting';
+          phaseStart = ts;
+        } else {
+          const t = easeOutCubic(elapsed / MOVE_DURATION);
+          setCursorPos(lerp(prevPoint.x, targetPoint.x, t), lerp(prevPoint.y, targetPoint.y, t));
+        }
       } else {
-        const t = easeOutCubic(elapsed / MOVE_DURATION);
-        setCursorPos(lerp(current.x, next.x, t), lerp(current.y, next.y, t));
+        if (elapsed >= WAIT_AT_POINT) {
+          stepIdx++;
+          phase = 'moving';
+          phaseStart = ts;
+        }
       }
+    } else if (stepIdx === zone.points.length) {
+      // Reveal polygon step
+      revealPolygon();
+      setHud(`ZONA LISTA · ${zone.points.length} VÉRTICES`);
+      stepIdx++;
+      phase = 'waiting';
+      phaseStart = ts;
     } else {
-      if (elapsed >= next.wait) {
-        currentIdx = (currentIdx + 1) % PATH.length;
-        phase = 'moving';
-        phaseStart = ts;
+      // Wait, then fade out, then advance
+      if (phase === 'waiting') {
+        if (elapsed >= WAIT_AFTER_REVEAL) {
+          fadeOutZone();
+          setHud('SIGUIENTE ZONA…');
+          phase = 'moving'; // reusing phase as "fading"
+          phaseStart = ts;
+        }
+      } else {
+        if (elapsed >= WAIT_BETWEEN_ZONES) {
+          const nextZone = (zoneIdx + 1) % ZONES.length;
+          startZone(nextZone);
+        }
       }
     }
 
     rafId = requestAnimationFrame(tick);
   };
 
-  if (svg && cursor && pointsGroup && polygon) {
-    setCursorPos(PATH[0].x, PATH[0].y);
-    if (PATH[0].hud) setHud(PATH[0].hud);
-    phase = 'waiting';
-    phaseStart = performance.now();
-    currentIdx = 0;
+  if (svg && cursor && pointsGroup && polygon && zoneMaps) {
+    startZone(0);
     rafId = requestAnimationFrame(tick);
 
-    // Pausar al cambiar de pestaña
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
         cancelAnimationFrame(rafId);
