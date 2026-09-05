@@ -559,26 +559,69 @@
       id: 'valparaiso',
       name: 'Centro Histórico',
       sub: 'Valparaíso · Pentágono irregular',
-      startCursor: { x: 60, y: 200 },
+      startCursor: { x: 65, y: 155 },
+      // Pentágono AMPLIADO — abarca los 3 corredores: Cochrane (y≈220),
+      // Prat (y≈310-340), y las verticales de los cerros (x=220, 450).
+      // Antes era muy chico y dejaba Cochrane afuera por arriba.
       points: [
-        { x: 180, y: 250 },
-        { x: 550, y: 245 },
-        { x: 660, y: 340 },
-        { x: 470, y: 435 },
-        { x: 190, y: 405 },
+        { x: 130, y: 195 }, // NW (bajo la costa)
+        { x: 620, y: 195 }, // NE
+        { x: 720, y: 320 }, // E
+        { x: 540, y: 430 }, // SE (sobre Blanco)
+        { x: 150, y: 405 }, // SW
       ],
-      // Aproximaciones rectas de las calles curvas (Cochrane, Prat) + verticales
+      // Vehículos alineados con las calles visibles Y dentro del polígono.
+      // Cochrane y Prat son curvas Bézier en el mapa — muestreadas en
+      // múltiples waypoints para que los vehículos las sigan visualmente.
       vehicles: [
-        // Cochrane aproximada (y≈260) al este
-        { kind: 'car', path: [{ x: 200, y: 260 }, { x: 630, y: 275 }], offset: 0.15, speed: 0.028 },
-        // Prat aproximada (y≈320) al este
-        { kind: 'car', path: [{ x: 200, y: 320 }, { x: 650, y: 335 }], offset: 0.50, speed: 0.028 },
-        // Prat al oeste
-        { kind: 'car', path: [{ x: 650, y: 335 }, { x: 200, y: 320 }], offset: 0.25, speed: 0.028 },
-        // Vertical x=450 (visible en el mapa) al sur
-        { kind: 'car', path: [{ x: 450, y: 250 }, { x: 450, y: 430 }], offset: 0.30, speed: 0.024 },
-        // Vertical x=220 al sur
-        { kind: 'car', path: [{ x: 220, y: 255 }, { x: 220, y: 405 }], offset: 0.60, speed: 0.024 },
+        // Cochrane (curva) al este — sigue la Bézier Q/T de la calle
+        {
+          kind: 'car',
+          path: [
+            { x: 200, y: 202 }, { x: 250, y: 209 }, { x: 300, y: 220 },
+            { x: 350, y: 231 }, { x: 400, y: 238 }, { x: 450, y: 241 },
+            { x: 500, y: 242 }, { x: 550, y: 240 }, { x: 600, y: 248 },
+          ],
+          offset: 0.15,
+          speed: 0.028,
+        },
+        // Cochrane al oeste — misma curva invertida
+        {
+          kind: 'car',
+          path: [
+            { x: 600, y: 248 }, { x: 550, y: 240 }, { x: 500, y: 242 },
+            { x: 450, y: 241 }, { x: 400, y: 238 }, { x: 350, y: 231 },
+            { x: 300, y: 220 }, { x: 250, y: 209 }, { x: 200, y: 202 },
+          ],
+          offset: 0.55,
+          speed: 0.028,
+        },
+        // Prat al este — auto (curva L→Q→L de la calle)
+        {
+          kind: 'car',
+          path: [
+            { x: 200, y: 312 }, { x: 250, y: 310 }, { x: 300, y: 310 },
+            { x: 350, y: 311 }, { x: 400, y: 316 }, { x: 450, y: 326 },
+            { x: 500, y: 340 }, { x: 560, y: 346 }, { x: 620, y: 353 },
+          ],
+          offset: 0.20,
+          speed: 0.026,
+        },
+        // Prat al este — camión (carga del puerto pasando por el centro)
+        {
+          kind: 'truck',
+          path: [
+            { x: 200, y: 312 }, { x: 250, y: 310 }, { x: 300, y: 310 },
+            { x: 350, y: 311 }, { x: 400, y: 316 }, { x: 450, y: 326 },
+            { x: 500, y: 340 }, { x: 560, y: 346 }, { x: 620, y: 353 },
+          ],
+          offset: 0.70,
+          speed: 0.022,
+        },
+        // Vertical x=220 (cerro) al sur — recta
+        { kind: 'car', path: [{ x: 220, y: 210 }, { x: 220, y: 395 }], offset: 0.30, speed: 0.024 },
+        // Vertical x=450 (cerro central) al sur — recta
+        { kind: 'car', path: [{ x: 450, y: 210 }, { x: 450, y: 415 }], offset: 0.60, speed: 0.024 },
       ],
     },
   ];
