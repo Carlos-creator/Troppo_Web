@@ -1,6 +1,6 @@
 ---
 // Sección CTA final + ubicación del evento
-// TODO: reemplazar map-box por un iframe real de Google Maps
+// Mapa: USM Campus San Joaquín — Av. Vicuña Mackenna 3939
 ---
 
 <section class="final" id="contacto">
@@ -26,7 +26,15 @@
           <button class="btn-primary" type="button">Hablemos</button>
         </div>
       </div>
-      <div class="map-box">Mapa · USM Campus San Joaquín</div>
+      <div class="map-box">
+        <iframe
+          src="https://maps.google.com/maps?q=-33.4905109,-70.6190188&hl=es&z=17&output=embed"
+          title="USM Campus San Joaquín · Av. Vicuña Mackenna 3939"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
     </div>
   </div>
 </section>
@@ -86,15 +94,19 @@
     border-radius: 100px;
   }
   .map-box {
-    background: rgba(255, 248, 234, 0.06);
     border: 1px solid rgba(255, 248, 234, 0.16);
     border-radius: 16px;
-    height: 220px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    color: rgba(255, 248, 234, 0.5);
+    height: 280px;
+    overflow: hidden;
+    background: rgba(255, 248, 234, 0.04);
+  }
+  .map-box iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    /* Suaviza el mapa hacia la paleta del sitio sin ocultar detalles */
+    filter: saturate(0.85);
   }
 
   @media (max-width: 860px) {

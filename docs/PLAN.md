@@ -109,7 +109,18 @@ Links en `Base.astro` referencian `/favicon/*` para todos los formatos.
 
 Y ajustar CSS de `.dash-screenshot` para que respete el border-radius del frame.
 
-### 1.4 Mapa real (Google Maps)
+### 1.4 Mapa real (Google Maps) ✅
+
+Implementado en `FinalCTA.astro` con embed simple por coordenadas:
+`https://maps.google.com/maps?q=-33.4905109,-70.6190188&hl=es&z=17&output=embed`
+
+Ubicación: USM Campus San Joaquín, Av. Vicuña Mackenna 3939. Altura 280px, filtro `saturate(0.85)` para armonizar con la paleta oscura del bloque.
+
+**Si en el futuro quieres upgrade al embed oficial** (más control del zoom/vista inicial): ver sección original abajo.
+
+---
+
+### 1.4 (referencia) Cómo obtener embed oficial
 
 **Archivo:** [src/components/FinalCTA.astro](../src/components/FinalCTA.astro)
 
