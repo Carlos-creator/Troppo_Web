@@ -73,13 +73,19 @@ Ajustar CSS de `.logo-img` con `height: 40px; width: auto;`.
 - `medium-white.png` — mediano para fondos oscuros (Footer)
 - `star-dark.png` / `star-light.png` — solo la brújula (favicon, decoración)
 
-### 1.2 Favicon optimizado
+### 1.2 Favicon optimizado ✅
 
-Hoy `Base.astro` usa `star-dark.png` (600KB, demasiado). Generar un `favicon.ico` de 32×32 y 16×16:
+Generado con [realfavicongenerator.net](https://realfavicongenerator.net) a partir de `star-dark.png`.
 
-- Usar [realfavicongenerator.net](https://realfavicongenerator.net) subiendo `star-dark.png`
-- Colocar el resultado en `public/favicon.ico`
-- Actualizar `Base.astro`: `<link rel="icon" href="/favicon.ico" />`
+Archivos en `public/favicon/`:
+- `favicon.ico` — fallback universal
+- `favicon.svg` — vectorial para navegadores modernos
+- `favicon-96x96.png` — retina
+- `apple-touch-icon.png` — 180×180 para iOS
+- `web-app-manifest-192x192.png` / `web-app-manifest-512x512.png` — PWA
+- `site.webmanifest` — configurado con nombre Troppo, tema navy `#044559`, idioma es-CL
+
+Links en `Base.astro` referencian `/favicon/*` para todos los formatos.
 
 ### 1.3 Screenshot real del dashboard
 

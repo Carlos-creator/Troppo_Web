@@ -1,0 +1,24 @@
+{
+  "name": "Troppo — Inteligencia que mueve el tráfico",
+  "short_name": "Troppo",
+  "description": "Gemelo digital con IA para optimizar el acceso al Puerto de San Antonio.",
+  "icons": [
+    {
+      "src": "/favicon/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "theme_color": "#044559",
+  "background_color": "#044559",
+  "display": "standalone",
+  "lang": "es-CL",
+  "start_url": "/"
+}
