@@ -50,10 +50,13 @@ Complementa a [IDEAS.md](IDEAS.md) (visión y diseño) y al [README.md](../READM
 
 ### 1.1 Logo real en el Header ✅
 
-**Header** (fondo cream) usa `/images/logo/logo_dark_sinfondo.png` con altura 44px.
-**Footer** (fondo ink) usa `/images/logo/logo_light_sinfondo.png` con altura 36px.
+**Header** (fondo cream): brújula `/images/logo/logo_dark_sinfondo.png` (44×44) + wordmark "TROPPO" en texto usando **fuente Arsenica** (color navy, 36px).
+**Footer** (fondo ink): brújula `/images/logo/logo_light_sinfondo.png` (44×44) + wordmark "TROPPO" en texto usando **fuente Arsenica** (color cream, 32px).
 
-Reemplazado el SVG placeholder + span "TROPPO" por `<img>` que ya contiene el wordmark completo. Se conserva el separador con la tagline "Inteligencia que mueve el tráfico" al costado del logo en el Header.
+**Fuente Arsenica** (self-hosted en `public/fonts/ArsenicaTrial-Regular.ttf`):
+- Versión Trial de Zetafonts, licencia CC-BY-NC — atribución en el Footer
+- Declarada como `--font-brand` en `global.css` — usar solo para el wordmark, no para texto largo
+- El archivo raw completo (14 pesos + license PDF) queda preservado en `ideas/arsenica/` (gitignored)
 
 **Variantes disponibles en `public/images/logo/`:**
 - `logo_dark_sinfondo.png` — logo oscuro sin fondo (Header) ← activo

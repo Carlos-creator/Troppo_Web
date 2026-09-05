@@ -3,6 +3,18 @@
    Variables de marca, reset y tipografía base
    ============================================================ */
 
+/* Fuente oficial de marca — self-hosted.
+   Arsenica by Zetafonts (versión Trial, licencia CC-BY-NC).
+   Uso permitido en proyectos no comerciales con atribución.
+   Fuente original: https://www.zetafonts.com/arsenica */
+@font-face {
+  font-family: 'Arsenica';
+  src: url('/fonts/ArsenicaTrial-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Paleta oficial (manual de identidad) */
   --navy: #044559;
@@ -13,8 +25,12 @@
   --ink: #151B20;
 
   /* Tipografías
-     Nota: Arsenica Antiqua no está en Google Fonts.
-     Fraunces es el sustituto serif con carácter similar. */
+     - --font-brand: Arsenica Trial (Zetafonts, CC-BY-NC). Solo para el
+       wordmark TROPPO — no usar en texto largo.
+     - --font-serif: Fraunces para titulares y elementos serif del sitio.
+     - --font-sans: Montserrat para texto general.
+     - --font-title: Helvetica para etiquetas técnicas. */
+  --font-brand: 'Arsenica', 'Fraunces', 'Georgia', serif;
   --font-serif: 'Fraunces', 'Georgia', serif;
   --font-sans: 'Montserrat', system-ui, -apple-system, sans-serif;
   --font-title: 'Helvetica Neue', Helvetica, Arial, sans-serif;
