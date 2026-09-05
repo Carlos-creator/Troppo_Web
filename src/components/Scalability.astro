@@ -1,0 +1,452 @@
+---
+// Escalabilidad — sección corta que muestra cómo Troppo se adapta a cualquier zona.
+// Animación auto-loop: un cursor simulado coloca 4 puntos sobre un mapa
+// urbano genérico, forma un polígono y "recorta" la zona (exactamente como
+// funciona en la app real de sumo_v2).
+---
+
+<section class="scalability" id="escalable">
+  <div class="wrap">
+    <div class="scal-grid">
+      <div class="scal-copy">
+        <div class="eyebrow">ESCALABLE</div>
+        <h2>Funciona en cualquier zona del país.</h2>
+        <p class="scal-lead">
+          El modelo no está atado a San Antonio. Realizamos un estudio previo del
+          terreno, extraemos la red vial desde OpenStreetMap y calibramos con
+          datos de tráfico local. En días, tenés un gemelo digital operativo.
+        </p>
+        <ul class="scal-steps">
+          <li>
+            <span class="step-n">01</span>
+            <div>
+              <strong>Estudio previo</strong>
+              <p>Análisis del terreno, red vial y patrones de demanda.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-n">02</span>
+            <div>
+              <strong>Delimitación de zona</strong>
+              <p>Sobre el mapa se marca el polígono de estudio.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-n">03</span>
+            <div>
+              <strong>Calibración local</strong>
+              <p>Datos históricos, flota real y semaforización existente.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="scal-viewport">
+        <svg
+          class="scal-map"
+          viewBox="0 0 800 500"
+          preserveAspectRatio="xMidYMid meet"
+          aria-label="Demostración de delimitación de zona"
+        >
+          <defs>
+            <pattern id="scalBlocks" width="120" height="90" patternUnits="userSpaceOnUse">
+              <rect width="120" height="90" fill="transparent" />
+              <rect x="10" y="10" width="40" height="30" fill="rgba(4, 69, 89, 0.08)" rx="2" />
+              <rect x="60" y="10" width="50" height="30" fill="rgba(4, 69, 89, 0.06)" rx="2" />
+              <rect x="10" y="50" width="55" height="35" fill="rgba(4, 69, 89, 0.05)" rx="2" />
+              <rect x="75" y="50" width="35" height="35" fill="rgba(4, 69, 89, 0.07)" rx="2" />
+            </pattern>
+          </defs>
+
+          <!-- Base tierra -->
+          <rect x="0" y="0" width="800" height="500" fill="#f0eadc" />
+          <rect x="0" y="0" width="800" height="500" fill="url(#scalBlocks)" />
+
+          <!-- Parque -->
+          <rect x="460" y="60" width="140" height="85" fill="#c8d99a" opacity="0.7" rx="4" />
+          <text x="530" y="108" fill="#5a6b30" font-family="Montserrat" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="0.5">PARQUE</text>
+
+          <!-- Plaza circular -->
+          <circle cx="600" cy="330" r="32" fill="rgba(97, 225, 230, 0.25)" stroke="#61E1E6" stroke-width="1.5" opacity="0.6" />
+          <text x="600" y="335" fill="#044559" font-family="Montserrat" font-size="8" font-weight="700" text-anchor="middle" opacity="0.7">PLAZA</text>
+
+          <!-- Red vial -->
+          <g class="streets" stroke="#151B20" fill="none">
+            <line x1="0" y1="150" x2="800" y2="150" stroke-width="10" />
+            <line x1="0" y1="280" x2="800" y2="280" stroke-width="8" />
+            <line x1="0" y1="410" x2="800" y2="410" stroke-width="7" />
+            <line x1="180" y1="0" x2="180" y2="500" stroke-width="8" />
+            <line x1="400" y1="0" x2="400" y2="500" stroke-width="10" />
+            <line x1="680" y1="0" x2="680" y2="500" stroke-width="7" />
+            <line x1="180" y1="410" x2="400" y2="280" stroke-width="5" />
+          </g>
+
+          <!-- Lane dashes -->
+          <g class="lanes" stroke="#FFF8EA" fill="none" opacity="0.55">
+            <line x1="0" y1="150" x2="800" y2="150" stroke-width="1.5" stroke-dasharray="10 8" />
+            <line x1="0" y1="280" x2="800" y2="280" stroke-width="1.5" stroke-dasharray="10 8" />
+            <line x1="0" y1="410" x2="800" y2="410" stroke-width="1" stroke-dasharray="8 6" />
+            <line x1="180" y1="0" x2="180" y2="500" stroke-width="1.5" stroke-dasharray="10 8" />
+            <line x1="400" y1="0" x2="400" y2="500" stroke-width="1.5" stroke-dasharray="10 8" />
+            <line x1="680" y1="0" x2="680" y2="500" stroke-width="1" stroke-dasharray="8 6" />
+          </g>
+
+          <!-- Etiquetas de calles -->
+          <g class="labels" font-family="Montserrat" font-weight="600">
+            <text x="795" y="145" fill="#044559" font-size="8" text-anchor="end" opacity="0.55">Av. Norte</text>
+            <text x="795" y="275" fill="#044559" font-size="8" text-anchor="end" opacity="0.55">Av. Central</text>
+            <text x="795" y="405" fill="#044559" font-size="8" text-anchor="end" opacity="0.55">Av. Sur</text>
+          </g>
+
+          <!-- Polígono (dinámico) -->
+          <polygon class="scal-polygon" points="" fill="rgba(209, 235, 120, 0.18)" stroke="#D1EB78" stroke-width="2.5" stroke-dasharray="8 5" />
+
+          <!-- Zona recortada (highlight cuando polígono completo) -->
+          <text class="scal-label" x="400" y="270" fill="#044559" font-family="Montserrat" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="1" opacity="0">ZONA DE ESTUDIO</text>
+
+          <!-- Puntos colocados (dinámico) -->
+          <g class="scal-points"></g>
+
+          <!-- Ripples de click (dinámico) -->
+          <g class="scal-ripples"></g>
+
+          <!-- Cursor -->
+          <g class="scal-cursor" transform="translate(40, 40)">
+            <path
+              d="M 0 0 L 14 12 L 8 13 L 12 21 L 9 22 L 5 14 L 0 18 Z"
+              fill="#151B20"
+              stroke="#FFF8EA"
+              stroke-width="1.5"
+              stroke-linejoin="round"
+            />
+          </g>
+        </svg>
+
+        <div class="scal-hud">
+          <span class="scal-hud-dot"></span>
+          <span data-hud="text">ESPERANDO</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .scalability {
+    padding: 110px 0;
+    background: var(--cream);
+  }
+  .scal-grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .eyebrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    opacity: 0.55;
+  }
+  h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 34px;
+    margin-top: 14px;
+    line-height: 1.2;
+    color: var(--navy);
+  }
+  .scal-lead {
+    margin-top: 18px;
+    font-size: 15px;
+    color: rgba(21, 27, 32, 0.72);
+    line-height: 1.55;
+    max-width: 480px;
+  }
+  .scal-steps {
+    list-style: none;
+    padding: 0;
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .scal-steps li {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .step-n {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--cyan);
+    line-height: 1;
+    padding-top: 2px;
+    opacity: 0.9;
+  }
+  .scal-steps strong {
+    font-family: var(--font-title);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    display: block;
+  }
+  .scal-steps p {
+    margin-top: 3px;
+    font-size: 13px;
+    color: rgba(21, 27, 32, 0.65);
+    line-height: 1.45;
+  }
+
+  /* ---------- Viewport / mapa ---------- */
+  .scal-viewport {
+    position: relative;
+    background: var(--navy);
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 8 / 5;
+  }
+  .scal-map {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .scal-cursor {
+    pointer-events: none;
+    will-change: transform;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  }
+  .scal-polygon {
+    opacity: 0;
+    transition: opacity 500ms ease;
+    filter: drop-shadow(0 0 6px rgba(209, 235, 120, 0.5));
+  }
+  .scal-polygon.visible {
+    opacity: 1;
+  }
+  .scal-label {
+    transition: opacity 500ms ease;
+  }
+  .scal-label.visible {
+    opacity: 1;
+  }
+
+  /* HUD */
+  .scal-hud {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(21, 27, 32, 0.78);
+    backdrop-filter: blur(8px);
+    border-radius: 100px;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--cyan);
+    border: 1px solid rgba(97, 225, 230, 0.3);
+    pointer-events: none;
+  }
+  .scal-hud-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+    animation: hud-pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes hud-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  @media (max-width: 860px) {
+    .scal-grid { grid-template-columns: 1fr; gap: 32px; }
+    .scal-viewport { aspect-ratio: 4 / 3; }
+    h2 { font-size: 26px; }
+  }
+</style>
+
+<script>
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+
+  const svg = document.querySelector<SVGSVGElement>('.scal-map');
+  const cursor = svg?.querySelector<SVGGElement>('.scal-cursor');
+  const pointsGroup = svg?.querySelector<SVGGElement>('.scal-points');
+  const ripplesGroup = svg?.querySelector<SVGGElement>('.scal-ripples');
+  const polygon = svg?.querySelector<SVGPolygonElement>('.scal-polygon');
+  const label = svg?.querySelector<SVGTextElement>('.scal-label');
+  const hudText = document.querySelector<HTMLElement>('.scal-hud [data-hud="text"]');
+
+  interface CursorStep {
+    x: number;
+    y: number;
+    wait: number;
+    action?: 'click' | 'reveal' | 'reset';
+    hud?: string;
+  }
+
+  // Secuencia del cursor: 4 clicks para formar el polígono + revelar + reset
+  const PATH: CursorStep[] = [
+    { x: 40,  y: 40,  wait: 600, hud: 'DELIMITAR ZONA' },
+    { x: 170, y: 130, wait: 500, action: 'click', hud: 'PUNTO 1 / 4' },
+    { x: 640, y: 155, wait: 500, action: 'click', hud: 'PUNTO 2 / 4' },
+    { x: 680, y: 400, wait: 500, action: 'click', hud: 'PUNTO 3 / 4' },
+    { x: 190, y: 420, wait: 500, action: 'click', hud: 'PUNTO 4 / 4' },
+    { x: 400, y: 270, wait: 2600, action: 'reveal', hud: 'ZONA LISTA' },
+    { x: -30, y: -30, wait: 1200, action: 'reset', hud: 'REINICIANDO' },
+  ];
+
+  const MOVE_DURATION = 750;
+  let placedPoints: Array<{ x: number; y: number }> = [];
+  let currentIdx = 0;
+  let phase: 'moving' | 'waiting' = 'waiting';
+  let phaseStart = 0;
+  let rafId = 0;
+
+  const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+  const setCursorPos = (x: number, y: number) => {
+    if (cursor) cursor.setAttribute('transform', `translate(${x}, ${y})`);
+  };
+
+  const setHud = (text: string) => {
+    if (hudText) hudText.textContent = text;
+  };
+
+  const spawnRipple = (x: number, y: number) => {
+    if (!ripplesGroup) return;
+    const ring = document.createElementNS(SVG_NS, 'circle');
+    ring.setAttribute('cx', String(x));
+    ring.setAttribute('cy', String(y));
+    ring.setAttribute('r', '3');
+    ring.setAttribute('fill', 'none');
+    ring.setAttribute('stroke', '#61E1E6');
+    ring.setAttribute('stroke-width', '2');
+    ring.style.opacity = '0.9';
+    ring.style.transition = 'r 700ms ease-out, opacity 700ms ease-out, stroke-width 700ms ease-out';
+    ripplesGroup.appendChild(ring);
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+      ring.setAttribute('r', '40');
+      ring.style.opacity = '0';
+      ring.style.strokeWidth = '0.5';
+    });
+
+    window.setTimeout(() => ring.remove(), 800);
+  };
+
+  const placePoint = (x: number, y: number, num: number) => {
+    if (!pointsGroup) return;
+    const g = document.createElementNS(SVG_NS, 'g');
+    g.style.opacity = '0';
+    g.style.transition = 'opacity 250ms ease';
+
+    const circle = document.createElementNS(SVG_NS, 'circle');
+    circle.setAttribute('cx', String(x));
+    circle.setAttribute('cy', String(y));
+    circle.setAttribute('r', '10');
+    circle.setAttribute('fill', '#61E1E6');
+    circle.setAttribute('stroke', '#033544');
+    circle.setAttribute('stroke-width', '2');
+    circle.style.filter = 'drop-shadow(0 0 6px rgba(97, 225, 230, 0.7))';
+
+    const text = document.createElementNS(SVG_NS, 'text');
+    text.setAttribute('x', String(x));
+    text.setAttribute('y', String(y));
+    text.setAttribute('fill', '#033544');
+    text.setAttribute('font-family', 'Montserrat, sans-serif');
+    text.setAttribute('font-size', '10');
+    text.setAttribute('font-weight', '700');
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'central');
+    text.textContent = String(num);
+
+    g.appendChild(circle);
+    g.appendChild(text);
+    pointsGroup.appendChild(g);
+
+    requestAnimationFrame(() => { g.style.opacity = '1'; });
+  };
+
+  const doClick = (x: number, y: number) => {
+    spawnRipple(x, y);
+    placedPoints.push({ x, y });
+    placePoint(x, y, placedPoints.length);
+    if (polygon) {
+      polygon.setAttribute('points', placedPoints.map((p) => `${p.x},${p.y}`).join(' '));
+    }
+  };
+
+  const doReveal = () => {
+    polygon?.classList.add('visible');
+    label?.classList.add('visible');
+  };
+
+  const doReset = () => {
+    if (pointsGroup) pointsGroup.innerHTML = '';
+    placedPoints = [];
+    if (polygon) {
+      polygon.setAttribute('points', '');
+      polygon.classList.remove('visible');
+    }
+    label?.classList.remove('visible');
+  };
+
+  const tick = (ts: number) => {
+    const current = PATH[currentIdx];
+    const next = PATH[(currentIdx + 1) % PATH.length];
+    const elapsed = ts - phaseStart;
+
+    if (phase === 'moving') {
+      if (elapsed >= MOVE_DURATION) {
+        // Arrived
+        setCursorPos(next.x, next.y);
+        if (next.hud) setHud(next.hud);
+        if (next.action === 'click') doClick(next.x, next.y);
+        if (next.action === 'reveal') doReveal();
+        if (next.action === 'reset') doReset();
+        phase = 'waiting';
+        phaseStart = ts;
+      } else {
+        const t = easeOutCubic(elapsed / MOVE_DURATION);
+        setCursorPos(lerp(current.x, next.x, t), lerp(current.y, next.y, t));
+      }
+    } else {
+      if (elapsed >= next.wait) {
+        currentIdx = (currentIdx + 1) % PATH.length;
+        phase = 'moving';
+        phaseStart = ts;
+      }
+    }
+
+    rafId = requestAnimationFrame(tick);
+  };
+
+  if (svg && cursor && pointsGroup && polygon) {
+    setCursorPos(PATH[0].x, PATH[0].y);
+    if (PATH[0].hud) setHud(PATH[0].hud);
+    phase = 'waiting';
+    phaseStart = performance.now();
+    currentIdx = 0;
+    rafId = requestAnimationFrame(tick);
+
+    // Pausar al cambiar de pestaña
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(rafId);
+      } else {
+        phaseStart = performance.now();
+        rafId = requestAnimationFrame(tick);
+      }
+    });
+  }
+</script>

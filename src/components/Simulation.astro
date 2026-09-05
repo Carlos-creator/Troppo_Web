@@ -222,6 +222,13 @@
   .sim-map { display: block; width: 100%; height: 100%; }
 
   /* Semáforos */
+  .signal {
+    transition: opacity 500ms ease;
+  }
+  .sim-viewport[data-show-signals="false"] .signal {
+    opacity: 0;
+    pointer-events: none;
+  }
   .signal .lens {
     fill: rgba(255, 248, 234, 0.12);
     transition: fill 300ms ease, filter 300ms ease;
@@ -521,6 +528,7 @@
     hud: string;
     hudTone: 'bad' | 'good' | 'warn' | 'off';
     signals: { north: LightState; south: LightState; east: LightState };
+    hideSignals?: boolean; // jam scenario oculta los semáforos (no son la causa)
     alert: boolean;
     speedMul: number;
     vehicles: Vehicle[];
@@ -626,10 +634,11 @@
     {
       id: 'jam',
       title: 'Congestión sin IA',
-      desc: 'Sin coordinación, los camiones frenan al entrar a la rotonda y la cola se acumula por todo el corredor logístico.',
+      desc: 'Sin coordinación de semáforos, los camiones frenan al entrar a la rotonda y la cola se acumula por todo el corredor logístico.',
       hud: 'CONGESTIÓN',
       hudTone: 'bad',
       signals: { north: 'green', south: 'green', east: 'green' },
+      hideSignals: true, // no hay semaforos operativos en este escenario
       alert: false,
       speedMul: 1.0,
       vehicles: jamPool,
@@ -872,6 +881,7 @@
     currentFrictionZones = sc.frictionZones ?? [];
 
     viewport?.setAttribute('data-scenario', String(index));
+    viewport?.setAttribute('data-show-signals', sc.hideSignals ? 'false' : 'true');
 
     // Signals
     signalEls.north?.setAttribute('data-state', sc.signals.north);
