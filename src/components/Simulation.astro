@@ -1,15 +1,18 @@
 ---
-// Simulación showcase — 4 escenarios auto-ciclando cada 8 segundos.
+// Simulación showcase — 4 escenarios auto-ciclando cada 9 segundos.
 //
 // Escenarios:
-//   1. Congestión sin IA — semáforos rojos, muchos vehículos lentos (atochamiento)
-//   2. Con IA: flujo optimizado — semáforos coordinados verdes, tráfico fluido
-//   3. Contingencia manejada — accidente en ruta norte, IA redirige tráfico
-//   4. Bimodal — camiones prioritarios en corredor logístico + autos separados
+//   1. Congestión sin IA — semáforos rojos + cars queueing (atochamiento visible)
+//   2. Con IA: flujo optimizado — semáforos verdes, tráfico fluido
+//   3. Contingencia manejada — accidente bloquea Ruta Norte, cars se acumulan
+//   4. Bimodal — camiones prioritarios en corredor + autos separados
 //
-// Es 100% visual. Los mismos ~20 vehículos siguen circulando por las rutas
-// entre escenarios; lo que cambia por escenario es velocidad, semáforos,
-// alertas visuales y las métricas del panel lateral.
+// Físicas visuales implementadas:
+//   - Car-following: cars mantienen distancia mínima, si el de adelante frena
+//     ellos también frenan (queueing natural)
+//   - Semáforos rojos DETIENEN cars antes de la línea de stop
+//   - Cars restringidos al mapa de tierra vía SVG clipPath (nunca sobre agua)
+//   - Aceleración/frenado suave (no cambios instantáneos)
 ---
 
 <section class="simulation-demo" id="demo">
@@ -39,6 +42,10 @@
             <pattern id="waterLines" width="12" height="12" patternUnits="userSpaceOnUse">
               <path d="M 0 6 Q 3 4, 6 6 T 12 6" stroke="rgba(97,225,230,0.14)" stroke-width="0.8" fill="none" />
             </pattern>
+            <!-- Clip que restringe vehículos al área de tierra (nunca sobre agua) -->
+            <clipPath id="landClip">
+              <path d="M 180 0 Q 155 90, 190 180 Q 155 250, 200 320 Q 170 410, 210 500 L 800 500 L 800 0 Z" />
+            </clipPath>
           </defs>
 
           <!-- Océano -->
@@ -51,7 +58,7 @@
             fill="#FFF8EA"
           />
 
-          <!-- Zona del puerto: terminales -->
+          <!-- Puerto: terminales -->
           <g class="port-area">
             <rect x="195" y="30" width="26" height="14" fill="#044559" opacity="0.4" rx="1" />
             <rect x="195" y="48" width="26" height="14" fill="#044559" opacity="0.4" rx="1" />
@@ -64,7 +71,7 @@
 
           <!-- Red vial (asfalto) -->
           <g class="roads" stroke="#151B20" fill="none">
-            <!-- Corredor logístico (grueso) — carga pesada -->
+            <!-- Corredor logístico (grueso) -->
             <line x1="185" y1="240" x2="800" y2="240" stroke-width="16" />
             <!-- Ruta norte -->
             <line x1="200" y1="140" x2="800" y2="140" stroke-width="9" />
@@ -82,12 +89,12 @@
             <line x1="520" y1="0" x2="520" y2="500" stroke-width="1" stroke-dasharray="8 6" />
           </g>
 
-          <!-- Rotonda (donde el corredor cruza con la vertical) -->
+          <!-- Rotonda -->
           <circle cx="520" cy="240" r="34" fill="#FFF8EA" stroke="#151B20" stroke-width="9" />
           <circle cx="520" cy="240" r="12" fill="#61E1E6" opacity="0.4" />
           <circle cx="520" cy="240" r="6" fill="#61E1E6" opacity="0.7" />
 
-          <!-- Semáforos (postes con housing negro + 3 lentes) en esquinas de intersecciones -->
+          <!-- Semáforos (postes 3-luces en esquinas) -->
           <g class="signal" data-signal="north" transform="translate(500, 115)">
             <rect x="-7" y="-17" width="14" height="34" rx="3" fill="#151B20" />
             <circle class="lens" data-lens="red" cx="0" cy="-10" r="3.5" />
@@ -117,16 +124,16 @@
             <text x="524" y="14" fill="#044559" font-size="8" opacity="0.65">Vía Central</text>
           </g>
 
-          <!-- Alert overlay: accidente en ruta norte (solo contingencia) -->
+          <!-- Alert overlay para escenario contingencia -->
           <g class="alert-overlay" data-alert="off">
             <circle cx="360" cy="140" r="20" fill="#ff5b5b" opacity="0.25" />
-            <circle cx="360" cy="140" r="12" fill="#ff5b5b" opacity="0.45" />
+            <circle cx="360" cy="140" r="12" fill="#ff5b5b" opacity="0.5" />
             <path d="M 353 132 L 367 148 M 367 132 L 353 148" stroke="#151B20" stroke-width="2.5" stroke-linecap="round" />
             <text x="360" y="115" fill="#ff5b5b" text-anchor="middle" font-family="Montserrat" font-size="9" font-weight="700" letter-spacing="1">ACCIDENTE</text>
           </g>
 
-          <!-- Vehículos (poblados en runtime) -->
-          <g class="cars"></g>
+          <!-- Vehículos (clip a tierra: nunca sobre agua) -->
+          <g class="cars" clip-path="url(#landClip)"></g>
         </svg>
 
         <!-- HUD flotante -->
@@ -167,10 +174,10 @@
           </div>
         </div>
         <div class="side-dots" role="tablist" aria-label="Elegir escenario">
-          <button type="button" data-dot="0" aria-label="Escenario 1" class="dot active"></button>
-          <button type="button" data-dot="1" aria-label="Escenario 2" class="dot"></button>
-          <button type="button" data-dot="2" aria-label="Escenario 3" class="dot"></button>
-          <button type="button" data-dot="3" aria-label="Escenario 4" class="dot"></button>
+          <button type="button" class="dot" aria-label="Escenario 1"></button>
+          <button type="button" class="dot" aria-label="Escenario 2"></button>
+          <button type="button" class="dot" aria-label="Escenario 3"></button>
+          <button type="button" class="dot" aria-label="Escenario 4"></button>
         </div>
       </aside>
     </div>
@@ -182,16 +189,8 @@
     padding: 110px 0;
     background: var(--cream);
   }
-  .sim-head {
-    max-width: 640px;
-    margin-bottom: 48px;
-  }
-  .eyebrow {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--navy);
-    opacity: 0.55;
-  }
+  .sim-head { max-width: 640px; margin-bottom: 48px; }
+  .eyebrow { font-size: 14px; font-weight: 600; color: var(--navy); opacity: 0.55; }
   h2 {
     font-family: var(--font-serif);
     font-weight: 500;
@@ -220,13 +219,9 @@
     overflow: hidden;
     aspect-ratio: 8 / 5;
   }
-  .sim-map {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
+  .sim-map { display: block; width: 100%; height: 100%; }
 
-  /* ---------- Semáforos ---------- */
+  /* Semáforos */
   .signal .lens {
     fill: rgba(255, 248, 234, 0.12);
     transition: fill 300ms ease, filter 300ms ease;
@@ -244,21 +239,19 @@
     filter: drop-shadow(0 0 6px var(--lime));
   }
 
-  /* ---------- Vehículos ---------- */
+  /* Vehículos */
   .cars :global(rect.car) {
     fill: var(--cyan);
     stroke: rgba(0, 0, 0, 0.35);
     stroke-width: 0.5;
-    transition: opacity 400ms ease;
   }
   .cars :global(rect.truck) {
     fill: var(--lime);
     stroke: rgba(0, 0, 0, 0.35);
     stroke-width: 0.5;
-    transition: opacity 400ms ease;
   }
 
-  /* ---------- Alert overlay ---------- */
+  /* Alert overlay */
   .alert-overlay {
     opacity: 0;
     transition: opacity 400ms ease;
@@ -273,7 +266,7 @@
     50% { opacity: 0.55; }
   }
 
-  /* ---------- HUD ---------- */
+  /* HUD */
   .sim-hud {
     position: absolute;
     top: 16px;
@@ -321,53 +314,58 @@
     50% { opacity: 0.4; transform: scale(0.7); }
   }
 
-  /* ---------- Panel lateral ---------- */
+  /* Panel lateral */
   .sim-side {
     background: var(--navy);
     border-radius: 20px;
-    padding: 26px;
+    padding: 24px;
     color: var(--cream);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
+    overflow: hidden;
+    min-width: 0;
   }
   .side-counter {
-    display: inline-flex;
+    display: flex;
     align-items: baseline;
     gap: 6px;
     font-family: var(--font-serif);
     color: var(--cyan);
+    flex-wrap: wrap;
   }
   .side-counter span {
-    font-size: 44px;
+    font-size: 34px;
     font-weight: 600;
     line-height: 1;
     font-variant-numeric: tabular-nums;
   }
   .side-counter small {
     font-family: var(--font-sans);
-    font-size: 12px;
+    font-size: 11px;
     color: rgba(255, 248, 234, 0.55);
     font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .side-content {
+    min-width: 0;
   }
   .side-content h3 {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: 22px;
+    font-size: 20px;
     line-height: 1.25;
     color: var(--cream);
-    margin-bottom: 6px;
-    min-height: 55px;
+    margin-bottom: 8px;
+    min-height: 48px;
+    overflow-wrap: break-word;
   }
   .side-content p {
     font-size: 13px;
     color: rgba(255, 248, 234, 0.7);
     line-height: 1.45;
   }
-  .side-metrics {
-    display: flex;
-    flex-direction: column;
-  }
+  .side-metrics { display: flex; flex-direction: column; }
   .metric-row {
     display: flex;
     justify-content: space-between;
@@ -375,9 +373,7 @@
     padding: 11px 0;
     border-bottom: 1px solid rgba(255, 248, 234, 0.1);
   }
-  .metric-row:first-child {
-    border-top: 1px solid rgba(255, 248, 234, 0.1);
-  }
+  .metric-row:first-child { border-top: 1px solid rgba(255, 248, 234, 0.1); }
   .metric-label {
     font-size: 12px;
     color: rgba(255, 248, 234, 0.6);
@@ -406,21 +402,22 @@
     padding-top: 8px;
   }
   .dot {
-    width: 30px;
+    width: 32px;
     height: 6px;
     border-radius: 3px;
     background: rgba(255, 248, 234, 0.2);
     border: none;
     cursor: pointer;
     padding: 0;
-    transition: background 250ms, transform 200ms;
+    transition: background 250ms ease, transform 200ms ease;
+    transform-origin: center;
   }
-  .dot:hover {
-    background: rgba(255, 248, 234, 0.4);
-  }
-  .dot.active {
+  .dot:hover { background: rgba(255, 248, 234, 0.4); }
+  .dot.is-active,
+  .dot[aria-current="true"] {
     background: var(--lime);
-    transform: scaleX(1.15);
+    transform: scaleX(1.2);
+    box-shadow: 0 0 8px rgba(209, 235, 120, 0.5);
   }
 
   @media (max-width: 860px) {
@@ -437,24 +434,86 @@
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
-  // Rutas que siguen las carreteras del mapa.
-  // Cars entran off-screen y salen off-screen para look natural.
-  const ROUTES: Record<string, Point[]> = {
-    corredorWE: [{ x: -30, y: 240 }, { x: 830, y: 240 }],
-    corredorEW: [{ x: 830, y: 240 }, { x: -30, y: 240 }],
-    norteWE: [{ x: -30, y: 140 }, { x: 830, y: 140 }],
-    norteEW: [{ x: 830, y: 140 }, { x: -30, y: 140 }],
-    surWE: [{ x: -30, y: 340 }, { x: 830, y: 340 }],
-    surEW: [{ x: 830, y: 340 }, { x: -30, y: 340 }],
-    verticalNS: [{ x: 520, y: -30 }, { x: 520, y: 530 }],
-    verticalSN: [{ x: 520, y: 530 }, { x: 520, y: -30 }],
+  // Rutas: cada una es una polilínea 2 puntos horizontal/vertical.
+  // Los extremos están fuera del viewport para que cars entren/salen naturalmente
+  // (los que quedan "sobre agua" son ocultados por el clipPath del <g class="cars">).
+  const ROUTES: Record<string, { path: Point[]; length: number }> = {};
+  const routeLength = (path: Point[]): number => {
+    let t = 0;
+    for (let i = 1; i < path.length; i++) t += Math.hypot(path[i].x - path[i - 1].x, path[i].y - path[i - 1].y);
+    return t;
+  };
+  const defRoute = (id: string, path: Point[]) => {
+    ROUTES[id] = { path, length: routeLength(path) };
+  };
+  // Corredor y vertical BYPAS la rotonda en (520,240) r=34. Waypoints extra
+  // hacen que los cars roden por encima/al lado en vez de atravesarla.
+  defRoute('corredorWE', [
+    { x: -40, y: 240 },
+    { x: 470, y: 240 }, // aproximación
+    { x: 490, y: 210 }, // bump NE
+    { x: 550, y: 210 }, // top
+    { x: 570, y: 240 }, // bump SE
+    { x: 830, y: 240 },
+  ]);
+  defRoute('corredorEW', [
+    { x: 830, y: 240 },
+    { x: 570, y: 240 },
+    { x: 550, y: 270 },
+    { x: 490, y: 270 },
+    { x: 470, y: 240 },
+    { x: -40, y: 240 },
+  ]);
+  defRoute('verticalNS', [
+    { x: 520, y: -40 },
+    { x: 520, y: 205 },
+    { x: 550, y: 225 },
+    { x: 550, y: 255 },
+    { x: 520, y: 275 },
+    { x: 520, y: 530 },
+  ]);
+  defRoute('verticalSN', [
+    { x: 520, y: 530 },
+    { x: 520, y: 275 },
+    { x: 490, y: 255 },
+    { x: 490, y: 225 },
+    { x: 520, y: 205 },
+    { x: 520, y: -40 },
+  ]);
+  // Rutas rectas (no cruzan la rotonda)
+  defRoute('norteWE',    [{ x: -40, y: 140 }, { x: 830, y: 140 }]);
+  defRoute('norteEW',    [{ x: 830, y: 140 }, { x: -40, y: 140 }]);
+  defRoute('surWE',      [{ x: -40, y: 340 }, { x: 830, y: 340 }]);
+  defRoute('surEW',      [{ x: 830, y: 340 }, { x: -40, y: 340 }]);
+
+  // Puntos de detención por semáforo (rojo). Progress = 0..1 sobre la ruta.
+  // Valores recalculados para las rutas con bypass de rotonda (más largas).
+  const SIGNAL_STOPS: Record<string, Array<{ routeId: string; progress: number }>> = {
+    east:  [
+      { routeId: 'corredorWE', progress: 0.87 }, // stop x≈712 (después del bypass)
+      { routeId: 'corredorEW', progress: 0.11 }, // stop desde el este
+    ],
+    north: [
+      { routeId: 'verticalNS', progress: 0.27 }, // stop y≈120 (antes del bypass)
+    ],
+    south: [
+      { routeId: 'verticalSN', progress: 0.28 }, // stop y≈360 (antes del bypass)
+    ],
   };
 
   interface Vehicle {
     kind: VehicleKind;
     routeId: string;
-    offset: number; // 0..1 posición inicial en la ruta
-    baseSpeed: number; // px per ms base
+    offset: number;
+    baseSpeed: number; // unidades: progress por 100ms
+  }
+
+  interface FrictionZone {
+    routeId: string;
+    from: number;
+    to: number;
+    multiplier: number; // 0..1 — velocidad reducida dentro de la zona
+    truckExtra?: number; // multiplier extra para camiones (más lento aún)
   }
 
   interface Scenario {
@@ -467,134 +526,154 @@
     alert: boolean;
     speedMul: number;
     vehicles: Vehicle[];
-    metrics: {
-      vehicles: string;
-      wait: string;
-      co2: string;
-      reduction: string;
-    };
+    extraStops?: Array<{ routeId: string; progress: number }>;
+    frictionZones?: FrictionZone[];
+    metrics: { vehicles: string; wait: string; co2: string; reduction: string };
     highlight: 'on' | 'off';
   }
 
-  // Vehicle pools reutilizables entre escenarios
+  // JAM POOL: MUCHOS camiones en corredor + más vehículos en general.
+  // La causa del atochamiento son las friction zones en la rotonda
+  // (camiones frenan mucho al entrar) — no hay semáforos rojos.
   const jamPool: Vehicle[] = [
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.05, baseSpeed: 0.02 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.14, baseSpeed: 0.02 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.22, baseSpeed: 0.02 },
-    { kind: 'car', routeId: 'corredorWE', offset: 0.32, baseSpeed: 0.025 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.42, baseSpeed: 0.02 },
-    { kind: 'car', routeId: 'corredorWE', offset: 0.55, baseSpeed: 0.025 },
-    { kind: 'car', routeId: 'corredorEW', offset: 0.15, baseSpeed: 0.025 },
-    { kind: 'car', routeId: 'corredorEW', offset: 0.55, baseSpeed: 0.025 },
-    { kind: 'car', routeId: 'norteWE', offset: 0.1, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'norteWE', offset: 0.3, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'norteWE', offset: 0.55, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'norteEW', offset: 0.7, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'surWE', offset: 0.2, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'surEW', offset: 0.4, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'verticalNS', offset: 0.15, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'verticalNS', offset: 0.45, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'verticalNS', offset: 0.75, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'verticalSN', offset: 0.35, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'verticalSN', offset: 0.65, baseSpeed: 0.028 },
+    // Corredor WE: 8 camiones + 3 cars formando cola larga hacia la rotonda
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.05, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.14, baseSpeed: 0.020 },
+    { kind: 'car',   routeId: 'corredorWE', offset: 0.22, baseSpeed: 0.025 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.30, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.38, baseSpeed: 0.020 },
+    { kind: 'car',   routeId: 'corredorWE', offset: 0.45, baseSpeed: 0.025 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.52, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.58, baseSpeed: 0.020 },
+    // Corredor EW: 4 vehículos también atascados
+    { kind: 'truck', routeId: 'corredorEW', offset: 0.10, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorEW', offset: 0.22, baseSpeed: 0.020 },
+    { kind: 'car',   routeId: 'corredorEW', offset: 0.35, baseSpeed: 0.025 },
+    { kind: 'truck', routeId: 'corredorEW', offset: 0.60, baseSpeed: 0.020 },
+    // Vertical NS: 3 cars aproximándose a la rotonda desde el norte
+    { kind: 'car',   routeId: 'verticalNS', offset: 0.15, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalNS', offset: 0.26, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalNS', offset: 0.35, baseSpeed: 0.028 },
+    // Vertical SN: 3 desde el sur
+    { kind: 'car',   routeId: 'verticalSN', offset: 0.18, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalSN', offset: 0.30, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalSN', offset: 0.42, baseSpeed: 0.028 },
+    // Norte y sur (no cruzan rotonda pero dan sensación de tráfico general)
+    { kind: 'car',   routeId: 'norteWE',    offset: 0.25, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteWE',    offset: 0.55, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteEW',    offset: 0.35, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteEW',    offset: 0.70, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surWE',      offset: 0.30, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surWE',      offset: 0.65, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surEW',      offset: 0.45, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surEW',      offset: 0.75, baseSpeed: 0.028 },
   ];
 
-  // Escenario 3 (contingencia): sin cars en ruta norte (bloqueada por accidente),
-  // más cars redirigidos por corredor y sur
+  // FLOW POOL: mismos vehículos que jam pero sin friction — IA optimiza el flujo
+  const flowPool: Vehicle[] = jamPool.map((v) => ({ ...v }));
+
+  // Escenario 3 (contingencia): cars ATASCADOS en Ruta Norte al accidente,
+  // más redirigidos por corredor y sur
   const contingencyPool: Vehicle[] = [
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.1, baseSpeed: 0.02 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.3, baseSpeed: 0.02 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.5, baseSpeed: 0.02 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.7, baseSpeed: 0.02 },
-    { kind: 'car', routeId: 'corredorWE', offset: 0.85, baseSpeed: 0.025 },
-    { kind: 'car', routeId: 'corredorEW', offset: 0.2, baseSpeed: 0.025 },
-    { kind: 'car', routeId: 'corredorEW', offset: 0.6, baseSpeed: 0.025 },
-    { kind: 'car', routeId: 'surWE', offset: 0.05, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'surWE', offset: 0.3, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'surWE', offset: 0.55, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'surWE', offset: 0.8, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'surEW', offset: 0.15, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'surEW', offset: 0.45, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'verticalNS', offset: 0.2, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'verticalNS', offset: 0.6, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'verticalSN', offset: 0.4, baseSpeed: 0.028 },
+    // Corredor WE (redirigidos, muchos)
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.10, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.28, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.46, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.64, baseSpeed: 0.020 },
+    { kind: 'car',   routeId: 'corredorWE', offset: 0.82, baseSpeed: 0.025 },
+    { kind: 'car',   routeId: 'corredorEW', offset: 0.30, baseSpeed: 0.025 },
+    { kind: 'car',   routeId: 'corredorEW', offset: 0.70, baseSpeed: 0.025 },
+    // Ruta Norte WE: cars atascados desde el oeste (stop en 0.44)
+    { kind: 'truck', routeId: 'norteWE', offset: 0.20, baseSpeed: 0.025 },
+    { kind: 'car',   routeId: 'norteWE', offset: 0.28, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteWE', offset: 0.34, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteWE', offset: 0.40, baseSpeed: 0.028 },
+    // Ruta Norte EW: cars atascados desde el este (stop en 0.52)
+    { kind: 'car',   routeId: 'norteEW', offset: 0.35, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteEW', offset: 0.42, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteEW', offset: 0.48, baseSpeed: 0.028 },
+    // Sur (redirigidos)
+    { kind: 'car',   routeId: 'surWE', offset: 0.15, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surWE', offset: 0.40, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surWE', offset: 0.65, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surEW', offset: 0.25, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surEW', offset: 0.60, baseSpeed: 0.028 },
+    // Vertical
+    { kind: 'car',   routeId: 'verticalNS', offset: 0.35, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalSN', offset: 0.55, baseSpeed: 0.028 },
   ];
 
-  // Escenario 4 (bimodal): más camiones en corredor, autos en rutas secundarias
+  // Escenario 4 (bimodal): muchos camiones en corredor
   const bimodalPool: Vehicle[] = [
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.05, baseSpeed: 0.02 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.2, baseSpeed: 0.02 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.35, baseSpeed: 0.02 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.5, baseSpeed: 0.02 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.65, baseSpeed: 0.02 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.8, baseSpeed: 0.02 },
-    { kind: 'truck', routeId: 'corredorEW', offset: 0.3, baseSpeed: 0.02 },
-    { kind: 'truck', routeId: 'corredorEW', offset: 0.7, baseSpeed: 0.02 },
-    { kind: 'car', routeId: 'norteWE', offset: 0.15, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'norteWE', offset: 0.4, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'norteWE', offset: 0.65, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'norteEW', offset: 0.25, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'norteEW', offset: 0.6, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'surWE', offset: 0.2, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'surWE', offset: 0.55, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'surEW', offset: 0.35, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'verticalNS', offset: 0.25, baseSpeed: 0.028 },
-    { kind: 'car', routeId: 'verticalSN', offset: 0.6, baseSpeed: 0.028 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.10, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.25, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.40, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.55, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.70, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.85, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorEW', offset: 0.30, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorEW', offset: 0.70, baseSpeed: 0.020 },
+    { kind: 'car',   routeId: 'norteWE',    offset: 0.20, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteWE',    offset: 0.50, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteWE',    offset: 0.75, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteEW',    offset: 0.30, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surWE',      offset: 0.25, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surWE',      offset: 0.60, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surEW',      offset: 0.40, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalNS', offset: 0.30, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalSN', offset: 0.60, baseSpeed: 0.028 },
   ];
 
   const SCENARIOS: Scenario[] = [
     {
       id: 'jam',
       title: 'Congestión sin IA',
-      desc: 'Ciclos fijos de semaforización. El corredor logístico se atocha y los camiones esperan minutos por cada fase.',
+      desc: 'Sin coordinación, los camiones frenan al entrar a la rotonda y la cola se acumula por todo el corredor logístico.',
       hud: 'CONGESTIÓN',
       hudTone: 'bad',
-      signals: { north: 'red', south: 'red', east: 'red' },
+      signals: { north: 'green', south: 'green', east: 'green' },
       alert: false,
-      speedMul: 0.3,
+      speedMul: 1.0,
       vehicles: jamPool,
-      metrics: {
-        vehicles: '19',
-        wait: '9.2 s',
-        co2: '87 kg/h',
-        reduction: '—',
-      },
+      // Friction fuerte en la zona de bypass de la rotonda para todos los sentidos
+      frictionZones: [
+        { routeId: 'corredorWE', from: 0.55, to: 0.75, multiplier: 0.12 },
+        { routeId: 'corredorEW', from: 0.28, to: 0.48, multiplier: 0.12 },
+        { routeId: 'verticalNS', from: 0.40, to: 0.60, multiplier: 0.18 },
+        { routeId: 'verticalSN', from: 0.42, to: 0.62, multiplier: 0.18 },
+      ],
+      metrics: { vehicles: '26', wait: '9.2 s', co2: '87 kg/h', reduction: '—' },
       highlight: 'off',
     },
     {
       id: 'ai-flow',
       title: 'Optimización con IA',
-      desc: 'La red neuronal coordina las tres intersecciones en tiempo real. Los ciclos se adaptan a la demanda observada.',
+      desc: 'La red neuronal coordina la rotonda y los semáforos en tiempo real. Los vehículos mantienen su velocidad al cruzar.',
       hud: 'FLUJO OPTIMIZADO',
       hudTone: 'good',
       signals: { north: 'green', south: 'green', east: 'green' },
       alert: false,
-      speedMul: 1.4,
-      vehicles: jamPool,
-      metrics: {
-        vehicles: '19',
-        wait: '2.6 s',
-        co2: '49 kg/h',
-        reduction: '−44 %',
-      },
+      speedMul: 1.5,
+      vehicles: flowPool,
+      // Sin friction — IA gestiona la rotonda sin frenar
+      metrics: { vehicles: '26', wait: '2.6 s', co2: '49 kg/h', reduction: '−44 %' },
       highlight: 'on',
     },
     {
       id: 'contingency',
       title: 'Contingencia manejada',
-      desc: 'Un accidente bloquea la Ruta Norte. La IA redirige tráfico por el corredor y la ruta sur en segundos.',
+      desc: 'Un accidente bloquea la Ruta Norte en ambos sentidos. Los vehículos se acumulan antes del incidente y la IA redirige por corredor y sur.',
       hud: 'REDIRECCIONANDO',
       hudTone: 'warn',
       signals: { north: 'red', south: 'green', east: 'green' },
       alert: true,
-      speedMul: 1.1,
+      speedMul: 1.3,
       vehicles: contingencyPool,
-      metrics: {
-        vehicles: '16',
-        wait: '4.1 s',
-        co2: '58 kg/h',
-        reduction: '−32 %',
-      },
+      extraStops: [
+        { routeId: 'norteWE', progress: 0.44 }, // desde el oeste, antes del accidente (x=340)
+        { routeId: 'norteEW', progress: 0.52 }, // desde el este (x=380 aprox)
+      ],
+      metrics: { vehicles: '21', wait: '4.1 s', co2: '58 kg/h', reduction: '−32 %' },
       highlight: 'on',
     },
     {
@@ -605,30 +684,31 @@
       hudTone: 'good',
       signals: { north: 'green', south: 'green', east: 'green' },
       alert: false,
-      speedMul: 1.25,
+      speedMul: 1.4,
       vehicles: bimodalPool,
-      metrics: {
-        vehicles: '18',
-        wait: '3.0 s',
-        co2: '52 kg/h',
-        reduction: '−38 %',
-      },
+      metrics: { vehicles: '17', wait: '3.0 s', co2: '52 kg/h', reduction: '−38 %' },
       highlight: 'on',
     },
   ];
 
-  const SCENARIO_DURATION = 8000; // ms
+  const SCENARIO_DURATION = 9000;
+  // Constantes de física (en unidades de progress relativas al mapa)
+  const MIN_GAP_PX = 12;   // distancia mínima entre bumpers (queueing tight)
+  const SLOW_GAP_PX = 65;  // empezar a frenar cuando hay este gap
+  const STOP_APPROACH_PX = 90; // empezar a frenar antes de un stop
+  const STOP_LINE_PX = 6;  // distancia final ante línea de stop
 
-  // ---------- Setup DOM refs ----------
   const viewport = document.querySelector<HTMLElement>('.sim-viewport');
   const svg = viewport?.querySelector<SVGSVGElement>('.sim-map');
   const carsGroup = svg?.querySelector<SVGGElement>('.cars');
   const alertOverlay = svg?.querySelector<SVGGElement>('.alert-overlay');
-  const signalNorth = svg?.querySelector<SVGGElement>('[data-signal="north"]');
-  const signalSouth = svg?.querySelector<SVGGElement>('[data-signal="south"]');
-  const signalEast = svg?.querySelector<SVGGElement>('[data-signal="east"]');
+  const signalEls: Record<string, SVGGElement | null> = {
+    north: svg?.querySelector<SVGGElement>('[data-signal="north"]') ?? null,
+    south: svg?.querySelector<SVGGElement>('[data-signal="south"]') ?? null,
+    east: svg?.querySelector<SVGGElement>('[data-signal="east"]') ?? null,
+  };
   const hudBadge = document.querySelector<HTMLElement>('.hud-badge');
-  const hudBadgeText = document.querySelector<HTMLElement>('[data-hud="badge"]');
+  const hudText = document.querySelector<HTMLElement>('[data-hud="badge"]');
   const sideIndex = document.querySelector<HTMLElement>('[data-side="index"]');
   const sideTitle = document.querySelector<HTMLElement>('[data-side="title"]');
   const sideDesc = document.querySelector<HTMLElement>('[data-side="desc"]');
@@ -639,46 +719,40 @@
     reduction: document.querySelector<HTMLElement>('[data-metric="reduction"]'),
   };
   const highlightRow = document.querySelector<HTMLElement>('[data-highlight]');
-  const dots = document.querySelectorAll<HTMLButtonElement>('.dot');
+  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.dot'));
 
-  // ---------- Vehicle animation state ----------
-  interface VehicleRuntime extends Vehicle {
+  interface RuntimeCar extends Vehicle {
     el: SVGRectElement;
     progress: number;
+    speed: number; // actual current speed (interpolado)
   }
-  let runtimeCars: VehicleRuntime[] = [];
-  let currentScenario = 0;
+  let runtimeCars: RuntimeCar[] = [];
+  let currentIdx = 0;
   let advanceTimer = 0;
   let animationFrame = 0;
   let lastTs = 0;
   let currentSpeedMul = 1;
+  let currentStops: Array<{ routeId: string; progress: number }> = [];
+  let currentFrictionZones: FrictionZone[] = [];
 
-  const routeLength = (route: Point[]) => {
-    let total = 0;
-    for (let i = 1; i < route.length; i++) {
-      total += Math.hypot(route[i].x - route[i - 1].x, route[i].y - route[i - 1].y);
-    }
-    return total;
-  };
-
-  const routePoint = (route: Point[], progress: number) => {
-    const total = routeLength(route);
-    const target = progress * total;
+  const routePoint = (path: Point[], progress: number) => {
+    const totalLen = routeLength(path);
+    const target = progress * totalLen;
     let acc = 0;
-    for (let i = 1; i < route.length; i++) {
-      const dx = route[i].x - route[i - 1].x;
-      const dy = route[i].y - route[i - 1].y;
+    for (let i = 1; i < path.length; i++) {
+      const dx = path[i].x - path[i - 1].x;
+      const dy = path[i].y - path[i - 1].y;
       const seg = Math.hypot(dx, dy);
       if (acc + seg >= target) {
         const t = (target - acc) / seg;
         return {
-          p: { x: route[i - 1].x + dx * t, y: route[i - 1].y + dy * t },
+          p: { x: path[i - 1].x + dx * t, y: path[i - 1].y + dy * t },
           angle: (Math.atan2(dy, dx) * 180) / Math.PI,
         };
       }
       acc += seg;
     }
-    return { p: route[route.length - 1], angle: 0 };
+    return { p: path[path.length - 1], angle: 0 };
   };
 
   const buildCars = (vehicles: Vehicle[]) => {
@@ -691,53 +765,128 @@
       el.setAttribute('height', v.kind === 'truck' ? '8' : '6');
       el.setAttribute('rx', '1');
       carsGroup.appendChild(el);
-      return { ...v, el, progress: v.offset };
+      return { ...v, el, progress: v.offset, speed: v.baseSpeed * currentSpeedMul };
     });
   };
 
+  // Motor de física: car-following + stopping en semáforos rojos.
   const tick = (dt: number) => {
-    runtimeCars.forEach((car) => {
-      car.progress += car.baseSpeed * currentSpeedMul * (dt / 100);
-      if (car.progress > 1) car.progress -= 1;
-      const route = ROUTES[car.routeId];
-      if (!route) return;
-      const { p, angle } = routePoint(route, car.progress);
-      const w = car.kind === 'truck' ? 22 : 11;
-      const h = car.kind === 'truck' ? 8 : 6;
-      car.el.setAttribute('x', String(p.x - w / 2));
-      car.el.setAttribute('y', String(p.y - h / 2));
-      car.el.setAttribute('transform', `rotate(${angle} ${p.x} ${p.y})`);
+    // Agrupar cars por ruta y ordenar por progress (para car-following)
+    const carsByRoute: Record<string, RuntimeCar[]> = {};
+    runtimeCars.forEach((c) => {
+      if (!carsByRoute[c.routeId]) carsByRoute[c.routeId] = [];
+      carsByRoute[c.routeId].push(c);
+    });
+
+    Object.entries(carsByRoute).forEach(([routeId, group]) => {
+      const routeInfo = ROUTES[routeId];
+      if (!routeInfo) return;
+      // Ordenar ascendente por progress (car en menor progress = "atrás")
+      group.sort((a, b) => a.progress - b.progress);
+
+      // Stops activos para esta ruta
+      const stopsHere = currentStops.filter((s) => s.routeId === routeId);
+
+      group.forEach((car, i) => {
+        let targetFactor = 1;
+
+        // 1. Car-following: revisar el car de adelante (i+1 en el orden ascendente)
+        const nextCar = group[i + 1];
+        if (nextCar) {
+          const gapProgress = nextCar.progress - car.progress;
+          const gapPx = gapProgress * routeInfo.length - (nextCar.kind === 'truck' ? 22 : 11);
+          if (gapPx < MIN_GAP_PX) {
+            targetFactor = 0;
+          } else if (gapPx < SLOW_GAP_PX) {
+            const f = (gapPx - MIN_GAP_PX) / (SLOW_GAP_PX - MIN_GAP_PX);
+            if (f < targetFactor) targetFactor = f;
+          }
+        }
+
+        // 2. Stops ahead (semáforos rojos, accidentes)
+        stopsHere.forEach((stop) => {
+          if (car.progress >= stop.progress) return; // ya lo pasó
+          const distPx = (stop.progress - car.progress) * routeInfo.length;
+          if (distPx < STOP_LINE_PX) {
+            targetFactor = 0;
+          } else if (distPx < STOP_APPROACH_PX) {
+            const f = (distPx - STOP_LINE_PX) / (STOP_APPROACH_PX - STOP_LINE_PX);
+            if (f < targetFactor) targetFactor = f;
+          }
+        });
+
+        // 3. Friction zones (rotonda sin IA — camiones frenan al entrar)
+        currentFrictionZones.forEach((zone) => {
+          if (zone.routeId !== routeId) return;
+          if (car.progress >= zone.from && car.progress <= zone.to) {
+            // Camiones se frenan aún más si truckExtra está definido
+            let mul = zone.multiplier;
+            if (car.kind === 'truck' && zone.truckExtra !== undefined) {
+              mul *= zone.truckExtra;
+            }
+            if (mul < targetFactor) targetFactor = mul;
+          }
+        });
+
+        // 3. Interpolar velocidad hacia el target (frenado/aceleración suave)
+        const desiredSpeed = car.baseSpeed * currentSpeedMul * targetFactor;
+        car.speed += (desiredSpeed - car.speed) * 0.18;
+
+        // Avanzar
+        car.progress += car.speed * (dt / 100);
+        if (car.progress > 1) car.progress -= 1;
+
+        // Render
+        const { p, angle } = routePoint(routeInfo.path, car.progress);
+        const w = car.kind === 'truck' ? 22 : 11;
+        const h = car.kind === 'truck' ? 8 : 6;
+        car.el.setAttribute('x', String(p.x - w / 2));
+        car.el.setAttribute('y', String(p.y - h / 2));
+        car.el.setAttribute('transform', `rotate(${angle} ${p.x} ${p.y})`);
+      });
     });
   };
 
   const loop = (ts: number) => {
-    const dt = lastTs ? ts - lastTs : 16;
+    const dt = lastTs ? Math.min(ts - lastTs, 50) : 16;
     lastTs = ts;
     tick(dt);
     animationFrame = requestAnimationFrame(loop);
   };
 
-  // ---------- Scenario application ----------
-  const applyScenario = (index: number, rebuildVehicles = true) => {
+  // Calcular los stops activos (semáforos rojos + extras del escenario)
+  const computeActiveStops = (sc: Scenario) => {
+    const stops: Array<{ routeId: string; progress: number }> = [];
+    (['north', 'south', 'east'] as const).forEach((sig) => {
+      if (sc.signals[sig] === 'red') stops.push(...SIGNAL_STOPS[sig]);
+    });
+    if (sc.extraStops) stops.push(...sc.extraStops);
+    return stops;
+  };
+
+  const applyScenario = (index: number) => {
     const sc = SCENARIOS[index];
     if (!sc) return;
-    currentScenario = index;
+    currentIdx = index;
     currentSpeedMul = sc.speedMul;
+    currentStops = computeActiveStops(sc);
+    currentFrictionZones = sc.frictionZones ?? [];
+
     viewport?.setAttribute('data-scenario', String(index));
 
     // Signals
-    signalNorth?.setAttribute('data-state', sc.signals.north);
-    signalSouth?.setAttribute('data-state', sc.signals.south);
-    signalEast?.setAttribute('data-state', sc.signals.east);
+    signalEls.north?.setAttribute('data-state', sc.signals.north);
+    signalEls.south?.setAttribute('data-state', sc.signals.south);
+    signalEls.east?.setAttribute('data-state', sc.signals.east);
 
-    // Alert overlay
+    // Alert
     alertOverlay?.setAttribute('data-alert', sc.alert ? 'on' : 'off');
 
     // HUD
-    if (hudBadgeText) hudBadgeText.textContent = sc.hud;
+    if (hudText) hudText.textContent = sc.hud;
     hudBadge?.setAttribute('data-hud-tone', sc.hudTone);
 
-    // Side panel
+    // Panel
     if (sideIndex) sideIndex.textContent = String(index + 1);
     if (sideTitle) sideTitle.textContent = sc.title;
     if (sideDesc) sideDesc.textContent = sc.desc;
@@ -749,16 +898,22 @@
     if (metricEls.reduction) metricEls.reduction.textContent = sc.metrics.reduction;
     highlightRow?.setAttribute('data-highlight', sc.highlight);
 
-    // Dots
-    dots.forEach((d, i) => d.classList.toggle('active', i === index));
+    // Dots — belt & suspenders: aria-current (semántico) + clase (fallback)
+    dots.forEach((d, i) => {
+      if (i === index) {
+        d.setAttribute('aria-current', 'true');
+        d.classList.add('is-active');
+      } else {
+        d.removeAttribute('aria-current');
+        d.classList.remove('is-active');
+      }
+    });
 
-    // Rebuild cars if pool changed
-    if (rebuildVehicles) buildCars(sc.vehicles);
+    // Rebuild cars con pool de este escenario
+    buildCars(sc.vehicles);
   };
 
-  const advance = () => {
-    applyScenario((currentScenario + 1) % SCENARIOS.length);
-  };
+  const advance = () => applyScenario((currentIdx + 1) % SCENARIOS.length);
 
   const startAutoAdvance = () => {
     window.clearInterval(advanceTimer);
@@ -767,24 +922,18 @@
 
   const jumpTo = (index: number) => {
     applyScenario(index);
-    startAutoAdvance();
+    startAutoAdvance(); // resetear timer al saltar manualmente
   };
 
-  // ---------- Init ----------
   if (viewport && svg && carsGroup) {
     applyScenario(0);
-    lastTs = 0;
     animationFrame = requestAnimationFrame(loop);
     startAutoAdvance();
 
-    dots.forEach((dot) => {
-      dot.addEventListener('click', () => {
-        const idx = Number(dot.dataset.dot);
-        if (!Number.isNaN(idx)) jumpTo(idx);
-      });
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => jumpTo(index));
     });
 
-    // Pausar cuando la pestaña no está visible (ahorra CPU)
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
         window.clearInterval(advanceTimer);
