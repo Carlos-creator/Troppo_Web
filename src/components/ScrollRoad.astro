@@ -26,6 +26,12 @@
   </svg>
 </div>
 
+<div class="semaphore state-red" role="status" aria-label="Indicador de estado de scroll">
+  <span class="light red"></span>
+  <span class="light yellow"></span>
+  <span class="light green"></span>
+</div>
+
 <style>
   .scroll-road {
     position: fixed;
@@ -63,9 +69,48 @@
     filter: drop-shadow(0 1px 3px rgba(4, 69, 89, 0.35));
   }
 
+  /* ---------- SEMÁFORO ---------- */
+  .semaphore {
+    position: fixed;
+    bottom: 32px;
+    right: 20px;
+    z-index: 100;
+    padding: 8px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: rgba(21, 27, 32, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 100px;
+    border: 1px solid rgba(255, 248, 234, 0.14);
+    box-shadow: 0 4px 14px rgba(4, 69, 89, 0.25);
+    pointer-events: none;
+  }
+  .light {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 248, 234, 0.08);
+    transition: background 220ms ease, box-shadow 220ms ease;
+  }
+  .semaphore.state-red .light.red {
+    background: #ff5b5b;
+    box-shadow: 0 0 12px #ff5b5b, 0 0 4px #ff5b5b inset;
+  }
+  .semaphore.state-yellow .light.yellow {
+    background: #ffc93c;
+    box-shadow: 0 0 12px #ffc93c, 0 0 4px #ffc93c inset;
+  }
+  .semaphore.state-green .light.green {
+    background: var(--lime);
+    box-shadow: 0 0 12px var(--lime), 0 0 4px var(--lime) inset;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .road-fill,
-    .truck {
+    .truck,
+    .light {
       transition: none;
     }
   }
@@ -75,6 +120,7 @@
   const scrollRoad = document.querySelector<HTMLElement>('.scroll-road');
   const fill = scrollRoad?.querySelector<HTMLElement>('.road-fill');
   const truck = scrollRoad?.querySelector<SVGElement>('.truck');
+  const semaphore = document.querySelector<HTMLElement>('.semaphore');
 
   if (fill && truck) {
     const TRUCK_WIDTH = 32;
@@ -99,5 +145,37 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', update, { passive: true });
     update();
+  }
+
+  // Semáforo: verde al scrollear, amarillo al desacelerar, rojo cuando queda quieto.
+  // Además: aplica body.is-scrolling para que otros componentes reaccionen
+  // (ej. LiDAR sweep del Hero acelera cuando el usuario esta scrolleando).
+  if (semaphore) {
+    let yellowTimer: number | undefined;
+    let redTimer: number | undefined;
+    let scrollingTimer: number | undefined;
+
+    const setState = (state: 'red' | 'yellow' | 'green') => {
+      semaphore.classList.remove('state-red', 'state-yellow', 'state-green');
+      semaphore.classList.add(`state-${state}`);
+    };
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        setState('green');
+        document.body.classList.add('is-scrolling');
+        window.clearTimeout(yellowTimer);
+        window.clearTimeout(redTimer);
+        window.clearTimeout(scrollingTimer);
+        yellowTimer = window.setTimeout(() => setState('yellow'), 450);
+        redTimer = window.setTimeout(() => setState('red'), 1200);
+        scrollingTimer = window.setTimeout(
+          () => document.body.classList.remove('is-scrolling'),
+          400
+        );
+      },
+      { passive: true }
+    );
   }
 </script>
