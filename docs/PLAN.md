@@ -358,7 +358,35 @@ CSS del `.video-embed`: `width: 100%; height: 100%; border: 0;`
 
 ---
 
-## Fase 4 — Simulación interactiva
+## Fase 4 — Simulación interactiva ✅
+
+Implementada en `Simulation.astro`. MVP visual del núcleo del producto:
+
+**Elementos:**
+- Mapa SVG estilizado del acceso al Puerto de San Antonio (océano + costa irregular + terminales + red vial + rotonda + semáforos)
+- Panel lateral con "Cómo funciona" (3 pasos) + métricas al iniciar
+- HUD flotante top-left con badge de estado + contador de puntos
+- Cursor `crosshair` sobre el mapa en modo idle
+
+**Flujo:**
+1. Usuario hace click 4 veces sobre el mapa → cada click añade un marcador cyan numerado + expande el polígono lime que los conecta
+2. Al 4to click: transición 1.4s ("EXTRAYENDO ZONA") con overlay de barrido + el mapa base se atenúa al 35%
+3. Aparecen 12 vehículos animados (8 autos cyan + 4 camiones lime) circulando por las rutas del mapa
+4. Métricas ficticias plausibles: vehículos, espera promedio, CO₂
+5. Botón **Activar IA**: los vehículos aceleran 1.65×, semáforos cambian a lime, aparece métrica de reducción −42%
+6. Botón **Reiniciar**: vuelve al estado inicial, limpia todo
+
+**Detalles técnicos:**
+- Animación de vehículos con `requestAnimationFrame` — smooth 60fps
+- Rutas polilineales predefinidas; función `routePoint()` interpola posición + ángulo según progreso 0..1
+- SVG `getScreenCTM()` para convertir coords del click a viewBox coords (independiente del tamaño de pantalla)
+- State machine: `idle → drawing → extracting → running` con `data-state` en el viewport
+- Camiones más largos + más lentos, autos más chicos + más rápidos (diferenciación bimodal)
+- Polígono con `stroke-dasharray` + glow pulsante en modo running
+
+---
+
+### Fase 4 (referencia) Approach original
 
 **Archivo:** [src/components/Simulation.astro](../src/components/Simulation.astro)
 

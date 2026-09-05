@@ -1,31 +1,195 @@
 ---
-// COMPONENTE PENDIENTE — Ver docs/IDEAS.md sección 2.1
-// "Simulación interactiva embebida" — mini-demo del núcleo del producto
+// Simulación interactiva — demo visual del núcleo del producto Troppo.
 //
-// Flujo:
-//   1. Mapa simplificado SVG de la zona (rotonda, acceso norte, cruce ferroviario)
-//   2. Usuario hace clic para colocar nodos que delimitan la zona de optimización
-//   3. Aparecen vehículos animados (camiones y autos) circulando
-//   4. Botón "Activar IA" cambia fases semafóricas visualmente
-//   5. Card con métricas: "Espera: 9 min → 3 min · CO₂: −22 %"
+// Flujo del usuario:
+//   1. Se muestra un mapa estilizado del acceso al Puerto de San Antonio
+//   2. El usuario hace click 4 veces sobre el mapa para delimitar una zona
+//   3. Al 4to punto, el mapa se "extrae": zonas externas se atenúan,
+//      el polígono se ilumina, aparecen vehículos animados
+//   4. El usuario puede activar/desactivar la IA con un botón — los
+//      vehículos cambian su comportamiento (más lentos vs optimizados)
+//   5. Botón Reiniciar vuelve al estado inicial
 //
-// Tecnología: HTML5 Canvas o SVG animado, sin dependencias externas.
-// Al ser interactivo, este componente debe ser una ISLA de Astro:
-//   <Simulation client:visible />  (hidratación cuando entra al viewport)
+// Nota: es SOLO visual — sin backend real. Métricas plausibles pero ficticias.
 ---
 
 <section class="simulation-demo" id="demo">
   <div class="wrap">
     <div class="sim-head">
-      <div class="eyebrow">DEMO INTERACTIVA</div>
-      <h2>Pruébalo tú mismo, aquí mismo.</h2>
+      <div class="eyebrow">PRUÉBALO TÚ MISMO</div>
+      <h2>Diseña tu zona, mira la IA en acción.</h2>
       <p>
-        Delimita una zona, coloca semáforos y observa cómo la IA optimiza el flujo en
-        tiempo real.
+        Marca 4 puntos en el mapa para definir tu zona de estudio. Troppo la
+        extrae y simula el flujo vehicular — sin tocar un semáforo real.
       </p>
     </div>
-    <div class="sim-canvas-placeholder">
-      <p>[ Simulación interactiva pendiente — ver IDEAS.md §2.1 ]</p>
+
+    <div class="sim-shell">
+      <div class="sim-viewport" data-state="idle">
+        <svg
+          class="sim-map"
+          viewBox="0 0 800 500"
+          preserveAspectRatio="xMidYMid meet"
+          aria-label="Mapa interactivo del acceso al Puerto de San Antonio"
+        >
+          <defs>
+            <linearGradient id="oceanGradient" x1="0" x2="1" y1="0" y2="0.5">
+              <stop offset="0" stop-color="#022a37" />
+              <stop offset="1" stop-color="#044559" />
+            </linearGradient>
+            <pattern id="waterLines" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 0 5 Q 2.5 3, 5 5 T 10 5" stroke="rgba(97,225,230,0.15)" stroke-width="0.8" fill="none" />
+            </pattern>
+          </defs>
+
+          <!-- Capa base: océano + costa + tierra + carreteras -->
+          <g class="base-layer">
+            <!-- Océano -->
+            <rect x="0" y="0" width="800" height="500" fill="url(#oceanGradient)" />
+            <rect x="0" y="0" width="800" height="500" fill="url(#waterLines)" />
+
+            <!-- Costa (tierra irregular) -->
+            <path
+              d="M 260 0 Q 240 60, 280 130 Q 250 200, 290 260 Q 260 340, 300 400 Q 280 460, 320 500 L 800 500 L 800 0 Z"
+              fill="#FFF8EA"
+            />
+
+            <!-- Ensenada del puerto (agua entra a tierra) -->
+            <path
+              d="M 280 180 Q 380 200, 420 240 Q 400 280, 320 320 Q 280 300, 280 260 Z"
+              fill="url(#oceanGradient)"
+              opacity="0.85"
+            />
+
+            <!-- Terminales del puerto (bloques) -->
+            <g class="terminals">
+              <rect x="300" y="200" width="40" height="18" fill="#044559" opacity="0.35" rx="1" />
+              <rect x="300" y="222" width="40" height="18" fill="#044559" opacity="0.35" rx="1" />
+              <rect x="300" y="244" width="40" height="18" fill="#044559" opacity="0.35" rx="1" />
+              <rect x="300" y="266" width="40" height="18" fill="#044559" opacity="0.35" rx="1" />
+              <rect x="345" y="211" width="35" height="18" fill="#044559" opacity="0.35" rx="1" />
+              <rect x="345" y="233" width="35" height="18" fill="#044559" opacity="0.35" rx="1" />
+              <rect x="345" y="255" width="35" height="18" fill="#044559" opacity="0.35" rx="1" />
+            </g>
+
+            <!-- Red vial -->
+            <g class="roads" stroke="#151B20" fill="none" opacity="0.75">
+              <!-- Horizontales -->
+              <line x1="290" y1="120" x2="800" y2="120" stroke-width="5" />
+              <line x1="330" y1="345" x2="800" y2="345" stroke-width="5" />
+              <line x1="420" y1="245" x2="800" y2="245" stroke-width="7" />
+              <!-- Verticales -->
+              <line x1="480" y1="0" x2="480" y2="500" stroke-width="5" />
+              <line x1="620" y1="0" x2="620" y2="500" stroke-width="5" />
+              <line x1="740" y1="0" x2="740" y2="500" stroke-width="5" />
+              <!-- Corredor logístico (línea gruesa desde puerto) -->
+              <path d="M 400 250 Q 450 250, 480 250" stroke-width="9" />
+            </g>
+
+            <!-- Líneas discontinuas de carril central (cream) -->
+            <g class="lane-dashes" stroke="#FFF8EA" stroke-width="1.5" fill="none" opacity="0.6">
+              <line x1="290" y1="120" x2="800" y2="120" stroke-dasharray="8 8" />
+              <line x1="330" y1="345" x2="800" y2="345" stroke-dasharray="8 8" />
+              <line x1="420" y1="245" x2="800" y2="245" stroke-dasharray="8 8" />
+              <line x1="480" y1="0" x2="480" y2="500" stroke-dasharray="8 8" />
+              <line x1="620" y1="0" x2="620" y2="500" stroke-dasharray="8 8" />
+              <line x1="740" y1="0" x2="740" y2="500" stroke-dasharray="8 8" />
+            </g>
+
+            <!-- Rotonda -->
+            <circle cx="480" cy="245" r="24" fill="#FFF8EA" stroke="#151B20" stroke-width="5" />
+            <circle cx="480" cy="245" r="8" fill="#61E1E6" opacity="0.35" />
+
+            <!-- Semáforos (círculos pequeños en intersecciones) -->
+            <g class="lights">
+              <circle class="light" cx="620" cy="120" r="4" fill="#ff5b5b" />
+              <circle class="light" cx="620" cy="345" r="4" fill="#ff5b5b" />
+              <circle class="light" cx="740" cy="245" r="4" fill="#ff5b5b" />
+            </g>
+
+            <!-- Etiquetas -->
+            <g class="labels" font-family="Montserrat, sans-serif" font-weight="600">
+              <text x="70" y="50" fill="#61E1E6" opacity="0.55" font-size="11">OCÉANO PACÍFICO</text>
+              <text x="300" y="192" fill="#044559" font-size="10">TERMINAL</text>
+              <text x="440" y="230" fill="#044559" font-size="9">Rotonda</text>
+              <text x="750" y="115" fill="#044559" font-size="9" text-anchor="end">Acceso Norte</text>
+              <text x="750" y="242" fill="#044559" font-size="9" text-anchor="end">Corredor logístico</text>
+              <text x="750" y="342" fill="#044559" font-size="9" text-anchor="end">Ruta Sur</text>
+            </g>
+          </g>
+
+          <!-- Polígono conectando los puntos del usuario -->
+          <polygon
+            class="sim-polygon"
+            points=""
+            fill="rgba(209,235,120,0.18)"
+            stroke="#D1EB78"
+            stroke-width="2.5"
+            stroke-dasharray="8 5"
+          />
+
+          <!-- Marcadores del usuario -->
+          <g class="sim-markers"></g>
+
+          <!-- Vehículos (poblados en runtime) -->
+          <g class="sim-cars"></g>
+
+          <!-- Overlay de "escaneo" durante la extracción -->
+          <rect class="scan-overlay" x="0" y="0" width="800" height="500" fill="transparent" pointer-events="none" />
+        </svg>
+
+        <!-- HUD flotante superior izquierda -->
+        <div class="sim-hud">
+          <div class="hud-badge" data-hud="status">
+            <span class="hud-dot"></span>
+            <span class="hud-text">CLICK PARA MARCAR</span>
+          </div>
+          <div class="hud-counter">
+            <span data-hud="count">0</span>
+            <small>/ 4 puntos</small>
+          </div>
+        </div>
+
+        <!-- Cursor personalizado en modo idle (crosshair) -->
+        <div class="sim-crosshair" aria-hidden="true"></div>
+      </div>
+
+      <!-- Panel lateral: métricas + controles -->
+      <aside class="sim-side">
+        <div class="side-block side-intro" data-visible="true">
+          <h3>Cómo funciona</h3>
+          <ol>
+            <li><strong>Marca 4 puntos</strong> sobre el mapa para delimitar tu zona</li>
+            <li>Troppo <strong>extrae la zona</strong> y simula el tráfico actual</li>
+            <li>Activa la <strong>IA de semaforización</strong> y compara el resultado</li>
+          </ol>
+        </div>
+
+        <div class="side-block side-metrics" data-visible="false">
+          <div class="metric-row">
+            <span class="metric-label">Vehículos activos</span>
+            <span class="metric-value" data-metric="vehicles">0</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Espera promedio</span>
+            <span class="metric-value" data-metric="wait">0.0s</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Emisiones CO₂</span>
+            <span class="metric-value" data-metric="co2">— kg/h</span>
+          </div>
+          <div class="metric-row highlight" data-metric-highlight="off">
+            <span class="metric-label">Reducción con IA</span>
+            <span class="metric-value" data-metric="reduction">—</span>
+          </div>
+
+          <button class="side-btn ai-toggle" type="button" data-ai="off">
+            <span class="btn-dot"></span>
+            <span class="btn-label">Activar IA</span>
+          </button>
+          <button class="side-btn ghost" type="button" data-action="reset">Reiniciar</button>
+        </div>
+      </aside>
     </div>
   </div>
 </section>
@@ -51,22 +215,607 @@
     font-size: 38px;
     margin-top: 14px;
     line-height: 1.2;
+    color: var(--navy);
   }
   .sim-head p {
     margin-top: 16px;
     font-size: 15px;
     color: rgba(21, 27, 32, 0.7);
-    max-width: 460px;
+    max-width: 520px;
   }
-  .sim-canvas-placeholder {
-    aspect-ratio: 16 / 9;
+
+  /* ---------- Shell (viewport + panel lateral) ---------- */
+  .sim-shell {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    align-items: stretch;
+  }
+  .sim-viewport {
+    position: relative;
     background: var(--navy);
-    border: 2px dashed rgba(255, 248, 234, 0.2);
     border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 8 / 5;
+  }
+  .sim-map {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+    transition: filter 700ms ease;
+  }
+  .sim-viewport[data-state="extracting"] .sim-map,
+  .sim-viewport[data-state="running"] .sim-map {
+    cursor: default;
+  }
+
+  /* Overlay de escaneo (línea que pasa durante la extracción) */
+  .scan-overlay {
+    fill: url(#oceanGradient);
+    opacity: 0;
+  }
+  .sim-viewport[data-state="extracting"] .scan-overlay {
+    animation: scan-sweep 1.4s ease-out forwards;
+  }
+  @keyframes scan-sweep {
+    0% {
+      opacity: 0;
+    }
+    30% {
+      opacity: 0.35;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Base layer se atenúa cuando entra en modo running */
+  .sim-viewport[data-state="running"] .base-layer {
+    opacity: 0.35;
+    transition: opacity 800ms ease;
+  }
+
+  /* ---------- Marcadores ---------- */
+  .sim-markers :global(circle.marker) {
+    fill: var(--cyan);
+    stroke: #033544;
+    stroke-width: 2;
+    filter: drop-shadow(0 0 6px rgba(97, 225, 230, 0.7));
+    animation: marker-pop 300ms cubic-bezier(0.2, 0.6, 0.3, 1.5);
+  }
+  .sim-markers :global(text.marker-num) {
+    fill: #033544;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 700;
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+  }
+  @keyframes marker-pop {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .sim-polygon {
+    opacity: 0;
+    transition: opacity 300ms ease;
+  }
+  .sim-viewport[data-state="drawing"] .sim-polygon,
+  .sim-viewport[data-state="extracting"] .sim-polygon,
+  .sim-viewport[data-state="running"] .sim-polygon {
+    opacity: 1;
+  }
+  .sim-viewport[data-state="running"] .sim-polygon {
+    animation: polygon-glow 3s ease-in-out infinite;
+  }
+  @keyframes polygon-glow {
+    0%, 100% {
+      filter: drop-shadow(0 0 4px rgba(209, 235, 120, 0.5));
+    }
+    50% {
+      filter: drop-shadow(0 0 14px rgba(209, 235, 120, 0.85));
+    }
+  }
+
+  /* Semáforos: cambian color cuando IA está on */
+  .sim-viewport[data-ai="on"] .lights .light {
+    fill: var(--lime) !important;
+    filter: drop-shadow(0 0 6px var(--lime));
+  }
+
+  /* ---------- Vehículos ---------- */
+  .sim-cars :global(rect.car),
+  .sim-cars :global(rect.truck) {
+    stroke: rgba(0, 0, 0, 0.3);
+    stroke-width: 0.5;
+  }
+  .sim-cars :global(rect.car) {
+    fill: var(--cyan);
+  }
+  .sim-cars :global(rect.truck) {
+    fill: var(--lime);
+  }
+
+  /* ---------- HUD ---------- */
+  .sim-hud {
+    position: absolute;
+    top: 16px;
+    left: 16px;
     display: flex;
+    gap: 12px;
+    align-items: center;
+    pointer-events: none;
+  }
+  .hud-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(21, 27, 32, 0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(97, 225, 230, 0.3);
+    border-radius: 100px;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--cyan);
+  }
+  .hud-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    animation: hud-pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes hud-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.4;
+      transform: scale(0.7);
+    }
+  }
+  .hud-counter {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    padding: 6px 12px;
+    background: rgba(21, 27, 32, 0.75);
+    backdrop-filter: blur(8px);
+    border-radius: 100px;
+    font-family: var(--font-serif);
+    color: var(--cream);
+  }
+  .hud-counter span {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .hud-counter small {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255, 248, 234, 0.55);
+  }
+
+  /* Cursor crosshair custom (solo idle/drawing) */
+  .sim-crosshair {
+    display: none;
+  }
+
+  /* ---------- Panel lateral ---------- */
+  .sim-side {
+    background: var(--navy);
+    border-radius: 20px;
+    padding: 26px;
+    color: var(--cream);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .side-block[data-visible="false"] {
+    display: none;
+  }
+  .side-block h3 {
+    font-family: var(--font-title);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: var(--cyan);
+    margin-bottom: 14px;
+  }
+  .side-intro ol {
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: rgba(255, 248, 234, 0.85);
+  }
+  .side-intro strong {
+    color: var(--cream);
+    font-weight: 700;
+  }
+
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 248, 234, 0.1);
+  }
+  .metric-row:first-child {
+    border-top: 1px solid rgba(255, 248, 234, 0.1);
+  }
+  .metric-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 248, 234, 0.65);
+    letter-spacing: 0.3px;
+  }
+  .metric-value {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--cream);
+    font-variant-numeric: tabular-nums;
+  }
+  .metric-row.highlight .metric-value {
+    color: var(--lime);
+    font-size: 24px;
+  }
+  .metric-row.highlight[data-metric-highlight="off"] .metric-value {
+    color: rgba(255, 248, 234, 0.35);
+  }
+
+  .side-btn {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: rgba(255, 248, 234, 0.5);
-    font-size: 14px;
+    gap: 10px;
+    padding: 14px 20px;
+    border-radius: 100px;
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    transition: transform 150ms ease, background 200ms ease;
+  }
+  .ai-toggle {
+    background: var(--lime);
+    color: var(--navy-deep);
+    margin-top: 4px;
+  }
+  .ai-toggle:hover {
+    transform: translateY(-1px);
+  }
+  .ai-toggle[data-ai="on"] {
+    background: transparent;
+    color: var(--lime);
+    border: 1px solid var(--lime);
+  }
+  .ai-toggle .btn-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+  }
+  .side-btn.ghost {
+    background: transparent;
+    color: rgba(255, 248, 234, 0.6);
+    border: 1px solid rgba(255, 248, 234, 0.15);
+  }
+  .side-btn.ghost:hover {
+    color: var(--cream);
+    border-color: rgba(255, 248, 234, 0.35);
+  }
+
+  @media (max-width: 860px) {
+    .sim-shell {
+      grid-template-columns: 1fr;
+    }
+    .sim-viewport {
+      aspect-ratio: 4 / 3;
+    }
+    h2 {
+      font-size: 30px;
+    }
   }
 </style>
+
+<script>
+  type Point = { x: number; y: number };
+  type SimState = 'idle' | 'drawing' | 'extracting' | 'running';
+
+  // Rutas predefinidas por las que circulan los vehículos.
+  // Cada ruta es una polilínea que sigue las carreteras del mapa base.
+  const CAR_ROUTES: Point[][] = [
+    // Corredor logístico este-oeste (rutas principales de camiones)
+    [{ x: -30, y: 245 }, { x: 480, y: 245 }, { x: 800, y: 245 }],
+    // Acceso Norte
+    [{ x: -30, y: 120 }, { x: 800, y: 120 }],
+    // Ruta Sur
+    [{ x: -30, y: 345 }, { x: 800, y: 345 }],
+    // Vertical desde puerto hacia abajo
+    [{ x: 480, y: -30 }, { x: 480, y: 500 }, { x: 480, y: 530 }],
+    // Segunda vertical
+    [{ x: 620, y: 530 }, { x: 620, y: 245 }, { x: 620, y: -30 }],
+    // Corredor logístico en sentido opuesto
+    [{ x: 830, y: 250 }, { x: 480, y: 250 }, { x: -30, y: 250 }],
+  ];
+
+  const viewport = document.querySelector<HTMLElement>('.sim-viewport');
+  const svg = viewport?.querySelector<SVGSVGElement>('.sim-map');
+  const markersGroup = svg?.querySelector<SVGGElement>('.sim-markers');
+  const polygon = svg?.querySelector<SVGPolygonElement>('.sim-polygon');
+  const carsGroup = svg?.querySelector<SVGGElement>('.sim-cars');
+  const introBlock = document.querySelector<HTMLElement>('.side-intro');
+  const metricsBlock = document.querySelector<HTMLElement>('.side-metrics');
+  const hudCount = document.querySelector<HTMLElement>('[data-hud="count"]');
+  const hudStatus = document.querySelector<HTMLElement>('[data-hud="status"] .hud-text');
+  const aiButton = document.querySelector<HTMLButtonElement>('.ai-toggle');
+  const aiLabel = aiButton?.querySelector<HTMLElement>('.btn-label');
+  const resetButton = document.querySelector<HTMLButtonElement>('[data-action="reset"]');
+
+  let points: Point[] = [];
+  let state: SimState = 'idle';
+  let aiOn = false;
+  let animationFrame = 0;
+  let carElements: {
+    el: SVGRectElement;
+    route: Point[];
+    progress: number;
+    speed: number;
+    length: number;
+  }[] = [];
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+
+  // Convierte coordenadas del click a coordenadas del viewBox del SVG.
+  const clientToSvg = (clientX: number, clientY: number): Point => {
+    if (!svg) return { x: 0, y: 0 };
+    const pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    const ctm = svg.getScreenCTM();
+    if (!ctm) return { x: 0, y: 0 };
+    const svgPt = pt.matrixTransform(ctm.inverse());
+    return { x: svgPt.x, y: svgPt.y };
+  };
+
+  const setState = (next: SimState) => {
+    state = next;
+    viewport?.setAttribute('data-state', next);
+  };
+
+  const setStatus = (text: string) => {
+    if (hudStatus) hudStatus.textContent = text;
+  };
+
+  const drawMarker = (p: Point, index: number) => {
+    if (!markersGroup) return;
+    const circle = document.createElementNS(SVG_NS, 'circle');
+    circle.setAttribute('class', 'marker');
+    circle.setAttribute('cx', String(p.x));
+    circle.setAttribute('cy', String(p.y));
+    circle.setAttribute('r', '10');
+    circle.style.transformOrigin = `${p.x}px ${p.y}px`;
+
+    const label = document.createElementNS(SVG_NS, 'text');
+    label.setAttribute('class', 'marker-num');
+    label.setAttribute('x', String(p.x));
+    label.setAttribute('y', String(p.y));
+    label.textContent = String(index + 1);
+
+    markersGroup.appendChild(circle);
+    markersGroup.appendChild(label);
+  };
+
+  const updatePolygon = () => {
+    if (!polygon) return;
+    polygon.setAttribute('points', points.map((p) => `${p.x},${p.y}`).join(' '));
+  };
+
+  const spawnCars = () => {
+    if (!carsGroup) return;
+    carsGroup.innerHTML = '';
+    carElements = [];
+
+    // Vehículos: mezcla de autos (chicos) y camiones (largos)
+    const vehicleConfigs = [
+      { route: 0, type: 'truck', length: 22, offset: 0.05 },
+      { route: 0, type: 'car', length: 10, offset: 0.35 },
+      { route: 0, type: 'truck', length: 22, offset: 0.65 },
+      { route: 1, type: 'car', length: 10, offset: 0.15 },
+      { route: 1, type: 'car', length: 10, offset: 0.5 },
+      { route: 1, type: 'truck', length: 22, offset: 0.8 },
+      { route: 2, type: 'car', length: 10, offset: 0.1 },
+      { route: 2, type: 'car', length: 10, offset: 0.55 },
+      { route: 3, type: 'car', length: 10, offset: 0.2 },
+      { route: 3, type: 'car', length: 10, offset: 0.7 },
+      { route: 4, type: 'car', length: 10, offset: 0.3 },
+      { route: 5, type: 'truck', length: 22, offset: 0.45 },
+    ];
+
+    vehicleConfigs.forEach((cfg) => {
+      const rect = document.createElementNS(SVG_NS, 'rect');
+      rect.setAttribute('class', cfg.type);
+      rect.setAttribute('width', String(cfg.length));
+      rect.setAttribute('height', '6');
+      rect.setAttribute('rx', '1');
+      carsGroup.appendChild(rect);
+
+      carElements.push({
+        el: rect,
+        route: CAR_ROUTES[cfg.route],
+        progress: cfg.offset,
+        speed: cfg.type === 'truck' ? 0.0006 : 0.0011,
+        length: cfg.length,
+      });
+    });
+  };
+
+  // Calcula la longitud total de una ruta polilineal
+  const routeLength = (route: Point[]): number => {
+    let total = 0;
+    for (let i = 1; i < route.length; i++) {
+      const dx = route[i].x - route[i - 1].x;
+      const dy = route[i].y - route[i - 1].y;
+      total += Math.hypot(dx, dy);
+    }
+    return total;
+  };
+
+  // Interpola posición a lo largo de una ruta según progress (0..1)
+  const routePoint = (route: Point[], progress: number): { p: Point; angle: number } => {
+    const total = routeLength(route);
+    const target = progress * total;
+    let acc = 0;
+    for (let i = 1; i < route.length; i++) {
+      const dx = route[i].x - route[i - 1].x;
+      const dy = route[i].y - route[i - 1].y;
+      const segLen = Math.hypot(dx, dy);
+      if (acc + segLen >= target) {
+        const t = (target - acc) / segLen;
+        return {
+          p: {
+            x: route[i - 1].x + dx * t,
+            y: route[i - 1].y + dy * t,
+          },
+          angle: (Math.atan2(dy, dx) * 180) / Math.PI,
+        };
+      }
+      acc += segLen;
+    }
+    const last = route[route.length - 1];
+    return { p: last, angle: 0 };
+  };
+
+  const tick = (dt: number) => {
+    carElements.forEach((car) => {
+      // Con IA activa: 65% más rápido (menos congestión)
+      const factor = aiOn ? 1.65 : 1;
+      car.progress += car.speed * dt * factor;
+      if (car.progress > 1) car.progress -= 1;
+
+      const { p, angle } = routePoint(car.route, car.progress);
+      // Offset para que el vehículo se ubique visualmente sobre el eje del carril
+      car.el.setAttribute('x', String(p.x - car.length / 2));
+      car.el.setAttribute('y', String(p.y - 3));
+      car.el.setAttribute(
+        'transform',
+        `rotate(${angle} ${p.x} ${p.y})`
+      );
+    });
+  };
+
+  let lastTs = 0;
+  const loop = (ts: number) => {
+    if (state !== 'running') return;
+    const dt = lastTs ? ts - lastTs : 16;
+    lastTs = ts;
+    tick(dt);
+    animationFrame = requestAnimationFrame(loop);
+  };
+
+  const startLoop = () => {
+    lastTs = 0;
+    cancelAnimationFrame(animationFrame);
+    animationFrame = requestAnimationFrame(loop);
+  };
+
+  // ---------- Métricas ficticias ----------
+  const updateMetrics = () => {
+    const vehiclesEl = document.querySelector<HTMLElement>('[data-metric="vehicles"]');
+    const waitEl = document.querySelector<HTMLElement>('[data-metric="wait"]');
+    const co2El = document.querySelector<HTMLElement>('[data-metric="co2"]');
+    const reductionEl = document.querySelector<HTMLElement>('[data-metric="reduction"]');
+    const reductionRow = reductionEl?.closest<HTMLElement>('.metric-row');
+
+    if (!vehiclesEl || !waitEl || !co2El || !reductionEl) return;
+
+    const vehicles = carElements.length;
+    if (aiOn) {
+      vehiclesEl.textContent = String(vehicles);
+      waitEl.textContent = '2.4s';
+      co2El.textContent = '48 kg/h';
+      reductionEl.textContent = '−42%';
+      reductionRow?.setAttribute('data-metric-highlight', 'on');
+    } else {
+      vehiclesEl.textContent = String(vehicles);
+      waitEl.textContent = '6.8s';
+      co2El.textContent = '83 kg/h';
+      reductionEl.textContent = '—';
+      reductionRow?.setAttribute('data-metric-highlight', 'off');
+    }
+  };
+
+  // ---------- Reset ----------
+  const reset = () => {
+    cancelAnimationFrame(animationFrame);
+    points = [];
+    aiOn = false;
+    if (markersGroup) markersGroup.innerHTML = '';
+    if (carsGroup) carsGroup.innerHTML = '';
+    carElements = [];
+    if (polygon) polygon.setAttribute('points', '');
+    if (hudCount) hudCount.textContent = '0';
+    setStatus('CLICK PARA MARCAR');
+    setState('idle');
+    viewport?.setAttribute('data-ai', 'off');
+    aiButton?.setAttribute('data-ai', 'off');
+    if (aiLabel) aiLabel.textContent = 'Activar IA';
+    introBlock?.setAttribute('data-visible', 'true');
+    metricsBlock?.setAttribute('data-visible', 'false');
+  };
+
+  // ---------- Eventos ----------
+  if (svg && viewport) {
+    svg.addEventListener('click', (e) => {
+      if (state !== 'idle' && state !== 'drawing') return;
+      const p = clientToSvg(e.clientX, e.clientY);
+      points.push(p);
+      drawMarker(p, points.length - 1);
+      updatePolygon();
+      if (hudCount) hudCount.textContent = String(points.length);
+
+      if (points.length === 1) {
+        setState('drawing');
+      }
+      if (points.length >= 4) {
+        // Extraer
+        setState('extracting');
+        setStatus('EXTRAYENDO ZONA');
+        window.setTimeout(() => {
+          setState('running');
+          setStatus('SIMULANDO TRÁFICO');
+          introBlock?.setAttribute('data-visible', 'false');
+          metricsBlock?.setAttribute('data-visible', 'true');
+          spawnCars();
+          updateMetrics();
+          startLoop();
+        }, 1400);
+      }
+    });
+  }
+
+  aiButton?.addEventListener('click', () => {
+    aiOn = !aiOn;
+    aiButton.setAttribute('data-ai', aiOn ? 'on' : 'off');
+    viewport?.setAttribute('data-ai', aiOn ? 'on' : 'off');
+    if (aiLabel) aiLabel.textContent = aiOn ? 'IA activa · Desactivar' : 'Activar IA';
+    updateMetrics();
+  });
+
+  resetButton?.addEventListener('click', reset);
+</script>
