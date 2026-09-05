@@ -48,30 +48,19 @@ Complementa a [IDEAS.md](IDEAS.md) (visión y diseño) y al [README.md](../READM
 
 **Objetivo:** Pulir presentación sin agregar interactividad. Todo esfuerzo bajo.
 
-### 1.1 Logo real en el Header
+### 1.1 Logo real en el Header ✅
 
-**Archivo:** [src/components/Header.astro](../src/components/Header.astro)
+**Header** (fondo cream) usa `/images/logo/logo_dark_sinfondo.png` con altura 44px.
+**Footer** (fondo ink) usa `/images/logo/logo_light_sinfondo.png` con altura 36px.
 
-Reemplazar el SVG placeholder de la brújula (líneas ~9-13) por:
-
-```astro
-<img
-  src="/images/logo/medium-navy.png"
-  alt="Troppo"
-  class="logo-img"
-  width="140"
-/>
-```
-
-Y eliminar el `<span class="wordmark">TROPPO</span>` (el logo ya contiene el wordmark).
-
-Ajustar CSS de `.logo-img` con `height: 40px; width: auto;`.
+Reemplazado el SVG placeholder + span "TROPPO" por `<img>` que ya contiene el wordmark completo. Se conserva el separador con la tagline "Inteligencia que mueve el tráfico" al costado del logo en el Header.
 
 **Variantes disponibles en `public/images/logo/`:**
+- `logo_dark_sinfondo.png` — logo oscuro sin fondo (Header) ← activo
+- `logo_light_sinfondo.png` — logo claro sin fondo (Footer) ← activo
 - `full-light.png` — logo grande para fondos claros
-- `medium-navy.png` — mediano para fondos claros (Header)
-- `medium-white.png` — mediano para fondos oscuros (Footer)
-- `star-dark.png` / `star-light.png` — solo la brújula (favicon, decoración)
+- `medium-navy.png` / `medium-white.png` — versiones medianas con fondo
+- `star-dark.png` / `star-light.png` — solo la brújula (decoración)
 
 ### 1.2 Favicon optimizado ✅
 

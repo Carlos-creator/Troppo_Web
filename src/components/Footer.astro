@@ -5,7 +5,14 @@
 <footer>
   <div class="wrap foot-inner">
     <div class="foot-brand">
-      <div class="foot-logo">TROPPO</div>
+      <img
+        src="/images/logo/logo_light_sinfondo.png"
+        alt=""
+        class="foot-logo"
+        width="36"
+        height="36"
+      />
+      <span class="foot-wordmark">TROPPO</span>
       <div class="foot-tagline">Inteligencia que mueve el tráfico</div>
     </div>
     <div class="foot-links">
@@ -32,15 +39,22 @@
   }
   .foot-brand {
     display: flex;
-    align-items: baseline;
-    gap: 10px;
+    align-items: center;
+    gap: 12px;
     flex-wrap: wrap;
   }
   .foot-logo {
+    height: 36px;
+    width: 36px;
+    display: block;
+  }
+  .foot-wordmark {
     font-family: var(--font-serif);
     color: var(--cream);
     font-size: 20px;
     font-weight: 600;
+    letter-spacing: 1.2px;
+    line-height: 1;
   }
   .foot-tagline {
     font-size: 13px;

@@ -4,12 +4,14 @@
 
 <header>
   <div class="wrap nav">
-    <a href="#top" class="logo">
-      <svg class="compass" viewBox="0 0 100 100" aria-hidden="true">
-        <circle cx="50" cy="50" r="46" fill="none" stroke="#044559" stroke-width="4" />
-        <path d="M50 8 L58 46 L50 92 L42 46 Z" fill="#044559" />
-        <path d="M8 50 L46 42 L92 50 L46 58 Z" fill="#61E1E6" />
-      </svg>
+    <a href="#top" class="logo" aria-label="Troppo — inicio">
+      <img
+        src="/images/logo/logo_dark_sinfondo.png"
+        alt=""
+        class="logo-img"
+        width="44"
+        height="44"
+      />
       <span class="wordmark">TROPPO</span>
       <span class="logo-tagline">Inteligencia que mueve el tráfico</span>
     </a>
@@ -41,18 +43,23 @@
     padding: 20px 0;
   }
   .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--navy);
+  }
+  .logo-img {
+    height: 44px;
+    width: 44px;
+    display: block;
+  }
+  .wordmark {
     font-family: var(--font-serif);
     font-weight: 600;
     font-size: 26px;
-    letter-spacing: 0.5px;
+    letter-spacing: 1.5px;
     color: var(--navy);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .compass {
-    width: 26px;
-    height: 26px;
+    line-height: 1;
   }
   .logo-tagline {
     font-family: var(--font-sans);
