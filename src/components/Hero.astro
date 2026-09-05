@@ -314,6 +314,73 @@
       display: none;
     }
   }
+
+  /* ---------- CLICK RIPPLES ---------- */
+  /* Impacto tipo agua: flash brillante + 3 ondas concéntricas escalonadas.
+     Se crean dinámicamente por JS y se auto-eliminan al terminar. */
+  .ripple {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 3px solid var(--cyan);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    will-change: transform, opacity, border-width;
+    animation: ripple-expand 1300ms cubic-bezier(0.15, 0.55, 0.3, 1) forwards;
+    z-index: 4;
+    box-shadow: 0 0 8px rgba(97, 225, 230, 0.4);
+  }
+  .ripple-flash {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(
+      circle,
+      rgba(97, 225, 230, 0.85) 0%,
+      rgba(97, 225, 230, 0.3) 40%,
+      rgba(97, 225, 230, 0) 70%
+    );
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    will-change: transform, opacity;
+    animation: ripple-flash 550ms ease-out forwards;
+    z-index: 4;
+  }
+  @keyframes ripple-expand {
+    0% {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      border-width: 3px;
+    }
+    10% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(10);
+      opacity: 0;
+      border-width: 0.5px;
+    }
+  }
+  @keyframes ripple-flash {
+    0% {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(2);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ripple,
+    .ripple-flash {
+      animation: none;
+      display: none;
+    }
+  }
   @keyframes spin {
     from {
       transform: translate(-50%, -50%) rotate(0deg);
@@ -417,6 +484,30 @@
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(update);
+    });
+
+    // Ripples al hacer click — impacto de agua con multiples ondas concentricas.
+    const spawnRipple = (x: number, y: number, delay: number, klass: string) => {
+      window.setTimeout(() => {
+        const el = document.createElement('span');
+        el.className = klass;
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        heroVisual.appendChild(el);
+        el.addEventListener('animationend', () => el.remove(), { once: true });
+      }, delay);
+    };
+
+    heroVisual.addEventListener('click', (e) => {
+      const rect = heroVisual.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      // Flash inicial: halo brillante en el punto de impacto
+      spawnRipple(x, y, 0, 'ripple-flash');
+      // Tres ondas concéntricas escalonadas — efecto "impacto en agua"
+      spawnRipple(x, y, 0, 'ripple');
+      spawnRipple(x, y, 220, 'ripple');
+      spawnRipple(x, y, 440, 'ripple');
     });
   }
 </script>
