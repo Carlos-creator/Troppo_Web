@@ -125,3 +125,143 @@ Referencia tomada del sitio de **Sentinel** (proyecto de feria de software anter
 - El compás/rosa de los vientos puede reutilizarse como elemento gráfico decorativo de fondo (marca de agua rotada), tal como aparece en el manual de identidad.
 - Reemplazar cualquier "Lorem ipsum" de mockups previos por copy real basado en la propuesta de valor de la sección 1.
 - Si se necesita un diagrama de arquitectura para la sección técnica, usar una versión simplificada de la tabla de la sección 2 — no el diagrama completo de 8 subsistemas con flechas técnicas (ese es para documentación interna, no para visitantes de feria).
+
+---
+
+## 6. Componentes e interacciones (estado del código)
+
+Sección de referencia técnica para operar sobre el código sin re-leer todo. Complementa `docs/PLAN.md` (qué se hizo/falta) y `docs/IDEAS.md` (visión y roadmap).
+
+### 6.1 Stack
+
+- **Astro 5** (islas + CSS scoped por componente)
+- **TypeScript** en scripts de componentes
+- **CSS vanilla** con variables globales, sin frameworks
+- **Sin dependencias JS externas** (todo animado con `requestAnimationFrame`, `IntersectionObserver`, o CSS transitions)
+
+**Ubicación de archivos:**
+```
+src/
+├── layouts/Base.astro          → HTML shell, fuentes, favicon, meta
+├── pages/index.astro           → Compone los 13 componentes en orden
+├── components/*.astro          → Componentes de sección
+└── styles/global.css           → Variables de marca (--font-*, colores)
+public/
+├── favicon/                    → Set completo (ico, svg, apple-touch, manifest)
+├── fonts/                      → ArsenicaTrial Regular + Bold (self-hosted)
+└── images/logo/                → Logos oficiales
+```
+
+### 6.2 Orden y propósito de componentes
+
+Renderizados por `index.astro` en este orden:
+
+| # | Componente | Propósito |
+|---|---|---|
+| — | `ScrollRoad` | Barra fixed bottom + camión + semáforo widget (global) |
+| — | `Header` | Sticky, logo real (SVG brújula + wordmark Arsenica), nav, CTA |
+| 1 | `Hero` | Titular + brújula con LiDAR sweep + card "9h→2h" |
+| 2 | `Problem` | 3 stat cards con contadores animados (7.000 / 9hrs / 800+) |
+| 3 | `Values` | 3 columnas — simulación, LiDAR, bimodal |
+| 4 | `HowItWorks` | 4 pasos del flujo simulación |
+| 5 | `Dashboard` | Laptop + celular con animación de encendido + notif Troppo |
+| 6 | `Simulation` | 4 escenarios auto-ciclando de San Antonio (26 vehículos c/u) |
+| 7 | `Scalability` | 3 zonas rotando (USM/San Antonio/Valparaíso) con análisis |
+| 8 | `Video` | Iframe YouTube (temporal: MJ, cambiar `YT_VIDEO_ID`) |
+| 9 | `Trust` | 6 atributos técnicos en grid |
+| 10 | `Team` | 6 tarjetas con iniciales (pendiente fotos) |
+| 11 | `FinalCTA` | Título + fecha + iframe Google Maps USM San Joaquín |
+| — | `Footer` | Logo, tagline, redes, copyright, atribución Arsenica |
+
+### 6.3 Sistemas interactivos globales (`ScrollRoad.astro`)
+
+**Barra de carretera** (fixed bottom, 4px lime que crece con scroll) + **camión SVG** 32×16 que translateX según progreso de `scrollY` + **semáforo widget** (bottom-right, glass-morphism, verde scrollando / amarillo desacelerando / rojo idle).
+
+**Body class `is-scrolling`:** El script agrega/quita esta clase al `<body>`. Otros componentes pueden reaccionar. Actualmente usado por Hero: `.lidar-sweep .ring` acelera (5s → 1.8s) mientras el usuario scrollea.
+
+### 6.4 Interactividad clave por componente
+
+**Hero** (`Hero.astro`):
+- **LiDAR sweep ambient:** 3 anillos cyan pulsando desde la brújula cada 5s (o 1.8s si scrolling)
+- **Scanner hover:** al pasar el mouse sobre `.hero-visual`, aparece brazo cyan siguiendo el cursor + blip pulsante + HUD "DETECTADO · X+123 Y-45" con coordenadas relativas al centro de la brújula
+- **Click ripples:** cada click en el área genera un flash + 3 anillos concéntricos cyan expandiéndose (loop de creación y auto-remove)
+
+**Problem** (`Problem.astro`):
+- Contadores 0 → 7000/9/800 con easing ease-out cubic (1400ms) al entrar al viewport. `IntersectionObserver` + `unobserve()` para disparar una sola vez. Respeta `prefers-reduced-motion`. Formato `es-CL` (7.000 con punto).
+
+**Dashboard** (`Dashboard.astro`):
+- **Laptop + celular** con animación de encendido al entrar al viewport
+- Coreografía: lid abre (rotateX -92deg → 0), pantalla laptop fade, filas escalonan, phone fade, notif desliza desde arriba, filas del phone escalonan
+- **Notificación de Troppo** en el celular: "Diagnóstico completado — optimización aplicada, +42% flujo"
+- **Approach técnico crítico:** usa CSS **transitions con `.pre` class** (no `@keyframes + fill:both`). Ver 6.5 gotchas.
+
+**Simulation** (`Simulation.astro`):
+- Showcase auto-animado de **4 escenarios** cada 9s ciclando: `jam` (congestión sin IA, sin semáforos, friction en rotonda), `flow` (IA optimizando), `contingency` (accidente en Ruta Norte), `bimodal` (camiones prioritarios)
+- **Todos con 26 vehículos** para consistencia visual
+- Rutas con **bypass de rotonda** — polylines con waypoints que rodean la rotonda en (520,240)
+- **Car-following real:** cars mantienen distancia mínima, frenan si el de adelante está cerca. Se detienen ante semáforos rojos y en `extraStops` (accidente contingencia)
+- **Panel lateral:** contador de escenario + título + descripción + métricas + 4 dots navegables
+
+**Scalability** (`Scalability.astro`):
+- **3 zonas ciclando** (~9s c/u) con cursor animado colocando puntos + análisis visual + tráfico
+- Zonas: **USM San Joaquín** (3 puntos triángulo), **Puerto San Antonio** (4 puntos cuadrilátero), **Valparaíso** (5 puntos pentágono)
+- Cada zona tiene su propio mapa SVG (`<g class="zone-map">`) que fade in/out
+- Al completar polígono: **capa de análisis se activa** (scanner LiDAR barriendo + corner brackets cyan en vértices + polygon pulse). Después spawn de vehículos circulando dentro (clipped al polígono via `clipPath` dinámico)
+
+**FinalCTA** (`FinalCTA.astro`):
+- Iframe Google Maps embed simple: `maps.google.com/maps?q=lat,lng&output=embed` de USM Campus San Joaquín
+
+### 6.5 Gotchas técnicos importantes
+
+- **Astro scope CSS pero no JS.** `document.querySelectorAll('.foo')` es GLOBAL al documento — si hay `.foo` en otro componente, lo captura. Bug real: `Simulation` tenía dots que se desalineaban porque el Hero también tiene `<span class="dot">`. **Solución:** siempre usar selectores scoped tipo `.side-dots .dot` o clases únicas.
+- **Preferir CSS transitions sobre `@keyframes + fill:both`.** La animación puede "revertir" al estado del cascade después de completarse por bugs de especificidad. En Dashboard hubo un caso donde elementos aparecían y desaparecían. Solución adoptada: usar clase `.pre` (transition-duration: 0s → oculta instantáneamente) y remover para disparar transitions naturales con delays.
+- **`visibilitychange` para pausar animaciones costosas** (Simulation, Scalability): cuando la pestaña se oculta, cancelar `rAF` y `setInterval`. Ahorra CPU/batería.
+- **`passive: true` en scroll listeners** (`ScrollRoad`) para no bloquear el scroll nativo.
+- **rAF throttling en `mousemove`** (Hero scanner) — 60fps máximo sin importar la frecuencia del evento.
+- **Rutas de vehículos con polylines:** función `routePoint(path, progress)` interpola posición y ángulo. Ángulo se usa con SVG `transform="rotate(deg cx cy)"` para orientar el vehículo en su dirección de viaje.
+- **Body class communication:** para que componentes reaccionen a cambios globales (ej: `is-scrolling`), un componente escribe la clase en `<body>` y otros la leen via `:global(body.is-scrolling)` en su CSS scoped.
+
+### 6.6 Convenciones
+
+**Variables CSS** (definidas en `global.css`):
+```css
+--navy: #044559       --font-brand: 'Arsenica', 'Fraunces', 'Georgia', serif
+--navy-deep: #033544  --font-serif: 'Fraunces', serif
+--cyan: #61E1E6       --font-sans: 'Montserrat', system-ui
+--cream: #FFF8EA      --font-title: 'Helvetica Neue', Helvetica, Arial
+--lime: #D1EB78
+--ink: #151B20
+```
+
+- `--font-brand` = **solo para el wordmark TROPPO** (Header + Footer). No usar en texto largo.
+- `--font-serif` = titulares (`h1`, `h2`, `h3` display).
+- `--font-title` = etiquetas UI técnicas (`h3`/`h4` en value cards).
+
+**Timing común:**
+- Transiciones cortas: 250-500ms ease-out
+- Fade in-out de secciones: 400-700ms
+- Loop de escenarios (Simulation, Scalability): 8-9s por escenario
+- Animación de laptop encendido: coreografía total ~3s
+
+**Vehículos SVG** (rects con rotate):
+- Simulation: `car` 11×6 cyan, `truck` 22×8 lime, rx=1
+- Scalability: `car` 9×5 cyan, `truck` 18×7 lime, rx=1
+- Ambos con `stroke rgba(0,0,0,0.35)` 0.5px para borde sutil
+
+**HUD flotante estilo sensor** (usado en Simulation, Scalability):
+- Pill negro con `backdrop-filter: blur(8px)`, border cyan 1px, texto letter-spacing 1.5px uppercase
+- Dot pulsante 6×6 con box-shadow del mismo color (glow)
+
+### 6.7 Fuentes y assets
+
+- **Arsenica Trial** (Zetafonts, CC-BY-NC) — self-hosted en `public/fonts/ArsenicaTrial-Regular.ttf` + `Bold.ttf`. Atribución obligatoria (visible en Footer copyright)
+- **Fraunces, Montserrat** — Google Fonts CDN via `<link>` en Base.astro
+- **Helvetica NO se self-hostea** (licencia comercial). Fallback: macOS/iOS ven Helvetica, Windows/Android ven Arial (visualmente equivalente)
+- **Logos** en `public/images/logo/`: `logo_dark_sinfondo.png` (brújula oscura para fondos claros), `logo_light_sinfondo.png` (brújula clara para fondos oscuros), variantes con fondo
+- **Favicons** en `public/favicon/` (subcarpeta, no en raíz)
+
+### 6.8 Deploy
+
+- **Dev preview:** Vercel auto en cada push a `main` — https://troppo-web-five.vercel.app/
+- **Producción destino:** VM del equipo con nginx (aún no desplegado). Build: `npm run build` → `dist/` → `scp` a la VM
+- **Deploy en VM = puramente estático.** Astro compila a HTML/CSS/JS puro, sin Node en runtime
