@@ -1,6 +1,8 @@
 ---
-// Sección de video del pitch — placeholder para embed
-// TODO: reemplazar el iframe placeholder por el video real cuando esté grabado
+// Sección de video del pitch — YouTube embed
+// TEMP: video de prueba (Michael Jackson) para validar el embed funciona.
+// Reemplazar el VIDEO_ID cuando esté grabado el pitch real.
+const YT_VIDEO_ID = 'crbFmpezO4A';
 ---
 
 <section class="video-section" id="pitch">
@@ -10,13 +12,14 @@
       <h2>Verlo funcionando dice más que cualquier slide.</h2>
     </div>
     <div class="video-frame">
-      <div class="video-placeholder">
-        <svg viewBox="0 0 80 80" width="80" height="80" aria-hidden="true">
-          <circle cx="40" cy="40" r="38" fill="none" stroke="#61E1E6" stroke-width="2" />
-          <path d="M32 26 L54 40 L32 54 Z" fill="#D1EB78" />
-        </svg>
-        <p>Video del pitch — próximamente</p>
-      </div>
+      <iframe
+        class="video-embed"
+        src={`https://www.youtube.com/embed/${YT_VIDEO_ID}?rel=0`}
+        title="Pitch de Troppo"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
     </div>
   </div>
 </section>
@@ -50,18 +53,12 @@
     overflow: hidden;
     position: relative;
   }
-  .video-placeholder {
+  .video-embed {
     position: absolute;
     inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    color: rgba(255, 248, 234, 0.6);
-  }
-  .video-placeholder p {
-    font-size: 14px;
-    font-weight: 500;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
   }
 </style>

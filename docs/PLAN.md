@@ -188,9 +188,29 @@ Los números 7.000 / 9 hrs / 800+ pueden animarse con IntersectionObserver cuand
 
 ---
 
-## Fase 2 — Carretera de scroll
+## Fase 2 — Carretera de scroll ✅
 
-**Archivo:** [src/components/ScrollRoad.astro](../src/components/ScrollRoad.astro)
+Implementado en `ScrollRoad.astro`. Variante C ejecutada con las siguientes decisiones:
+
+**Diseño:**
+- Posicionado **fixed bottom** (no top) — evita conflicto con header sticky, camión siempre visible
+- Alto total 20px: 4px de barra + espacio para el camión encima (16px tall)
+- Barra vacía: navy 20% opacity; barra rellena: lime; camión: navy con drop-shadow sutil
+- SVG del camión: 32×16px, silueta simple (cabina + carrocería + 3 ruedas negras)
+
+**Comportamiento:**
+- Scroll listener con `requestAnimationFrame` throttling — universal, sin dependencias de scroll-driven CSS
+- Progreso = scrollY / (scrollHeight - innerHeight)
+- Fill: `width: progress * 100%`
+- Camión: `translateX(progress * (viewportWidth - 32))`
+- Respeta `prefers-reduced-motion` (sin transiciones)
+- `passive: true` en los listeners → cero jank de scroll
+
+**Fallback:** si JS falla, no aparece nada (aceptable, es decorativo). El script escucha `resize` para recalcular en cambios de viewport.
+
+---
+
+### Fase 2 (referencia) Approach original
 
 Implementar la **variante C** de [IDEAS.md §2.2](IDEAS.md) — progress bar tipo carretera con camión.
 
