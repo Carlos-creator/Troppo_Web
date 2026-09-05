@@ -135,7 +135,20 @@ Reemplazar el `<div class="map-box">` por:
 
 CSS del `.map-embed`: `width: 100%; height: 100%; border: 0; border-radius: 16px;`
 
-### 1.5 Contadores animados
+### 1.5 Contadores animados ✅
+
+Implementado en `Problem.astro`. Los tres números (7.000 / 9 hrs / 800+) cuentan desde 0 hasta el valor final cuando la sección entra al viewport (threshold 40%). Duración 1400ms con easing ease-out cubic.
+
+**Detalles técnicos:**
+- IntersectionObserver — cero costo hasta que se ve
+- `unobserve()` después del primer disparo → no se repite al hacer scroll de vuelta
+- Respeta `prefers-reduced-motion` — usuarios con esa preferencia ven el valor final directo
+- Fallback graceful: si JS falla, HTML muestra el valor final estático
+- Formato numérico `es-CL` — mantiene punto como separador de miles (7.000)
+
+---
+
+### 1.5 (referencia) Approach original
 
 **Archivo:** [src/components/Problem.astro](../src/components/Problem.astro)
 

@@ -10,15 +10,15 @@
     </div>
     <div class="stat-grid">
       <div class="stat-card">
-        <div class="num">7.000</div>
+        <div class="num" data-count-to="7000" data-suffix="">7.000</div>
         <p>Camiones circulando por los accesos en un solo día peak.</p>
       </div>
       <div class="stat-card">
-        <div class="num">9 hrs</div>
+        <div class="num" data-count-to="9" data-suffix=" hrs">9 hrs</div>
         <p>Tiempo de espera máximo registrado en los nodos viales críticos.</p>
       </div>
       <div class="stat-card">
-        <div class="num">800+</div>
+        <div class="num" data-count-to="800" data-suffix="+">800+</div>
         <p>Transportistas de carga pesada que transitan la zona a diario.</p>
       </div>
     </div>
@@ -75,3 +75,47 @@
     }
   }
 </style>
+
+<script>
+  // Animación de conteo — respeta prefers-reduced-motion.
+  // Si JS falla, el HTML ya muestra el valor final (fallback seguro).
+  const nums = document.querySelectorAll<HTMLElement>('.num[data-count-to]');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (nums.length && !reducedMotion && 'IntersectionObserver' in window) {
+    // Reset a 0 para que el conteo se sienta completo desde el inicio
+    nums.forEach((el) => {
+      const suffix = el.dataset.suffix ?? '';
+      el.textContent = '0' + suffix;
+    });
+
+    const easeOutCubic = (t: number): number => 1 - Math.pow(1 - t, 3);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          const target = Number(el.dataset.countTo);
+          const suffix = el.dataset.suffix ?? '';
+          const duration = 1400;
+          const start = performance.now();
+
+          function tick(now: number) {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = easeOutCubic(progress);
+            const current = Math.floor(target * eased);
+            el.textContent = current.toLocaleString('es-CL') + suffix;
+            if (progress < 1) requestAnimationFrame(tick);
+          }
+
+          requestAnimationFrame(tick);
+          observer.unobserve(el);
+        });
+      },
+      { threshold: 0.4 }
+    );
+
+    nums.forEach((el) => observer.observe(el));
+  }
+</script>
