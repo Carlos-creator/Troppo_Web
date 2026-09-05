@@ -1,0 +1,72 @@
+---
+// COMPONENTE PENDIENTE — Ver docs/IDEAS.md sección 2.1
+// "Simulación interactiva embebida" — mini-demo del núcleo del producto
+//
+// Flujo:
+//   1. Mapa simplificado SVG de la zona (rotonda, acceso norte, cruce ferroviario)
+//   2. Usuario hace clic para colocar nodos que delimitan la zona de optimización
+//   3. Aparecen vehículos animados (camiones y autos) circulando
+//   4. Botón "Activar IA" cambia fases semafóricas visualmente
+//   5. Card con métricas: "Espera: 9 min → 3 min · CO₂: −22 %"
+//
+// Tecnología: HTML5 Canvas o SVG animado, sin dependencias externas.
+// Al ser interactivo, este componente debe ser una ISLA de Astro:
+//   <Simulation client:visible />  (hidratación cuando entra al viewport)
+---
+
+<section class="simulation-demo" id="demo">
+  <div class="wrap">
+    <div class="sim-head">
+      <div class="eyebrow">DEMO INTERACTIVA</div>
+      <h2>Pruébalo tú mismo, aquí mismo.</h2>
+      <p>
+        Delimita una zona, coloca semáforos y observa cómo la IA optimiza el flujo en
+        tiempo real.
+      </p>
+    </div>
+    <div class="sim-canvas-placeholder">
+      <p>[ Simulación interactiva pendiente — ver IDEAS.md §2.1 ]</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .simulation-demo {
+    padding: 110px 0;
+    background: var(--cream);
+  }
+  .sim-head {
+    max-width: 640px;
+    margin-bottom: 48px;
+  }
+  .eyebrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    opacity: 0.55;
+  }
+  h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 38px;
+    margin-top: 14px;
+    line-height: 1.2;
+  }
+  .sim-head p {
+    margin-top: 16px;
+    font-size: 15px;
+    color: rgba(21, 27, 32, 0.7);
+    max-width: 460px;
+  }
+  .sim-canvas-placeholder {
+    aspect-ratio: 16 / 9;
+    background: var(--navy);
+    border: 2px dashed rgba(255, 248, 234, 0.2);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 248, 234, 0.5);
+    font-size: 14px;
+  }
+</style>

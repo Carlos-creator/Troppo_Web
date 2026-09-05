@@ -1,0 +1,87 @@
+---
+// Sección de equipo — tarjetas con iniciales
+// TODO: reemplazar iniciales por fotos reales en public/images/team/
+
+const members = [
+  { initials: 'CC', name: 'Cristóbal Césped', role: 'Product Owner' },
+  { initials: 'CR', name: 'Carlos Ramírez', role: 'UI/UX Lead' },
+  { initials: 'CT', name: 'Cristian Tapia', role: 'Fullstack Developer' },
+  { initials: 'AA', name: 'Andrés Araya D.', role: 'Scrum Master' },
+  { initials: 'LC', name: 'Leonardo Chacón G.', role: 'Tester + Brand Identity Lead' },
+  { initials: 'BP', name: 'Baltazar Portilla R.', role: 'Lead Developer' },
+];
+---
+
+<section class="team" id="equipo">
+  <div class="wrap">
+    <h2>El equipo detrás del gemelo digital.</h2>
+    <div class="team-grid">
+      {
+        members.map((m) => (
+          <div class="member">
+            <div class="avatar">{m.initials}</div>
+            <h4>{m.name}</h4>
+            <div class="role">{m.role}</div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .team {
+    padding: 110px 0;
+    background: var(--navy-deep);
+    color: var(--cream);
+  }
+  h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 38px;
+    max-width: 500px;
+    line-height: 1.2;
+  }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 52px;
+  }
+  .member {
+    background: rgba(255, 248, 234, 0.05);
+    border: 1px solid rgba(255, 248, 234, 0.12);
+    border-radius: 14px;
+    padding: 26px;
+  }
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--cyan);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    color: var(--navy-deep);
+    font-size: 17px;
+    margin-bottom: 18px;
+  }
+  .member h4 {
+    font-family: var(--font-title);
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .member .role {
+    font-size: 13px;
+    color: var(--cyan);
+    margin-top: 4px;
+  }
+
+  @media (max-width: 860px) {
+    .team-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

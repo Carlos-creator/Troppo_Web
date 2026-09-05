@@ -1,0 +1,187 @@
+---
+// Hero principal — titular + brújula animada + card destacada
+---
+
+<section class="hero" id="top">
+  <div class="wrap hero-inner">
+    <div>
+      <div class="hero-tag">
+        <span class="dot"></span>
+        33.ª Feria de Software USM · 13 de noviembre
+      </div>
+      <h1>
+        Simulamos el tráfico<br />
+        antes de <em>moverlo</em> de verdad.
+      </h1>
+      <p>
+        Un gemelo digital del acceso a San Antonio, entrenado con redes neuronales de
+        grafos y aprendizaje por refuerzo, para probar políticas de semaforización
+        sin arriesgar una sola maniobra en terreno.
+      </p>
+      <div class="hero-ctas">
+        <button class="btn-primary" type="button">Ver la simulación</button>
+        <a href="#como-funciona" class="btn-ghost">Cómo funciona</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <svg class="compass-big" viewBox="0 0 200 200" aria-hidden="true">
+        <circle
+          cx="100"
+          cy="100"
+          r="94"
+          fill="none"
+          stroke="rgba(255,248,234,0.25)"
+          stroke-width="1.5"
+        />
+        <circle
+          cx="100"
+          cy="100"
+          r="70"
+          fill="none"
+          stroke="rgba(255,248,234,0.18)"
+          stroke-width="1"
+        />
+        <path d="M100 16 L112 100 L100 184 L88 100 Z" fill="#FFF8EA" />
+        <path d="M16 100 L100 88 L184 100 L100 112 Z" fill="#61E1E6" />
+      </svg>
+      <div class="hero-card">
+        <div class="big-num">9h → 2h</div>
+        <div>Espera estimada en horas peak con políticas optimizadas por IA.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    background: var(--navy);
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+    padding: 100px 0 120px;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cyan);
+    border: 1px solid rgba(97, 225, 230, 0.4);
+    border-radius: 100px;
+    padding: 8px 16px;
+    margin-bottom: 28px;
+  }
+  .hero-tag .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--lime);
+  }
+  h1 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 56px;
+    line-height: 1.08;
+    letter-spacing: -0.5px;
+    max-width: 560px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--cyan);
+  }
+  p {
+    margin-top: 24px;
+    font-size: 17px;
+    color: rgba(255, 248, 234, 0.78);
+    max-width: 460px;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    margin-top: 36px;
+    align-items: center;
+  }
+  .btn-primary {
+    background: var(--lime);
+    color: var(--navy-deep);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 15px 28px;
+    border-radius: 100px;
+  }
+  .btn-ghost {
+    color: var(--cream);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 15px 10px;
+    border-bottom: 1px solid rgba(255, 248, 234, 0.4);
+  }
+  .hero-visual {
+    position: relative;
+    height: 420px;
+  }
+  .compass-big {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 420px;
+    height: 420px;
+    opacity: 0.9;
+    animation: spin 60s linear infinite;
+  }
+  @keyframes spin {
+    from {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+  .hero-card {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: rgba(255, 248, 234, 0.06);
+    border: 1px solid rgba(255, 248, 234, 0.16);
+    backdrop-filter: blur(6px);
+    border-radius: 16px;
+    padding: 22px 24px;
+    width: 260px;
+    font-size: 13px;
+    color: var(--cream);
+  }
+  .hero-card .big-num {
+    font-family: var(--font-serif);
+    font-size: 34px;
+    color: var(--lime);
+    font-weight: 600;
+  }
+
+  @media (max-width: 860px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+    }
+    h1 {
+      font-size: 38px;
+    }
+    .hero-visual {
+      height: 260px;
+      margin-top: 20px;
+    }
+    .compass-big {
+      width: 220px;
+      height: 220px;
+    }
+  }
+</style>

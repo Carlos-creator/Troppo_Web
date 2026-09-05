@@ -1,0 +1,107 @@
+---
+// Sección "Cómo funciona" — 4 pasos del flujo de simulación
+---
+
+<section class="how" id="como-funciona">
+  <div class="wrap how-top">
+    <div>
+      <h2>De la solicitud al resultado, sin sorpresas.</h2>
+      <p>
+        La simulación corre completa y de forma independiente. El frontend nunca ve el
+        estado en vivo: reconstruye el resultado una vez que ya existe.
+      </p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <h4>Se solicita la simulación</h4>
+          <p>Desde el panel, se define el escenario y se envía al backend vía REST.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <h4>El orquestador coordina</h4>
+          <p>Distribuye la carga entre los workers de SUMO y consulta al modelo de IA.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <h4>SUMO y la IA simulan</h4>
+          <p>El motor de tráfico ejecuta el escenario completo hasta finalizarlo.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <h4>Resultados listos</h4>
+          <p>Se procesan, almacenan y quedan disponibles para reconstruir y revisar.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .how {
+    padding: 110px 0;
+  }
+  .how-top {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 60px;
+  }
+  h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 38px;
+    line-height: 1.2;
+  }
+  .how-top > div:first-child p {
+    margin-top: 18px;
+    font-size: 15px;
+    color: rgba(21, 27, 32, 0.7);
+    max-width: 380px;
+  }
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 20px;
+    padding: 26px 0;
+    border-bottom: 1px solid rgba(4, 69, 89, 0.14);
+  }
+  .step:first-child {
+    padding-top: 0;
+  }
+  .step .step-num {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    color: var(--navy);
+    opacity: 0.35;
+  }
+  .step h4 {
+    font-family: var(--font-title);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .step p {
+    margin-top: 6px;
+    font-size: 14px;
+    color: rgba(21, 27, 32, 0.68);
+  }
+
+  @media (max-width: 860px) {
+    .how-top {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+  }
+</style>

@@ -1,0 +1,114 @@
+---
+// Sección de confianza / atributos técnicos
+// Sección nueva — no estaba en el mockup v0 pero sí en el plan del CLAUDE.md
+
+const attributes = [
+  {
+    title: 'Privacy-preserving',
+    body:
+      'Sensores LiDAR en lugar de cámaras. Ningún dato personal identificable, sin video, cumpliendo la Ley 21.719.',
+  },
+  {
+    title: 'Escalabilidad probada',
+    body:
+      'Diseñado para pasar de 50 a 500 nodos viales con menos de 15 % de latencia adicional.',
+  },
+  {
+    title: 'Simulación desacoplada',
+    body:
+      'El motor corre completo antes de reconstruir la visualización. Cero riesgo de decisiones sobre datos parciales.',
+  },
+  {
+    title: 'Trazabilidad de resultados',
+    body:
+      'Cada corrida queda registrada con seed, políticas y métricas. Reproducibilidad total.',
+  },
+  {
+    title: 'IA aprendida, no programada',
+    body:
+      'Las políticas emergen de aprendizaje por refuerzo profundo (PPO/DQN), no de reglas fijas.',
+  },
+  {
+    title: 'Bimodal por diseño',
+    body:
+      'Diferencia camiones y livianos desde la simulación: métricas y políticas nunca los promedian.',
+  },
+];
+---
+
+<section class="trust">
+  <div class="wrap">
+    <div class="trust-head">
+      <div class="eyebrow">POR QUÉ CONFIAR</div>
+      <h2>Ingeniería para decisiones que importan.</h2>
+    </div>
+    <div class="trust-grid">
+      {
+        attributes.map((a) => (
+          <article class="trust-card">
+            <h3>{a.title}</h3>
+            <p>{a.body}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .trust {
+    padding: 110px 0;
+    background: var(--cream);
+  }
+  .trust-head {
+    max-width: 640px;
+    margin-bottom: 56px;
+  }
+  .eyebrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    opacity: 0.55;
+  }
+  h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 38px;
+    margin-top: 14px;
+    line-height: 1.2;
+  }
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .trust-card {
+    background: #fff;
+    border: 1px solid rgba(4, 69, 89, 0.12);
+    border-radius: 14px;
+    padding: 28px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .trust-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(4, 69, 89, 0.08);
+  }
+  .trust-card h3 {
+    font-family: var(--font-title);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+  .trust-card p {
+    font-size: 14px;
+    color: rgba(21, 27, 32, 0.7);
+    line-height: 1.55;
+  }
+
+  @media (max-width: 860px) {
+    .trust-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

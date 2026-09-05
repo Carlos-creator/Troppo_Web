@@ -1,0 +1,77 @@
+/* ============================================================
+   TROPPO — Estilos globales
+   Variables de marca, reset y tipografía base
+   ============================================================ */
+
+:root {
+  /* Paleta oficial (manual de identidad) */
+  --navy: #044559;
+  --navy-deep: #033544;
+  --cyan: #61E1E6;
+  --cream: #FFF8EA;
+  --lime: #D1EB78;
+  --ink: #151B20;
+
+  /* Tipografías
+     Nota: Arsenica Antiqua no está en Google Fonts.
+     Fraunces es el sustituto serif con carácter similar. */
+  --font-serif: 'Fraunces', 'Georgia', serif;
+  --font-sans: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-title: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* Layout */
+  --wrap-max: 1180px;
+  --wrap-padding: 32px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--ink);
+  background: var(--cream);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.wrap {
+  max-width: var(--wrap-max);
+  margin: 0 auto;
+  padding: 0 var(--wrap-padding);
+}
+
+/* Breakpoint móvil global */
+@media (max-width: 860px) {
+  :root {
+    --wrap-padding: 20px;
+  }
+}

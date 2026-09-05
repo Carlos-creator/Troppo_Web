@@ -1,0 +1,77 @@
+---
+// Sección del problema — cifras duras del acceso a San Antonio
+---
+
+<section class="problem" id="problema">
+  <div class="wrap">
+    <div class="problem-head">
+      <div class="eyebrow">El punto de partida</div>
+      <h2>San Antonio mueve el país. Y el país espera en la fila.</h2>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="num">7.000</div>
+        <p>Camiones circulando por los accesos en un solo día peak.</p>
+      </div>
+      <div class="stat-card">
+        <div class="num">9 hrs</div>
+        <p>Tiempo de espera máximo registrado en los nodos viales críticos.</p>
+      </div>
+      <div class="stat-card">
+        <div class="num">800+</div>
+        <p>Transportistas de carga pesada que transitan la zona a diario.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .problem {
+    padding: 110px 0;
+    background: var(--cream);
+  }
+  .problem-head {
+    max-width: 640px;
+  }
+  .eyebrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    opacity: 0.55;
+  }
+  h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 38px;
+    margin-top: 14px;
+    line-height: 1.2;
+  }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-top: 56px;
+  }
+  .stat-card {
+    border-top: 2px solid var(--navy);
+    padding-top: 20px;
+  }
+  .stat-card .num {
+    font-family: var(--font-serif);
+    font-size: 46px;
+    color: var(--navy);
+    font-weight: 500;
+  }
+  .stat-card p {
+    margin-top: 10px;
+    font-size: 15px;
+    color: rgba(21, 27, 32, 0.7);
+    max-width: 230px;
+  }
+
+  @media (max-width: 860px) {
+    .stat-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

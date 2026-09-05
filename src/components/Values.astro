@@ -1,0 +1,127 @@
+---
+// Sección de propuesta de valor — 3 columnas con iconos SVG
+---
+
+<section class="values" id="nosotros">
+  <div class="wrap">
+    <div class="values-head">
+      <h2>Menos obra civil. Más algoritmo.</h2>
+      <p>
+        Troppo traslada la complejidad del problema al software, no al hormigón ni a
+        las cámaras.
+      </p>
+    </div>
+    <div class="value-grid">
+      <div class="value-card">
+        <svg class="icon" viewBox="0 0 34 34" aria-hidden="true">
+          <rect
+            x="4"
+            y="4"
+            width="26"
+            height="26"
+            rx="4"
+            fill="none"
+            stroke="#61E1E6"
+            stroke-width="2"
+          />
+          <path d="M10 22 L16 12 L22 22" stroke="#D1EB78" stroke-width="2" fill="none" />
+        </svg>
+        <h3>Simulación sin riesgo</h3>
+        <p>
+          Prueba cada política de semaforización en el gemelo digital antes de tocar
+          un semáforo real.
+        </p>
+      </div>
+      <div class="value-card">
+        <svg class="icon" viewBox="0 0 34 34" aria-hidden="true">
+          <circle cx="17" cy="17" r="6" fill="#61E1E6" />
+          <circle
+            cx="17"
+            cy="17"
+            r="13"
+            fill="none"
+            stroke="#D1EB78"
+            stroke-width="2"
+          />
+        </svg>
+        <h3>Sensórica sin cámaras</h3>
+        <p>
+          LiDAR bajo un enfoque privacy-preserving: sin video invasivo, sin datos
+          personales expuestos.
+        </p>
+      </div>
+      <div class="value-card">
+        <svg class="icon" viewBox="0 0 34 34" aria-hidden="true">
+          <path
+            d="M6 26 L14 14 L20 20 L28 6"
+            stroke="#61E1E6"
+            stroke-width="2.5"
+            fill="none"
+          />
+        </svg>
+        <h3>Bimodal por diseño</h3>
+        <p>Optimiza el flujo de carga pesada sin asfixiar la movilidad civil de la ciudad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .values {
+    background: var(--navy-deep);
+    color: var(--cream);
+    padding: 110px 0;
+  }
+  .values-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .values-head h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 38px;
+    max-width: 520px;
+    line-height: 1.2;
+  }
+  .values-head p {
+    max-width: 340px;
+    color: rgba(255, 248, 234, 0.7);
+    font-size: 15px;
+  }
+  .value-grid {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255, 248, 234, 0.14);
+    border: 1px solid rgba(255, 248, 234, 0.14);
+  }
+  .value-card {
+    background: var(--navy-deep);
+    padding: 36px 30px;
+  }
+  .value-card .icon {
+    width: 34px;
+    height: 34px;
+    margin-bottom: 22px;
+  }
+  .value-card h3 {
+    font-family: var(--font-title);
+    font-size: 19px;
+    font-weight: 700;
+  }
+  .value-card p {
+    margin-top: 12px;
+    font-size: 14.5px;
+    color: rgba(255, 248, 234, 0.68);
+  }
+
+  @media (max-width: 860px) {
+    .value-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+// Header sticky con logo, navegación y CTA
+---
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="logo">
+      <svg class="compass" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#044559" stroke-width="4" />
+        <path d="M50 8 L58 46 L50 92 L42 46 Z" fill="#044559" />
+        <path d="M8 50 L46 42 L92 50 L46 58 Z" fill="#61E1E6" />
+      </svg>
+      <span class="wordmark">TROPPO</span>
+      <span class="logo-tagline">Inteligencia que mueve el tráfico</span>
+    </a>
+
+    <div class="header-actions">
+      <nav class="navlinks" aria-label="Navegación principal">
+        <a href="#nosotros">Nosotros</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#equipo">Equipo</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <button class="cta-btn" type="button">Agenda una demo</button>
+    </div>
+  </div>
+</header>
+
+<style>
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--cream);
+    border-bottom: 1px solid rgba(4, 69, 89, 0.12);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+  }
+  .logo {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: 0.5px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .compass {
+    width: 26px;
+    height: 26px;
+  }
+  .logo-tagline {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 12.5px;
+    color: var(--navy);
+    opacity: 0.55;
+    padding-left: 10px;
+    border-left: 1px solid rgba(4, 69, 89, 0.25);
+  }
+  .navlinks {
+    display: flex;
+    gap: 36px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--navy);
+  }
+  .navlinks a {
+    opacity: 0.8;
+    transition: opacity 0.15s;
+  }
+  .navlinks a:hover {
+    opacity: 1;
+  }
+  .cta-btn {
+    background: var(--lime);
+    color: var(--navy-deep);
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-size: 14px;
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  @media (max-width: 860px) {
+    .logo-tagline,
+    .navlinks {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,57 @@
+---
+// Footer minimalista con marca, tagline y enlaces
+---
+
+<footer>
+  <div class="wrap foot-inner">
+    <div class="foot-brand">
+      <div class="foot-logo">TROPPO</div>
+      <div class="foot-tagline">Inteligencia que mueve el tráfico</div>
+    </div>
+    <div class="foot-links">
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Contacto</a>
+    </div>
+    <div class="foot-copy">© 2026 Feria USM · Proyecto Troppo</div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    background: var(--ink);
+    color: rgba(255, 248, 234, 0.6);
+    padding: 48px 0;
+  }
+  .foot-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .foot-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .foot-logo {
+    font-family: var(--font-serif);
+    color: var(--cream);
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .foot-tagline {
+    font-size: 13px;
+    color: rgba(255, 248, 234, 0.5);
+  }
+  .foot-links {
+    display: flex;
+    gap: 24px;
+    font-size: 13.5px;
+  }
+  .foot-copy {
+    font-size: 12.5px;
+  }
+</style>

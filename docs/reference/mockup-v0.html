@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Troppo | Inteligencia que mueve el tráfico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#044559;
+    --navy-deep:#033544;
+    --cyan:#61E1E6;
+    --cream:#FFF8EA;
+    --lime:#D1EB78;
+    --ink:#151B20;
+    --serif:'Fraunces', serif;
+    --sans:'Montserrat', sans-serif;
+    --title:'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:var(--cream);
+    line-height:1.55;
+  }
+  img,svg{display:block;}
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:var(--cream);
+    border-bottom:1px solid rgba(4,69,89,0.12);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 0;
+  }
+  .logo{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:26px;
+    letter-spacing:0.5px;
+    color:var(--navy);
+    display:flex; align-items:center; gap:10px;
+  }
+  .logo .compass{width:26px; height:26px;}
+  .logo-tagline{
+    font-family:var(--sans); font-weight:500; font-size:12.5px;
+    letter-spacing:0; color:var(--navy); opacity:0.55;
+    padding-left:10px; border-left:1px solid rgba(4,69,89,0.25);
+  }
+  .navlinks{display:flex; gap:36px; font-size:15px; font-weight:500; color:var(--navy);}
+  .navlinks a{opacity:0.8; transition:opacity .15s;}
+  .navlinks a:hover{opacity:1;}
+  .cta-btn{
+    background:var(--lime); color:var(--navy-deep); font-weight:700;
+    padding:12px 24px; border-radius:100px; font-size:14px;
+    border:none; cursor:pointer;
+  }
+  .header-actions{display:flex; align-items:center; gap:28px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--navy); color:var(--cream);
+    position:relative; overflow:hidden;
+    padding:100px 0 120px;
+  }
+  .hero-inner{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:40px; align-items:center;
+    position:relative; z-index:2;
+  }
+  .hero-tag{
+    display:inline-flex; align-items:center; gap:10px;
+    font-size:13px; font-weight:600; color:var(--cyan);
+    border:1px solid rgba(97,225,230,0.4); border-radius:100px;
+    padding:8px 16px; margin-bottom:28px;
+  }
+  .hero-tag .dot{width:6px; height:6px; border-radius:50%; background:var(--lime);}
+  .hero h1{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:56px;
+    line-height:1.08;
+    letter-spacing:-0.5px;
+    max-width:560px;
+  }
+  .hero h1 em{
+    font-style:italic; color:var(--cyan);
+  }
+  .hero p{
+    margin-top:24px; font-size:17px; color:rgba(255,248,234,0.78);
+    max-width:460px;
+  }
+  .hero-ctas{display:flex; gap:16px; margin-top:36px; align-items:center;}
+  .btn-primary{
+    background:var(--lime); color:var(--navy-deep); font-weight:700; font-size:15px;
+    padding:15px 28px; border-radius:100px;
+  }
+  .btn-ghost{
+    color:var(--cream); font-weight:600; font-size:15px;
+    padding:15px 10px; border-bottom:1px solid rgba(255,248,234,0.4);
+  }
+  .hero-visual{position:relative; height:420px;}
+  .compass-big{
+    position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:420px; height:420px; opacity:0.9;
+    animation:spin 60s linear infinite;
+  }
+  @keyframes spin{ from{transform:translate(-50%,-50%) rotate(0deg);} to{transform:translate(-50%,-50%) rotate(360deg);} }
+  .hero-card{
+    position:absolute; bottom:0; right:0;
+    background:rgba(255,248,234,0.06);
+    border:1px solid rgba(255,248,234,0.16);
+    backdrop-filter:blur(6px);
+    border-radius:16px; padding:22px 24px; width:260px;
+    font-size:13px; color:var(--cream);
+  }
+  .hero-card .big-num{font-family:var(--serif); font-size:34px; color:var(--lime); font-weight:600;}
+
+  /* ---------- STAT / PROBLEM SECTION ---------- */
+  .problem{padding:110px 0; background:var(--cream);}
+  .problem-head{max-width:640px;}
+  .eyebrow{font-size:14px; font-weight:600; color:var(--navy); opacity:0.55;}
+  .problem h2{
+    font-family:var(--serif); font-weight:500; font-size:38px; margin-top:14px;
+    line-height:1.2;
+  }
+  .stat-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:28px; margin-top:56px;
+  }
+  .stat-card{
+    border-top:2px solid var(--navy); padding-top:20px;
+  }
+  .stat-card .num{
+    font-family:var(--serif); font-size:46px; color:var(--navy); font-weight:500;
+  }
+  .stat-card p{margin-top:10px; font-size:15px; color:rgba(21,27,32,0.7); max-width:230px;}
+
+  /* ---------- VALUE PROPS ---------- */
+  .values{background:var(--navy-deep); color:var(--cream); padding:110px 0;}
+  .values-head{display:flex; justify-content:space-between; align-items:flex-end; gap:40px; flex-wrap:wrap;}
+  .values-head h2{
+    font-family:var(--serif); font-weight:500; font-size:38px; max-width:520px; line-height:1.2;
+  }
+  .values-head p{max-width:340px; color:rgba(255,248,234,0.7); font-size:15px;}
+  .value-grid{
+    margin-top:56px;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+    background:rgba(255,248,234,0.14);
+    border:1px solid rgba(255,248,234,0.14);
+  }
+  .value-card{background:var(--navy-deep); padding:36px 30px;}
+  .value-card .icon{width:34px; height:34px; margin-bottom:22px;}
+  .value-card h3{font-family:var(--title); font-size:19px; font-weight:700;}
+  .value-card p{margin-top:12px; font-size:14.5px; color:rgba(255,248,234,0.68);}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how{padding:110px 0;}
+  .how-top{display:grid; grid-template-columns:0.9fr 1.1fr; gap:60px;}
+  .how h2{font-family:var(--serif); font-weight:500; font-size:38px; line-height:1.2;}
+  .how-top p{margin-top:18px; font-size:15px; color:rgba(21,27,32,0.7); max-width:380px;}
+  .steps{display:flex; flex-direction:column; gap:0;}
+  .step{
+    display:grid; grid-template-columns:56px 1fr; gap:20px;
+    padding:26px 0; border-bottom:1px solid rgba(4,69,89,0.14);
+  }
+  .step:first-child{padding-top:0;}
+  .step .step-num{
+    font-family:var(--serif); font-size:26px; color:var(--navy); opacity:0.35;
+  }
+  .step h4{font-family:var(--title); font-size:16px; font-weight:700; color:var(--navy);}
+  .step p{margin-top:6px; font-size:14px; color:rgba(21,27,32,0.68);}
+
+  /* ---------- DASHBOARD MOCK ---------- */
+  .dashboard{background:var(--cream); padding:0 0 110px;}
+  .dash-frame{
+    background:var(--navy);
+    border-radius:20px;
+    padding:28px;
+    display:grid; grid-template-columns:230px 1fr; gap:24px;
+  }
+  .dash-side{color:var(--cream);}
+  .dash-side .tag{font-size:12px; color:var(--cyan); font-weight:700;}
+  .dash-side h3{font-family:var(--serif); font-size:24px; margin-top:10px; font-weight:500;}
+  .dash-side p{margin-top:10px; font-size:13.5px; color:rgba(255,248,234,0.68);}
+  .dash-panel{
+    background:var(--cream); border-radius:14px; padding:22px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .dash-row{
+    display:flex; align-items:center; justify-content:space-between;
+    background:#fff; border-radius:10px; padding:14px 18px;
+    border-left:4px solid var(--lime);
+    font-size:13px;
+  }
+  .dash-row.high{border-left-color:#e0a15c;}
+  .dash-row .lbl{font-weight:700; color:var(--navy);}
+  .dash-row .sub{color:rgba(21,27,32,0.55); margin-top:2px;}
+  .dash-row .metric{font-family:var(--serif); font-size:20px; color:var(--navy); font-weight:600;}
+
+  /* ---------- TEAM ---------- */
+  .team{padding:110px 0; background:var(--navy-deep); color:var(--cream);}
+  .team h2{font-family:var(--serif); font-weight:500; font-size:38px; max-width:500px; line-height:1.2;}
+  .team-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:52px;}
+  .member{
+    background:rgba(255,248,234,0.05); border:1px solid rgba(255,248,234,0.12);
+    border-radius:14px; padding:26px;
+  }
+  .avatar{
+    width:48px; height:48px; border-radius:50%; background:var(--cyan);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-weight:600; color:var(--navy-deep); font-size:17px;
+    margin-bottom:18px;
+  }
+  .member h4{font-family:var(--title); font-size:16px; font-weight:700;}
+  .member .role{font-size:13px; color:var(--cyan); margin-top:4px;}
+
+  /* ---------- CTA + LOCATION ---------- */
+  .final{padding:110px 0;}
+  .final-inner{
+    background:var(--navy); color:var(--cream); border-radius:24px;
+    padding:64px; display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center;
+    position:relative; overflow:hidden;
+  }
+  .final h2{font-family:var(--serif); font-weight:500; font-size:34px; line-height:1.2; max-width:420px;}
+  .final p{margin-top:16px; color:rgba(255,248,234,0.72); font-size:15px; max-width:380px;}
+  .final .meta{margin-top:26px; display:flex; gap:28px; font-size:13.5px;}
+  .final .meta div{color:var(--cyan); font-weight:700; margin-bottom:4px;}
+  .map-box{
+    background:rgba(255,248,234,0.06); border:1px solid rgba(255,248,234,0.16);
+    border-radius:16px; height:220px; display:flex; align-items:center; justify-content:center;
+    font-size:13px; color:rgba(255,248,234,0.5);
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--ink); color:rgba(255,248,234,0.6); padding:48px 0;}
+  .foot-inner{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
+  .foot-logo{font-family:var(--serif); color:var(--cream); font-size:20px; font-weight:600;}
+  .foot-brand{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;}
+  .foot-tagline{font-size:13px; color:rgba(255,248,234,0.5);}
+  .foot-links{display:flex; gap:24px; font-size:13.5px;}
+
+  @media (max-width:860px){
+    .hero-inner, .how-top, .final-inner{grid-template-columns:1fr;}
+    .value-grid, .stat-grid, .team-grid{grid-template-columns:1fr;}
+    .dash-frame{grid-template-columns:1fr;}
+    .hero h1{font-size:38px;}
+    .hero-visual{height:260px; margin-top:20px;}
+    .compass-big{width:220px; height:220px;}
+    .logo-tagline{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo">
+      <svg class="compass" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#044559" stroke-width="4"/><path d="M50 8 L58 46 L50 92 L42 46 Z" fill="#044559"/><path d="M8 50 L46 42 L92 50 L46 58 Z" fill="#61E1E6"/></svg>
+      TROPPO
+      <span class="logo-tagline">Inteligencia que mueve el tráfico</span>
+    </div>
+    <div class="header-actions">
+      <div class="navlinks">
+        <a href="#">Nosotros</a>
+        <a href="#">Cómo funciona</a>
+        <a href="#">Equipo</a>
+        <a href="#">Contacto</a>
+      </div>
+      <button class="cta-btn">Agenda una demo</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div>
+      <div class="hero-tag"><span class="dot"></span> 33.ª Feria de Software USM · 13 de noviembre</div>
+      <h1>Simulamos el tráfico<br>antes de <em>moverlo</em> de verdad.</h1>
+      <p>Un gemelo digital del acceso a San Antonio, entrenado con redes neuronales de grafos y aprendizaje por refuerzo, para probar políticas de semaforización sin arriesgar una sola maniobra en terreno.</p>
+      <div class="hero-ctas">
+        <button class="btn-primary">Ver la simulación</button>
+        <a href="#" class="btn-ghost">Cómo funciona</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <svg class="compass-big" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="94" fill="none" stroke="rgba(255,248,234,0.25)" stroke-width="1.5"/>
+        <circle cx="100" cy="100" r="70" fill="none" stroke="rgba(255,248,234,0.18)" stroke-width="1"/>
+        <path d="M100 16 L112 100 L100 184 L88 100 Z" fill="#FFF8EA"/>
+        <path d="M16 100 L100 88 L184 100 L100 112 Z" fill="#61E1E6"/>
+      </svg>
+      <div class="hero-card">
+        <div class="big-num">9h → 2h</div>
+        <div>Espera estimada en horas peak con políticas optimizadas por IA.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="problem">
+  <div class="wrap">
+    <div class="problem-head">
+      <div class="eyebrow">El punto de partida</div>
+      <h2>San Antonio mueve el país. Y el país espera en la fila.</h2>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="num">7.000</div>
+        <p>Camiones circulando por los accesos en un solo día peak.</p>
+      </div>
+      <div class="stat-card">
+        <div class="num">9 hrs</div>
+        <p>Tiempo de espera máximo registrado en los nodos viales críticos.</p>
+      </div>
+      <div class="stat-card">
+        <div class="num">800+</div>
+        <p>Transportistas de carga pesada que transitan la zona a diario.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="values">
+  <div class="wrap">
+    <div class="values-head">
+      <h2>Menos obra civil. Más algoritmo.</h2>
+      <p>Troppo traslada la complejidad del problema al software, no al hormigón ni a las cámaras.</p>
+    </div>
+    <div class="value-grid">
+      <div class="value-card">
+        <svg class="icon" viewBox="0 0 34 34"><rect x="4" y="4" width="26" height="26" rx="4" fill="none" stroke="#61E1E6" stroke-width="2"/><path d="M10 22 L16 12 L22 22" stroke="#D1EB78" stroke-width="2" fill="none"/></svg>
+        <h3>Simulación sin riesgo</h3>
+        <p>Prueba cada política de semaforización en el gemelo digital antes de tocar un semáforo real.</p>
+      </div>
+      <div class="value-card">
+        <svg class="icon" viewBox="0 0 34 34"><circle cx="17" cy="17" r="6" fill="#61E1E6"/><circle cx="17" cy="17" r="13" fill="none" stroke="#D1EB78" stroke-width="2"/></svg>
+        <h3>Sensórica sin cámaras</h3>
+        <p>LiDAR bajo un enfoque privacy-preserving: sin video invasivo, sin datos personales expuestos.</p>
+      </div>
+      <div class="value-card">
+        <svg class="icon" viewBox="0 0 34 34"><path d="M6 26 L14 14 L20 20 L28 6" stroke="#61E1E6" stroke-width="2.5" fill="none"/></svg>
+        <h3>Bimodal por diseño</h3>
+        <p>Optimiza el flujo de carga pesada sin asfixiar la movilidad civil de la ciudad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how">
+  <div class="wrap how-top">
+    <div>
+      <h2>De la solicitud al resultado, sin sorpresas.</h2>
+      <p>La simulación corre completa y de forma independiente. El frontend nunca ve el estado en vivo: reconstruye el resultado una vez que ya existe.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div><h4>Se solicita la simulación</h4><p>Desde el panel, se define el escenario y se envía al backend vía REST.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div><h4>El orquestador coordina</h4><p>Distribuye la carga entre los workers de SUMO y consulta al modelo de IA.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div><h4>SUMO y la IA simulan</h4><p>El motor de tráfico ejecuta el escenario completo hasta finalizarlo.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div><h4>Resultados listos</h4><p>Se procesan, almacenan y quedan disponibles para reconstruir y revisar.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dashboard">
+  <div class="wrap">
+    <div class="dash-frame">
+      <div class="dash-side">
+        <div class="tag">VISTA DE RESULTADOS</div>
+        <h3>El flujo, reconstruido.</h3>
+        <p>Una vez terminada la simulación, el panel reconstruye la evolución del tráfico nodo por nodo — sin depender de una conexión en vivo.</p>
+      </div>
+      <div class="dash-panel">
+        <div class="dash-row">
+          <div><div class="lbl">Acceso Norte — Puerta 3</div><div class="sub">Política optimizada activa</div></div>
+          <div class="metric">↓ 41%</div>
+        </div>
+        <div class="dash-row high">
+          <div><div class="lbl">Cruce Ovalo Vespucio</div><div class="sub">Congestión moderada</div></div>
+          <div class="metric">03:12</div>
+        </div>
+        <div class="dash-row">
+          <div><div class="lbl">Corredor logístico sur</div><div class="sub">Flujo estable</div></div>
+          <div class="metric">↓ 18%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="team">
+  <div class="wrap">
+    <h2>El equipo detrás del gemelo digital.</h2>
+    <div class="team-grid">
+      <div class="member"><div class="avatar">CC</div><h4>Cristóbal Césped</h4><div class="role">Product Owner</div></div>
+      <div class="member"><div class="avatar">CR</div><h4>Carlos Ramírez</h4><div class="role">UI/UX Lead</div></div>
+      <div class="member"><div class="avatar">CT</div><h4>Cristian Tapia</h4><div class="role">Fullstack Developer</div></div>
+      <div class="member"><div class="avatar">AA</div><h4>Andrés Araya D.</h4><div class="role">Scrum Master</div></div>
+      <div class="member"><div class="avatar">LC</div><h4>Leonardo Chacón G.</h4><div class="role">Tester + Brand Identity Lead</div></div>
+      <div class="member"><div class="avatar">BP</div><h4>Baltazar Portilla R.</h4><div class="role">Lead Developer</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="final-inner">
+      <div>
+        <h2>Ven a ver Troppo en la feria.</h2>
+        <p>Presentamos el prototipo completo del gemelo digital, con simulaciones en vivo del acceso a San Antonio.</p>
+        <div class="meta">
+          <div><div>FECHA</div>13 de noviembre, 2026</div>
+          <div><div>LUGAR</div>USM Campus San Joaquín</div>
+        </div>
+        <div class="hero-ctas" style="margin-top:28px;">
+          <button class="btn-primary">Hablemos</button>
+        </div>
+      </div>
+      <div class="map-box">Mapa · USM Campus San Joaquín</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <div class="foot-brand">
+      <div class="foot-logo">TROPPO</div>
+      <div class="foot-tagline">Inteligencia que mueve el tráfico</div>
+    </div>
+    <div class="foot-links">
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Contacto</a>
+    </div>
+    <div style="font-size:12.5px;">© 2026 Feria USM · Proyecto Troppo</div>
+  </div>
+</footer>
+
+</body>
+</html>

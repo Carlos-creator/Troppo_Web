@@ -1,0 +1,117 @@
+---
+// Dashboard mockup — reconstrucción de resultados de simulación
+// TODO: Reemplazar por screenshot real de sumo_v2 (public/images/screenshots/dashboard.png)
+---
+
+<section class="dashboard">
+  <div class="wrap">
+    <div class="dash-frame">
+      <div class="dash-side">
+        <div class="tag">VISTA DE RESULTADOS</div>
+        <h3>El flujo, reconstruido.</h3>
+        <p>
+          Una vez terminada la simulación, el panel reconstruye la evolución del
+          tráfico nodo por nodo — sin depender de una conexión en vivo.
+        </p>
+      </div>
+      <div class="dash-panel">
+        <div class="dash-row">
+          <div>
+            <div class="lbl">Acceso Norte — Puerta 3</div>
+            <div class="sub">Política optimizada activa</div>
+          </div>
+          <div class="metric">↓ 41%</div>
+        </div>
+        <div class="dash-row high">
+          <div>
+            <div class="lbl">Cruce Ovalo Vespucio</div>
+            <div class="sub">Congestión moderada</div>
+          </div>
+          <div class="metric">03:12</div>
+        </div>
+        <div class="dash-row">
+          <div>
+            <div class="lbl">Corredor logístico sur</div>
+            <div class="sub">Flujo estable</div>
+          </div>
+          <div class="metric">↓ 18%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .dashboard {
+    background: var(--cream);
+    padding: 0 0 110px;
+  }
+  .dash-frame {
+    background: var(--navy);
+    border-radius: 20px;
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    gap: 24px;
+  }
+  .dash-side {
+    color: var(--cream);
+  }
+  .dash-side .tag {
+    font-size: 12px;
+    color: var(--cyan);
+    font-weight: 700;
+  }
+  .dash-side h3 {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    margin-top: 10px;
+    font-weight: 500;
+  }
+  .dash-side p {
+    margin-top: 10px;
+    font-size: 13.5px;
+    color: rgba(255, 248, 234, 0.68);
+  }
+  .dash-panel {
+    background: var(--cream);
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .dash-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px 18px;
+    border-left: 4px solid var(--lime);
+    font-size: 13px;
+  }
+  .dash-row.high {
+    border-left-color: #e0a15c;
+  }
+  .dash-row .lbl {
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .dash-row .sub {
+    color: rgba(21, 27, 32, 0.55);
+    margin-top: 2px;
+  }
+  .dash-row .metric {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  @media (max-width: 860px) {
+    .dash-frame {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

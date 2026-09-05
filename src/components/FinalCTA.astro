@@ -1,0 +1,106 @@
+---
+// Sección CTA final + ubicación del evento
+// TODO: reemplazar map-box por un iframe real de Google Maps
+---
+
+<section class="final" id="contacto">
+  <div class="wrap">
+    <div class="final-inner">
+      <div>
+        <h2>Ven a ver Troppo en la feria.</h2>
+        <p>
+          Presentamos el prototipo completo del gemelo digital, con simulaciones en
+          vivo del acceso a San Antonio.
+        </p>
+        <div class="meta">
+          <div>
+            <div class="meta-label">FECHA</div>
+            13 de noviembre, 2026
+          </div>
+          <div>
+            <div class="meta-label">LUGAR</div>
+            USM Campus San Joaquín
+          </div>
+        </div>
+        <div class="cta-row">
+          <button class="btn-primary" type="button">Hablemos</button>
+        </div>
+      </div>
+      <div class="map-box">Mapa · USM Campus San Joaquín</div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .final {
+    padding: 110px 0;
+  }
+  .final-inner {
+    background: var(--navy);
+    color: var(--cream);
+    border-radius: 24px;
+    padding: 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 34px;
+    line-height: 1.2;
+    max-width: 420px;
+  }
+  p {
+    margin-top: 16px;
+    color: rgba(255, 248, 234, 0.72);
+    font-size: 15px;
+    max-width: 380px;
+  }
+  .meta {
+    margin-top: 26px;
+    display: flex;
+    gap: 28px;
+    font-size: 13.5px;
+  }
+  .meta-label {
+    color: var(--cyan);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .cta-row {
+    margin-top: 28px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  .btn-primary {
+    background: var(--lime);
+    color: var(--navy-deep);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 15px 28px;
+    border-radius: 100px;
+  }
+  .map-box {
+    background: rgba(255, 248, 234, 0.06);
+    border: 1px solid rgba(255, 248, 234, 0.16);
+    border-radius: 16px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: rgba(255, 248, 234, 0.5);
+  }
+
+  @media (max-width: 860px) {
+    .final-inner {
+      grid-template-columns: 1fr;
+      padding: 40px 28px;
+    }
+  }
+</style>

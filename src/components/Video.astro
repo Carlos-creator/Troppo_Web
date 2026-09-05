@@ -1,0 +1,67 @@
+---
+// Sección de video del pitch — placeholder para embed
+// TODO: reemplazar el iframe placeholder por el video real cuando esté grabado
+---
+
+<section class="video-section" id="pitch">
+  <div class="wrap">
+    <div class="video-head">
+      <div class="eyebrow">EL PITCH EN 90 SEGUNDOS</div>
+      <h2>Verlo funcionando dice más que cualquier slide.</h2>
+    </div>
+    <div class="video-frame">
+      <div class="video-placeholder">
+        <svg viewBox="0 0 80 80" width="80" height="80" aria-hidden="true">
+          <circle cx="40" cy="40" r="38" fill="none" stroke="#61E1E6" stroke-width="2" />
+          <path d="M32 26 L54 40 L32 54 Z" fill="#D1EB78" />
+        </svg>
+        <p>Video del pitch — próximamente</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .video-section {
+    padding: 110px 0;
+    background: var(--cream);
+  }
+  .video-head {
+    max-width: 640px;
+    margin-bottom: 48px;
+  }
+  .eyebrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    opacity: 0.55;
+  }
+  h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 38px;
+    margin-top: 14px;
+    line-height: 1.2;
+  }
+  .video-frame {
+    aspect-ratio: 16 / 9;
+    background: var(--navy);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+  }
+  .video-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    color: rgba(255, 248, 234, 0.6);
+  }
+  .video-placeholder p {
+    font-size: 14px;
+    font-weight: 500;
+  }
+</style>
