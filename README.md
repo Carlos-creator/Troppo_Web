@@ -77,7 +77,8 @@ El sitio queda disponible en `http://localhost:4321`.
 
 ## Roadmap del sitio
 
-Ver **[docs/IDEAS.md](docs/IDEAS.md)** para el plan completo, priorización y diferencias con la app real.
+- **[docs/PLAN.md](docs/PLAN.md)** — pasos concretos, ubicación de assets, comandos de deploy
+- **[docs/IDEAS.md](docs/IDEAS.md)** — visión, ideas de diseño y diferencias con la app real
 
 Pendientes principales:
 
@@ -93,3 +94,5 @@ Pendientes principales:
 ## Créditos
 
 Proyecto capstone INF360 · UTFSM · 2026-1. Ver equipo completo en la sección correspondiente del sitio.
+
+**Autor del sitio web:** Carlos Ramírez Valdés — UI/UX Lead
