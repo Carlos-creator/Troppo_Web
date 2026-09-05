@@ -360,29 +360,40 @@ CSS del `.video-embed`: `width: 100%; height: 100%; border: 0;`
 
 ## Fase 4 — Simulación interactiva ✅
 
-Implementada en `Simulation.astro`. MVP visual del núcleo del producto:
+Implementada en `Simulation.astro` como **showcase auto-animado** (no interactivo).
 
-**Elementos:**
-- Mapa SVG estilizado del acceso al Puerto de San Antonio (océano + costa irregular + terminales + red vial + rotonda + semáforos)
-- Panel lateral con "Cómo funciona" (3 pasos) + métricas al iniciar
-- HUD flotante top-left con badge de estado + contador de puntos
-- Cursor `crosshair` sobre el mapa en modo idle
+**Concepto:** ciclo automático de 4 escenarios cada 8 segundos que demuestran los distintos features de Troppo sin requerir input del usuario. Dots clickables permiten saltar a un escenario específico.
 
-**Flujo:**
-1. Usuario hace click 4 veces sobre el mapa → cada click añade un marcador cyan numerado + expande el polígono lime que los conecta
-2. Al 4to click: transición 1.4s ("EXTRAYENDO ZONA") con overlay de barrido + el mapa base se atenúa al 35%
-3. Aparecen 12 vehículos animados (8 autos cyan + 4 camiones lime) circulando por las rutas del mapa
-4. Métricas ficticias plausibles: vehículos, espera promedio, CO₂
-5. Botón **Activar IA**: los vehículos aceleran 1.65×, semáforos cambian a lime, aparece métrica de reducción −42%
-6. Botón **Reiniciar**: vuelve al estado inicial, limpia todo
+**Escenarios:**
+1. **Congestión sin IA** (rojo, atochamiento) — vehículos lentos, semáforos en rojo, HUD "CONGESTIÓN"
+2. **Optimización con IA** — mismos vehículos aceleran, semáforos verdes coordinados, métrica de reducción aparece
+3. **Contingencia manejada** — accidente overlay en Ruta Norte, IA redirige tráfico por corredor y sur, HUD "REDIRECCIONANDO"
+4. **Bimodal** — más camiones en corredor logístico + autos en rutas secundarias, HUD "PRIORIDAD BIMODAL"
 
-**Detalles técnicos:**
-- Animación de vehículos con `requestAnimationFrame` — smooth 60fps
-- Rutas polilineales predefinidas; función `routePoint()` interpola posición + ángulo según progreso 0..1
-- SVG `getScreenCTM()` para convertir coords del click a viewBox coords (independiente del tamaño de pantalla)
-- State machine: `idle → drawing → extracting → running` con `data-state` en el viewport
-- Camiones más largos + más lentos, autos más chicos + más rápidos (diferenciación bimodal)
-- Polígono con `stroke-dasharray` + glow pulsante en modo running
+**Mapa** (rediseñado con geometría coherente):
+- Océano gradiente + patrón de olas + costa irregular
+- Puerto San Antonio (terminales top-left) con etiqueta
+- 4 rutas viales: **Corredor logístico** (grueso, y=240), **Ruta Norte** (y=140), **Ruta Sur** (y=340), **Vía Central** (x=520)
+- Rotonda a escala en la intersección del corredor con la vía central
+- 3 semáforos con housing negro + 3 lentes (rojo/amarillo/verde) posicionados en esquinas de intersecciones reales
+- Alert overlay (bloqueo por accidente en Ruta Norte, visible solo en escenario 3)
+
+**Panel lateral:**
+- Contador `1/4 escenarios` grande en Fraunces cyan
+- Título + descripción del escenario actual
+- 4 métricas: vehículos activos, espera promedio, CO₂, reducción vs sin IA
+- Dots navegables (barras horizontales, dot activo en lime con scale-x)
+
+**HUD flotante top-left:**
+- Badge con dot pulsante + texto de estado
+- Cambia de color según tono: `bad` (rojo), `warn` (amarillo), `good` (lime), `off` (cyan)
+
+**Técnico:**
+- Animación con `requestAnimationFrame` — 60fps
+- 3 pools de vehículos diferentes según escenario (contingencia sin cars en ruta bloqueada, bimodal con más trucks)
+- Speed multiplier por escenario cambia dinámicamente
+- `visibilitychange` pausa el loop cuando la pestaña no está visible → ahorro de CPU
+- Rutas polilineales con `routePoint()` que interpola posición + ángulo
 
 ---
 
