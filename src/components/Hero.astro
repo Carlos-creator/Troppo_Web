@@ -142,10 +142,13 @@
   .hero-visual {
     position: relative;
     height: 420px;
+    /* Eje Y compartido: brújula, lidar-sweep y scanner-arm todos pivotan aquí.
+       En mobile se sobrescribe para empujar la brújula hacia arriba. */
+    --compass-cy: 50%;
   }
   .compass-big {
     position: absolute;
-    top: 50%;
+    top: var(--compass-cy);
     left: 50%;
     transform: translate(-50%, -50%);
     width: 420px;
@@ -161,7 +164,7 @@
      ScrollRoad.astro). */
   .lidar-sweep {
     position: absolute;
-    top: 50%;
+    top: var(--compass-cy);
     left: 50%;
     width: 420px;
     height: 420px;
@@ -227,7 +230,7 @@
   }
   .scanner-arm {
     position: absolute;
-    top: 50%;
+    top: var(--compass-cy);
     left: 50%;
     height: 1.5px;
     width: 0;
@@ -313,12 +316,8 @@
       animation: none;
     }
   }
-  /* En dispositivos sin hover fino (mobile), no mostramos el scanner */
-  @media (hover: none) {
-    .lidar-scanner {
-      display: none;
-    }
-  }
+  /* En touch el scanner también funciona (finger tracking) — se activa
+     con touchstart/touchmove. Ver script abajo. */
 
   /* ---------- CLICK RIPPLES ---------- */
   /* Impacto tipo agua: flash brillante + 3 ondas concéntricas escalonadas.
@@ -398,9 +397,12 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    background: rgba(255, 248, 234, 0.06);
-    border: 1px solid rgba(255, 248, 234, 0.16);
-    backdrop-filter: blur(6px);
+    /* Glassmorphism reforzado — más blur, saturación y sombra sutil */
+    background: rgba(255, 248, 234, 0.08);
+    border: 1px solid rgba(255, 248, 234, 0.18);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
     border-radius: 16px;
     padding: 22px 24px;
     width: 260px;
@@ -421,14 +423,31 @@
     h1 {
       font-size: 38px;
     }
+    /* Alto suficiente para que brújula + card no se solapen */
     .hero-visual {
-      height: 260px;
+      height: 400px;
       margin-top: 20px;
+      /* Empuja el eje Y compartido hacia arriba — la brújula, el
+         lidar-sweep y el pivote del scanner-arm siguen esta var */
+      --compass-cy: 32%;
     }
     .compass-big,
     .lidar-sweep {
-      width: 220px;
-      height: 220px;
+      width: 200px;
+      height: 200px;
+    }
+    /* Card centrado horizontalmente y anclado al fondo */
+    .hero-card {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      bottom: 0;
+      width: calc(100% - 24px);
+      max-width: 340px;
+      padding: 18px 20px;
+    }
+    .hero-card .big-num {
+      font-size: 28px;
     }
   }
 </style>
@@ -447,10 +466,22 @@
     let latestX = 0;
     let latestY = 0;
 
+    // El centro Y de la brújula viene de la CSS var --compass-cy (50% desktop,
+    // 32% mobile). Se cachea y se re-lee en resize para no llamar
+    // getComputedStyle en cada frame.
+    let compassCyRatio = 0.5;
+    const readCompassCy = () => {
+      const raw = getComputedStyle(heroVisual).getPropertyValue('--compass-cy').trim();
+      const parsed = parseFloat(raw);
+      compassCyRatio = Number.isNaN(parsed) ? 0.5 : parsed / 100;
+    };
+    readCompassCy();
+    window.addEventListener('resize', readCompassCy);
+
     const update = () => {
       const rect = heroVisual.getBoundingClientRect();
       const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
+      const centerY = rect.height * compassCyRatio;
       const dx = latestX - centerX;
       const dy = latestY - centerY;
 
@@ -474,6 +505,16 @@
       ticking = false;
     };
 
+    const updatePosition = (clientX: number, clientY: number) => {
+      const rect = heroVisual.getBoundingClientRect();
+      latestX = clientX - rect.left;
+      latestY = clientY - rect.top;
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    // ---- MOUSE ----
     heroVisual.addEventListener('mouseenter', () => {
       scanner.classList.add('active');
     });
@@ -483,13 +524,45 @@
     });
 
     heroVisual.addEventListener('mousemove', (e) => {
-      const rect = heroVisual.getBoundingClientRect();
-      latestX = e.clientX - rect.left;
-      latestY = e.clientY - rect.top;
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(update);
+      updatePosition(e.clientX, e.clientY);
     });
+
+    // ---- TOUCH ----
+    // Finger tracking en mobile: mientras el dedo pasa sobre el hero
+    // (incluso durante scroll — touchmove es passive, no bloquea el scroll)
+    // el scanner sigue el dedo. Se desactiva con delay al levantar el dedo
+    // para que no parpadee.
+    let touchFadeTimer = 0;
+
+    heroVisual.addEventListener(
+      'touchstart',
+      (e) => {
+        window.clearTimeout(touchFadeTimer);
+        scanner.classList.add('active');
+        const t = e.touches[0];
+        if (t) updatePosition(t.clientX, t.clientY);
+      },
+      { passive: true },
+    );
+
+    heroVisual.addEventListener(
+      'touchmove',
+      (e) => {
+        const t = e.touches[0];
+        if (t) updatePosition(t.clientX, t.clientY);
+      },
+      { passive: true },
+    );
+
+    heroVisual.addEventListener(
+      'touchend',
+      () => {
+        touchFadeTimer = window.setTimeout(() => {
+          scanner.classList.remove('active');
+        }, 900);
+      },
+      { passive: true },
+    );
 
     // Ripples al hacer click — impacto de agua con multiples ondas concentricas.
     const spawnRipple = (x: number, y: number, delay: number, klass: string) => {
