@@ -396,28 +396,26 @@
   }
   .side-dots {
     display: flex;
-    gap: 8px;
+    gap: 14px;
     justify-content: center;
     margin-top: auto;
     padding-top: 8px;
   }
   .dot {
-    width: 32px;
+    width: 34px;
     height: 6px;
     border-radius: 3px;
     background: rgba(255, 248, 234, 0.2);
     border: none;
     cursor: pointer;
     padding: 0;
-    transition: background 250ms ease, transform 200ms ease;
-    transform-origin: center;
+    transition: background 180ms ease, box-shadow 180ms ease;
   }
   .dot:hover { background: rgba(255, 248, 234, 0.4); }
   .dot.is-active,
   .dot[aria-current="true"] {
     background: var(--lime);
-    transform: scaleX(1.2);
-    box-shadow: 0 0 8px rgba(209, 235, 120, 0.5);
+    box-shadow: 0 0 10px rgba(209, 235, 120, 0.7);
   }
 
   @media (max-width: 860px) {
@@ -719,7 +717,8 @@
     reduction: document.querySelector<HTMLElement>('[data-metric="reduction"]'),
   };
   const highlightRow = document.querySelector<HTMLElement>('[data-highlight]');
-  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.dot'));
+  // Scoped a .side-dots — evita capturar el <span class="dot"> del Hero
+  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.side-dots .dot'));
 
   interface RuntimeCar extends Vehicle {
     el: SVGRectElement;
