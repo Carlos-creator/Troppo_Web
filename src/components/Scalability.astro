@@ -558,7 +558,10 @@
     showZoneMap(zone.id);
     setZoneNameText(zone);
     setHud(`ANALIZANDO · ${zone.sub.split(' · ')[0].toUpperCase()}`);
-    phase = 'waiting';
+    // IMPORTANTE: iniciar en 'moving' — así el tick empieza moviendo el cursor
+    // desde startCursor hacia points[0]. Con 'waiting' se saltaba el primer
+    // click porque el waiting-phase avanza stepIdx sin hacer click.
+    phase = 'moving';
     phaseStart = performance.now();
   };
 
