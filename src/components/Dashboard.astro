@@ -1,40 +1,171 @@
 ---
-// Dashboard mockup — reconstrucción de resultados de simulación
-// TODO: Reemplazar por screenshot real de sumo_v2 (public/images/screenshots/dashboard.png)
+// Dashboard mockup — laptop + phone que "se encienden" al entrar al viewport.
+// Muestra la app real de Troppo (basado en sumo_v2) con:
+//   - Laptop: panel de simulaciones activas + KPIs + lista de corridas
+//   - Phone: notificación de Troppo + vista compacta del dashboard
+//   - Animaciones: tapa se abre, pantallas se prenden, notif slide-down,
+//     contenido aparece con stagger.
 ---
 
-<section class="dashboard">
+<section class="dashboard-section">
   <div class="wrap">
-    <div class="dash-frame">
-      <div class="dash-side">
-        <div class="tag">VISTA DE RESULTADOS</div>
-        <h3>El flujo, reconstruido.</h3>
-        <p>
-          Una vez terminada la simulación, el panel reconstruye la evolución del
-          tráfico nodo por nodo — sin depender de una conexión en vivo.
-        </p>
+    <div class="dash-head">
+      <div class="eyebrow">VISTA DE RESULTADOS</div>
+      <h2>La app real que operan.</h2>
+      <p>
+        El panel de Troppo funciona en escritorio para el analista logístico y
+        envía alertas al móvil del operador. Simulaciones, métricas y
+        recomendaciones en el mismo lugar.
+      </p>
+    </div>
+
+    <div class="rd-stage">
+      <!-- ================= LAPTOP ================= -->
+      <div class="rd-laptop" aria-hidden="true">
+        <div class="rd-lid">
+          <span class="rd-cam"></span>
+          <div class="rd-display">
+            <div class="rd-app">
+              <!-- Rail izquierdo con íconos -->
+              <aside class="rd-rail">
+                <span class="rd-mark"></span>
+                <i class="on"></i>
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
+              </aside>
+
+              <!-- Panel principal -->
+              <div class="rd-main">
+                <div class="rd-top">
+                  <div class="rd-title">
+                    <span class="rd-h">Simulaciones activas</span>
+                    <span class="rd-subtle">SUMO v2 · Puerto San Antonio</span>
+                  </div>
+                  <span class="rd-live">
+                    <span class="rd-live-dot"></span>EN VIVO · 04:16
+                  </span>
+                </div>
+
+                <div class="rd-kpis">
+                  <div class="rd-kpi">
+                    <b>3.240</b>
+                    <span>vehículos activos</span>
+                  </div>
+                  <div class="rd-kpi">
+                    <b>2.6<small>s</small></b>
+                    <span>espera promedio</span>
+                  </div>
+                  <div class="rd-kpi rd-kpi-hl">
+                    <b>−44%</b>
+                    <span>reducción CO₂</span>
+                  </div>
+                </div>
+
+                <div class="rd-list">
+                  <div class="rd-row rd-good">
+                    <div class="rd-row-head">
+                      <span class="rd-tag">FLUJO IA</span>
+                      <span class="rd-id">run-2026-011</span>
+                      <span class="rd-time">04:12</span>
+                    </div>
+                    <p class="rd-row-title">Corredor logístico — optimización activa</p>
+                    <p class="rd-row-svcs">rotonda · acceso norte · vía central</p>
+                    <div class="rd-progress"><span style="width:82%"></span></div>
+                  </div>
+
+                  <div class="rd-row rd-warn">
+                    <div class="rd-row-head">
+                      <span class="rd-tag">CONTINGENCIA</span>
+                      <span class="rd-id">run-2026-010</span>
+                      <span class="rd-time">03:58</span>
+                    </div>
+                    <p class="rd-row-title">Ruta Norte — accidente, redirigiendo</p>
+                    <p class="rd-row-svcs">ruta norte · corredor · ruta sur</p>
+                    <div class="rd-progress"><span style="width:46%"></span></div>
+                  </div>
+
+                  <div class="rd-row rd-good">
+                    <div class="rd-row-head">
+                      <span class="rd-tag">BIMODAL</span>
+                      <span class="rd-id">run-2026-009</span>
+                      <span class="rd-time">03:41</span>
+                    </div>
+                    <p class="rd-row-title">Rotonda Central — prioridad carga</p>
+                    <p class="rd-row-svcs">corredor · vía central</p>
+                    <div class="rd-progress"><span style="width:91%"></span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="rd-hinge"></div>
+        <div class="rd-base"></div>
       </div>
-      <div class="dash-panel">
-        <div class="dash-row">
-          <div>
-            <div class="lbl">Acceso Norte — Puerta 3</div>
-            <div class="sub">Política optimizada activa</div>
+
+      <!-- ================= PHONE ================= -->
+      <div class="rd-phone" aria-hidden="true">
+        <div class="rd-phone-screen">
+          <span class="rd-island"></span>
+
+          <div class="rd-notif">
+            <span class="rd-notif-mark"></span>
+            <span class="rd-notif-body">
+              <div class="rd-notif-head">
+                <b>Troppo</b>
+                <span class="rd-notif-time">ahora</span>
+              </div>
+              <span class="rd-notif-msg">Diagnóstico completado — optimización aplicada, +42% flujo</span>
+            </span>
           </div>
-          <div class="metric">↓ 41%</div>
-        </div>
-        <div class="dash-row high">
-          <div>
-            <div class="lbl">Cruce Ovalo Vespucio</div>
-            <div class="sub">Congestión moderada</div>
+
+          <div class="rd-status">
+            <span>9:41</span>
+            <span class="rd-batt"></span>
           </div>
-          <div class="metric">03:12</div>
-        </div>
-        <div class="dash-row">
-          <div>
-            <div class="lbl">Corredor logístico sur</div>
-            <div class="sub">Flujo estable</div>
+          <div class="rd-head">
+            <span class="rd-brand">TROPPO</span>
+            <span class="rd-h1">Panel operador</span>
           </div>
-          <div class="metric">↓ 18%</div>
+
+          <div class="rd-pkpi">
+            <span><b>3.240</b>veh</span>
+            <span><b>2.6s</b>espera</span>
+            <span class="hl"><b>−44%</b>CO₂</span>
+          </div>
+
+          <div class="rd-plist">
+            <div class="rd-prow rd-good">
+              <div class="rd-prow-head">
+                <span class="rd-ptag">FLUJO IA</span>
+                <span class="rd-ptime">04:12</span>
+              </div>
+              <p class="rd-prow-title">Corredor logístico</p>
+              <p class="rd-prow-svcs">run-2026-011 · 82%</p>
+            </div>
+            <div class="rd-prow rd-warn">
+              <div class="rd-prow-head">
+                <span class="rd-ptag">CONTINGENCIA</span>
+                <span class="rd-ptime">03:58</span>
+              </div>
+              <p class="rd-prow-title">Ruta Norte redirigiendo</p>
+              <p class="rd-prow-svcs">run-2026-010 · 46%</p>
+            </div>
+            <div class="rd-prow rd-good">
+              <div class="rd-prow-head">
+                <span class="rd-ptag">BIMODAL</span>
+                <span class="rd-ptime">03:41</span>
+              </div>
+              <p class="rd-prow-title">Rotonda prioridad carga</p>
+              <p class="rd-prow-svcs">run-2026-009 · 91%</p>
+            </div>
+          </div>
+
+          <div class="rd-tabs">
+            <i class="on"></i><i></i><i></i><i></i>
+          </div>
         </div>
       </div>
     </div>
@@ -42,76 +173,693 @@
 </section>
 
 <style>
-  .dashboard {
+  .dashboard-section {
+    padding: 110px 0;
     background: var(--cream);
-    padding: 0 0 110px;
   }
-  .dash-frame {
-    background: var(--navy);
-    border-radius: 20px;
-    padding: 28px;
-    display: grid;
-    grid-template-columns: 230px 1fr;
-    gap: 24px;
+  .dash-head {
+    max-width: 640px;
+    margin-bottom: 60px;
   }
-  .dash-side {
-    color: var(--cream);
+  .eyebrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    opacity: 0.55;
   }
-  .dash-side .tag {
-    font-size: 12px;
-    color: var(--cyan);
-    font-weight: 700;
-  }
-  .dash-side h3 {
+  h2 {
     font-family: var(--font-serif);
-    font-size: 24px;
-    margin-top: 10px;
     font-weight: 500;
+    font-size: 38px;
+    margin-top: 14px;
+    line-height: 1.2;
+    color: var(--navy);
   }
-  .dash-side p {
-    margin-top: 10px;
-    font-size: 13.5px;
-    color: rgba(255, 248, 234, 0.68);
+  .dash-head p {
+    margin-top: 16px;
+    font-size: 15px;
+    color: rgba(21, 27, 32, 0.7);
+    max-width: 520px;
   }
-  .dash-panel {
-    background: var(--cream);
-    border-radius: 14px;
-    padding: 22px;
+
+  /* ========================================================
+     STAGE — contenedor con perspectiva para la animación
+     ======================================================== */
+  .rd-stage {
+    position: relative;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 190px 40px 0;
+    perspective: 1100px;
+    perspective-origin: 50% 35%;
+  }
+  .rd-stage::after {
+    /* sombra de contacto bajo laptop */
+    content: '';
+    position: absolute;
+    bottom: 20px;
+    left: 15%;
+    right: 15%;
+    height: 22px;
+    background: radial-gradient(ellipse at center, rgba(4, 69, 89, 0.28), transparent 70%);
+    filter: blur(6px);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ========================================================
+     LAPTOP
+     ======================================================== */
+  .rd-laptop {
+    position: relative;
+    z-index: 1;
+    width: min(680px, 100%);
+    margin: 0 auto;
+    filter: drop-shadow(0 30px 40px rgba(4, 69, 89, 0.18));
+  }
+  .rd-lid {
+    position: relative;
+    background: #1a1c20;
+    border: 3px solid #0b0d10;
+    border-radius: 12px 12px 3px 3px;
+    padding: 14px 14px 10px;
+    transform-origin: 50% 100%;
+  }
+  .rd-cam {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2a2c30;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    z-index: 7;
+  }
+  .rd-display {
+    position: relative;
+    overflow: hidden;
+    background: #0b0d10;
+    border-radius: 2px;
+    aspect-ratio: 16 / 10;
+  }
+  .rd-display::after {
+    /* Overlay sutil de reflejo en pantalla */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 6;
+  }
+  .rd-hinge {
+    height: 8px;
+    background: linear-gradient(#a3a8ad, #c6cacd 45%, #9ba1a6);
+    border-radius: 0 0 4px 4px;
+  }
+  .rd-base {
+    position: relative;
+    height: 12px;
+    background: linear-gradient(#e5e7ea, #b8bdc1 40%, #909499);
+    border-radius: 0 0 24px 24px;
+    margin: 0 -12px;
+  }
+  .rd-base::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 4px;
+    background: rgba(4, 69, 89, 0.25);
+    border-radius: 0 0 6px 6px;
+  }
+
+  /* ---------------- App inside laptop ---------------- */
+  .rd-app {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    background: var(--navy);
+    height: 100%;
+    font-family: var(--font-sans);
+  }
+  .rd-rail {
+    background: var(--navy-deep);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 0;
+    border-right: 1px solid rgba(255, 248, 234, 0.08);
+  }
+  .rd-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    background: var(--cyan);
+    margin-bottom: 8px;
+    box-shadow: 0 0 12px rgba(97, 225, 230, 0.5);
+  }
+  .rd-rail i {
+    width: 22px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 248, 234, 0.18);
+    transition: background 200ms ease;
+  }
+  .rd-rail i.on {
+    background: var(--lime);
+    box-shadow: 0 0 6px rgba(209, 235, 120, 0.5);
+  }
+  .rd-main {
+    padding: 16px 20px;
+    min-width: 0;
+    color: var(--cream);
     display: flex;
     flex-direction: column;
     gap: 14px;
   }
-  .dash-row {
+  .rd-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .rd-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .rd-h {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  .rd-subtle {
+    font-size: 10px;
+    color: rgba(255, 248, 234, 0.5);
+    letter-spacing: 0.4px;
+  }
+  .rd-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    color: var(--cyan);
+    padding: 4px 8px;
+    border: 1px solid rgba(97, 225, 230, 0.35);
+    border-radius: 100px;
+  }
+  .rd-live-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 6px var(--cyan);
+    animation: rd-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes rd-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .rd-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .rd-kpi {
+    background: rgba(255, 248, 234, 0.04);
+    border: 1px solid rgba(255, 248, 234, 0.08);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .rd-kpi b {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--cream);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .rd-kpi b small {
+    font-size: 12px;
+    color: rgba(255, 248, 234, 0.55);
+  }
+  .rd-kpi span {
+    font-size: 9.5px;
+    color: rgba(255, 248, 234, 0.55);
+    letter-spacing: 0.3px;
+  }
+  .rd-kpi-hl b {
+    color: var(--lime);
+  }
+
+  .rd-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-height: 0;
+  }
+  .rd-row {
+    background: rgba(255, 248, 234, 0.04);
+    border-left: 3px solid var(--lime);
+    border-radius: 6px;
+    padding: 9px 12px;
+  }
+  .rd-row.rd-warn { border-left-color: #ffc93c; }
+  .rd-row-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+  .rd-tag {
+    color: var(--lime);
+    padding: 2px 6px;
+    background: rgba(209, 235, 120, 0.12);
+    border-radius: 3px;
+  }
+  .rd-warn .rd-tag {
+    color: #ffc93c;
+    background: rgba(255, 201, 60, 0.12);
+  }
+  .rd-id {
+    color: rgba(255, 248, 234, 0.5);
+    font-family: var(--font-sans);
+  }
+  .rd-time {
+    color: rgba(255, 248, 234, 0.5);
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
+  .rd-row-title {
+    font-size: 12px;
+    color: var(--cream);
+    font-weight: 500;
+    margin-top: 5px;
+  }
+  .rd-row-svcs {
+    font-size: 10px;
+    color: rgba(255, 248, 234, 0.5);
+    margin-top: 2px;
+  }
+  .rd-progress {
+    margin-top: 8px;
+    height: 3px;
+    background: rgba(255, 248, 234, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .rd-progress span {
+    display: block;
+    height: 100%;
+    background: var(--lime);
+    border-radius: 2px;
+  }
+  .rd-warn .rd-progress span { background: #ffc93c; }
+
+  /* ========================================================
+     PHONE
+     ======================================================== */
+  .rd-phone {
+    position: absolute;
+    right: 20px;
+    bottom: 30px;
+    width: 190px;
+    z-index: 2;
+    filter: drop-shadow(0 22px 35px rgba(4, 69, 89, 0.28));
+  }
+  .rd-phone::before,
+  .rd-phone::after {
+    content: '';
+    position: absolute;
+    background: #0b0d10;
+    border-radius: 2px 0 0 2px;
+  }
+  .rd-phone::before {
+    left: -2px;
+    top: 100px;
+    width: 2px;
+    height: 26px;
+  }
+  .rd-phone::after {
+    right: -2px;
+    top: 130px;
+    width: 2px;
+    height: 40px;
+    border-radius: 0 2px 2px 0;
+  }
+  .rd-phone-screen {
+    position: relative;
+    aspect-ratio: 9 / 19;
+    background: var(--navy-deep);
+    border: 5px solid #0b0d10;
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: var(--cream);
+    font-family: var(--font-sans);
+  }
+  .rd-phone-screen::after {
+    /* reflejo sutil */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.06) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 6;
+    border-radius: inherit;
+  }
+  .rd-island {
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 65px;
+    height: 15px;
+    background: #0b0d10;
+    border-radius: 100px;
+    z-index: 7;
+  }
+
+  .rd-notif {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    z-index: 8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(21, 27, 32, 0.92);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(97, 225, 230, 0.28);
+    border-radius: 14px;
+    transform: translateY(-90px);
+    opacity: 0;
+  }
+  .rd-notif-mark {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background: var(--cyan);
+    box-shadow: 0 0 8px rgba(97, 225, 230, 0.5);
+    flex-shrink: 0;
+  }
+  .rd-notif-body {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+    min-width: 0;
+    gap: 2px;
+    flex: 1;
+  }
+  .rd-notif-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .rd-notif-body b {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--cream);
+    letter-spacing: 0.2px;
+  }
+  .rd-notif-time {
+    font-size: 8.5px;
+    color: rgba(255, 248, 234, 0.5);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .rd-notif-msg {
+    font-size: 9px;
+    color: rgba(255, 248, 234, 0.75);
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .rd-status {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #fff;
-    border-radius: 10px;
-    padding: 14px 18px;
-    border-left: 4px solid var(--lime);
-    font-size: 13px;
-  }
-  .dash-row.high {
-    border-left-color: #e0a15c;
-  }
-  .dash-row .lbl {
+    padding: 30px 20px 4px;
+    font-size: 10px;
     font-weight: 700;
-    color: var(--navy);
   }
-  .dash-row .sub {
-    color: rgba(21, 27, 32, 0.55);
+  .rd-batt {
+    width: 22px;
+    height: 10px;
+    border: 1.5px solid var(--cream);
+    border-radius: 3px;
+    opacity: 0.5;
+    position: relative;
+  }
+  .rd-batt::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    height: 6px;
+    width: 15px;
+    background: var(--cream);
+    border-radius: 1px;
+  }
+  .rd-head {
+    padding: 8px 14px 6px;
+  }
+  .rd-brand {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    font-family: var(--font-sans);
+  }
+  .rd-h1 {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
     margin-top: 2px;
   }
-  .dash-row .metric {
+
+  .rd-pkpi {
+    display: flex;
+    gap: 6px;
+    padding: 4px 14px 10px;
+    font-size: 8.5px;
+    color: rgba(255, 248, 234, 0.55);
+  }
+  .rd-pkpi span {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .rd-pkpi b {
     font-family: var(--font-serif);
-    font-size: 20px;
-    color: var(--navy);
+    font-size: 13px;
+    color: var(--cream);
     font-weight: 600;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .rd-pkpi .hl b { color: var(--lime); }
+
+  .rd-plist {
+    flex: 1;
+    padding: 4px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 0;
+  }
+  .rd-prow {
+    background: rgba(255, 248, 234, 0.04);
+    border-left: 2px solid var(--lime);
+    border-radius: 5px;
+    padding: 6px 8px;
+  }
+  .rd-prow.rd-warn { border-left-color: #ffc93c; }
+  .rd-prow-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 7.5px;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+  .rd-ptag {
+    color: var(--lime);
+  }
+  .rd-warn .rd-ptag { color: #ffc93c; }
+  .rd-ptime {
+    color: rgba(255, 248, 234, 0.5);
+    font-variant-numeric: tabular-nums;
+  }
+  .rd-prow-title {
+    font-size: 10px;
+    margin-top: 3px;
+    color: var(--cream);
+    font-weight: 500;
+  }
+  .rd-prow-svcs {
+    font-size: 8.5px;
+    color: rgba(255, 248, 234, 0.5);
+    margin-top: 1px;
+  }
+  .rd-tabs {
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 22px 14px;
+    border-top: 1px solid rgba(255, 248, 234, 0.08);
+    margin-top: 4px;
+  }
+  .rd-tabs i {
+    width: 16px;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 248, 234, 0.2);
+  }
+  .rd-tabs i.on { background: var(--cyan); }
+
+  /* ========================================================
+     ANIMACIONES — usa transitions con delays (más robusto que
+     @keyframes + fill:both para persistir el estado final).
+     La clase .pre aplica el estado inicial oculto.
+     Al remover .pre, las transitions llevan al estado visible.
+     ======================================================== */
+
+  /* Definir transitions en el estado normal */
+  .rd-app,
+  .rd-phone,
+  .rd-row,
+  .rd-prow,
+  .rd-notif,
+  .rd-lid {
+    transition: opacity 500ms ease-out, transform 500ms cubic-bezier(0.4, 0.05, 0.25, 1);
+  }
+  .rd-lid {
+    transition: transform 1400ms cubic-bezier(0.4, 0.05, 0.25, 1);
+    transform: rotateX(0deg);
+  }
+
+  /* Estado inicial oculto (activo mientras .pre está en el stage) */
+  .rd-stage.pre .rd-lid {
+    transform: rotateX(-92deg);
+    transition-duration: 0s; /* aplicar instantáneamente al montar */
+  }
+  .rd-stage.pre .rd-app,
+  .rd-stage.pre .rd-phone,
+  .rd-stage.pre .rd-row,
+  .rd-stage.pre .rd-prow {
+    opacity: 0;
+    transition-duration: 0s;
+  }
+  .rd-stage.pre .rd-notif {
+    opacity: 0;
+    transform: translateY(-90px);
+    transition-duration: 0s;
+  }
+
+  /* Al remover .pre → transitions activas con delays escalonados */
+  .rd-stage:not(.pre) .rd-lid {
+    transition-delay: 300ms;
+  }
+  .rd-stage:not(.pre) .rd-app {
+    transition-delay: 1300ms;
+  }
+  .rd-stage:not(.pre) .rd-phone {
+    transition-delay: 700ms;
+  }
+  .rd-stage:not(.pre) .rd-notif {
+    transition-delay: 2100ms;
+    transition-duration: 700ms;
+  }
+  .rd-stage:not(.pre) .rd-list .rd-row:nth-child(1) { transition-delay: 1600ms; }
+  .rd-stage:not(.pre) .rd-list .rd-row:nth-child(2) { transition-delay: 1750ms; }
+  .rd-stage:not(.pre) .rd-list .rd-row:nth-child(3) { transition-delay: 1900ms; }
+  .rd-stage:not(.pre) .rd-plist .rd-prow:nth-child(1) { transition-delay: 2400ms; }
+  .rd-stage:not(.pre) .rd-plist .rd-prow:nth-child(2) { transition-delay: 2550ms; }
+  .rd-stage:not(.pre) .rd-plist .rd-prow:nth-child(3) { transition-delay: 2700ms; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rd-stage.pre .rd-lid,
+    .rd-stage.pre .rd-app,
+    .rd-stage.pre .rd-phone,
+    .rd-stage.pre .rd-row,
+    .rd-stage.pre .rd-prow,
+    .rd-stage.pre .rd-notif {
+      transform: none;
+      opacity: 1;
+    }
   }
 
   @media (max-width: 860px) {
-    .dash-frame {
-      grid-template-columns: 1fr;
+    .rd-stage {
+      padding: 20px 0 0;
     }
+    .rd-phone {
+      position: static;
+      margin: 30px auto 0;
+      width: 230px;
+    }
+    .rd-stage::after { display: none; }
+    h2 { font-size: 30px; }
+    .rd-h { font-size: 15px; }
+    .rd-kpi b { font-size: 16px; }
   }
 </style>
+
+<script>
+  // Modelo: .rd-stage arranca con clase .pre (oculto instantáneamente).
+  // Cuando entra al viewport, se remueve .pre → CSS transitions se disparan
+  // con sus delays escalonados hacia el estado natural (visible).
+  //
+  // Este enfoque es más robusto que @keyframes con fill:both porque las
+  // transitions naturalmente persisten al estado final (no dependen de que
+  // el navegador respete correctamente el fill mode contra la cascada).
+  const stage = document.querySelector<HTMLElement>('.rd-stage');
+  if (stage) {
+    // Añadir .pre inmediatamente antes del primer paint
+    stage.classList.add('pre');
+
+    const reveal = () => stage.classList.remove('pre');
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              reveal();
+              observer.unobserve(stage);
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+      observer.observe(stage);
+    } else {
+      // Fallback: mostrar inmediatamente
+      reveal();
+    }
+  }
+</script>

@@ -578,8 +578,8 @@
   // FLOW POOL: mismos vehículos que jam pero sin friction — IA optimiza el flujo
   const flowPool: Vehicle[] = jamPool.map((v) => ({ ...v }));
 
-  // Escenario 3 (contingencia): cars ATASCADOS en Ruta Norte al accidente,
-  // más redirigidos por corredor y sur
+  // Escenario 3 (contingencia): cars atascados + redirigidos.
+  // Balanceado a 26 vehículos (mismo tamaño que jam/flow).
   const contingencyPool: Vehicle[] = [
     // Corredor WE (redirigidos, muchos)
     { kind: 'truck', routeId: 'corredorWE', offset: 0.10, baseSpeed: 0.020 },
@@ -587,8 +587,10 @@
     { kind: 'truck', routeId: 'corredorWE', offset: 0.46, baseSpeed: 0.020 },
     { kind: 'truck', routeId: 'corredorWE', offset: 0.64, baseSpeed: 0.020 },
     { kind: 'car',   routeId: 'corredorWE', offset: 0.82, baseSpeed: 0.025 },
-    { kind: 'car',   routeId: 'corredorEW', offset: 0.30, baseSpeed: 0.025 },
-    { kind: 'car',   routeId: 'corredorEW', offset: 0.70, baseSpeed: 0.025 },
+    { kind: 'truck', routeId: 'corredorEW', offset: 0.15, baseSpeed: 0.020 },
+    { kind: 'car',   routeId: 'corredorEW', offset: 0.35, baseSpeed: 0.025 },
+    { kind: 'truck', routeId: 'corredorEW', offset: 0.55, baseSpeed: 0.020 },
+    { kind: 'car',   routeId: 'corredorEW', offset: 0.78, baseSpeed: 0.025 },
     // Ruta Norte WE: cars atascados desde el oeste (stop en 0.44)
     { kind: 'truck', routeId: 'norteWE', offset: 0.20, baseSpeed: 0.025 },
     { kind: 'car',   routeId: 'norteWE', offset: 0.28, baseSpeed: 0.028 },
@@ -598,36 +600,54 @@
     { kind: 'car',   routeId: 'norteEW', offset: 0.35, baseSpeed: 0.028 },
     { kind: 'car',   routeId: 'norteEW', offset: 0.42, baseSpeed: 0.028 },
     { kind: 'car',   routeId: 'norteEW', offset: 0.48, baseSpeed: 0.028 },
-    // Sur (redirigidos)
+    // Sur (redirigidos — el flujo se va por acá)
     { kind: 'car',   routeId: 'surWE', offset: 0.15, baseSpeed: 0.028 },
     { kind: 'car',   routeId: 'surWE', offset: 0.40, baseSpeed: 0.028 },
     { kind: 'car',   routeId: 'surWE', offset: 0.65, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surWE', offset: 0.85, baseSpeed: 0.028 },
     { kind: 'car',   routeId: 'surEW', offset: 0.25, baseSpeed: 0.028 },
     { kind: 'car',   routeId: 'surEW', offset: 0.60, baseSpeed: 0.028 },
     // Vertical
-    { kind: 'car',   routeId: 'verticalNS', offset: 0.35, baseSpeed: 0.028 },
-    { kind: 'car',   routeId: 'verticalSN', offset: 0.55, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalNS', offset: 0.25, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalNS', offset: 0.60, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalSN', offset: 0.35, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalSN', offset: 0.70, baseSpeed: 0.028 },
   ];
 
-  // Escenario 4 (bimodal): muchos camiones en corredor
+  // Escenario 4 (bimodal): muchos camiones en corredor + autos en secundarias.
+  // Balanceado a 26 vehículos (mismo tamaño que jam/flow/contingencia).
   const bimodalPool: Vehicle[] = [
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.10, baseSpeed: 0.020 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.25, baseSpeed: 0.020 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.40, baseSpeed: 0.020 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.55, baseSpeed: 0.020 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.70, baseSpeed: 0.020 },
-    { kind: 'truck', routeId: 'corredorWE', offset: 0.85, baseSpeed: 0.020 },
-    { kind: 'truck', routeId: 'corredorEW', offset: 0.30, baseSpeed: 0.020 },
-    { kind: 'truck', routeId: 'corredorEW', offset: 0.70, baseSpeed: 0.020 },
-    { kind: 'car',   routeId: 'norteWE',    offset: 0.20, baseSpeed: 0.028 },
-    { kind: 'car',   routeId: 'norteWE',    offset: 0.50, baseSpeed: 0.028 },
-    { kind: 'car',   routeId: 'norteWE',    offset: 0.75, baseSpeed: 0.028 },
-    { kind: 'car',   routeId: 'norteEW',    offset: 0.30, baseSpeed: 0.028 },
-    { kind: 'car',   routeId: 'surWE',      offset: 0.25, baseSpeed: 0.028 },
-    { kind: 'car',   routeId: 'surWE',      offset: 0.60, baseSpeed: 0.028 },
-    { kind: 'car',   routeId: 'surEW',      offset: 0.40, baseSpeed: 0.028 },
-    { kind: 'car',   routeId: 'verticalNS', offset: 0.30, baseSpeed: 0.028 },
-    { kind: 'car',   routeId: 'verticalSN', offset: 0.60, baseSpeed: 0.028 },
+    // Corredor WE — muchos camiones (feature bimodal principal)
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.05, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.18, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.32, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.45, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.58, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.72, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorWE', offset: 0.86, baseSpeed: 0.020 },
+    // Corredor EW — camiones y autos mixtos
+    { kind: 'truck', routeId: 'corredorEW', offset: 0.15, baseSpeed: 0.020 },
+    { kind: 'truck', routeId: 'corredorEW', offset: 0.42, baseSpeed: 0.020 },
+    { kind: 'car',   routeId: 'corredorEW', offset: 0.68, baseSpeed: 0.025 },
+    { kind: 'truck', routeId: 'corredorEW', offset: 0.88, baseSpeed: 0.020 },
+    // Ruta norte — autos
+    { kind: 'car',   routeId: 'norteWE',    offset: 0.15, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteWE',    offset: 0.40, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteWE',    offset: 0.65, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteWE',    offset: 0.88, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteEW',    offset: 0.25, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'norteEW',    offset: 0.60, baseSpeed: 0.028 },
+    // Ruta sur — autos
+    { kind: 'car',   routeId: 'surWE',      offset: 0.18, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surWE',      offset: 0.52, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surWE',      offset: 0.82, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surEW',      offset: 0.30, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'surEW',      offset: 0.65, baseSpeed: 0.028 },
+    // Vertical — autos
+    { kind: 'car',   routeId: 'verticalNS', offset: 0.25, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalNS', offset: 0.65, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalSN', offset: 0.30, baseSpeed: 0.028 },
+    { kind: 'car',   routeId: 'verticalSN', offset: 0.70, baseSpeed: 0.028 },
   ];
 
   const SCENARIOS: Scenario[] = [
@@ -680,7 +700,7 @@
         { routeId: 'norteWE', progress: 0.44 }, // desde el oeste, antes del accidente (x=340)
         { routeId: 'norteEW', progress: 0.52 }, // desde el este (x=380 aprox)
       ],
-      metrics: { vehicles: '21', wait: '4.1 s', co2: '58 kg/h', reduction: '−32 %' },
+      metrics: { vehicles: '26', wait: '4.1 s', co2: '58 kg/h', reduction: '−32 %' },
       highlight: 'on',
     },
     {
@@ -693,7 +713,7 @@
       alert: false,
       speedMul: 1.4,
       vehicles: bimodalPool,
-      metrics: { vehicles: '17', wait: '3.0 s', co2: '52 kg/h', reduction: '−38 %' },
+      metrics: { vehicles: '26', wait: '3.0 s', co2: '52 kg/h', reduction: '−38 %' },
       highlight: 'on',
     },
   ];
