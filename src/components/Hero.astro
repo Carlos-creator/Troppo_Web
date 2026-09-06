@@ -7,7 +7,7 @@
     <div>
       <div class="hero-tag">
         <span class="dot"></span>
-        33.ª Feria de Software USM · 13 de noviembre
+        34.ª Feria de Software USM · 13 de noviembre
       </div>
       <h1>
         Simulamos el tráfico<br />
@@ -395,25 +395,32 @@
   }
   .hero-card {
     position: absolute;
-    bottom: 0;
-    right: 0;
-    /* Glassmorphism reforzado — más blur, saturación y sombra sutil */
-    background: rgba(255, 248, 234, 0.08);
-    border: 1px solid rgba(255, 248, 234, 0.18);
-    backdrop-filter: blur(14px) saturate(140%);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+    /* Empujado ~20/30px fuera del container para que solo roze la esquina
+       SE del anillo exterior de la brújula (antes se solapaba en toda la
+       zona inferior del star) */
+    bottom: -30px;
+    right: -20px;
+    /* Glassmorphism reforzado — blur más alto y saturación para "vidrio real" */
+    background: rgba(255, 248, 234, 0.09);
+    border: 1px solid rgba(255, 248, 234, 0.22);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
     border-radius: 16px;
-    padding: 22px 24px;
-    width: 260px;
-    font-size: 13px;
+    padding: 18px 20px;
+    width: 220px;
+    font-size: 12.5px;
+    line-height: 1.4;
     color: var(--cream);
   }
   .hero-card .big-num {
     font-family: var(--font-serif);
-    font-size: 34px;
+    font-size: 30px;
     color: var(--lime);
     font-weight: 600;
+    margin-bottom: 4px;
   }
 
   @media (max-width: 860px) {

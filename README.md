@@ -1,6 +1,6 @@
 # Troppo Web
 
-Landing page para **Troppo** — 33.ª Feria de Software USM, 13 de noviembre de 2026.
+Landing page para **Troppo** — 34.ª Feria de Software USM, 13 de noviembre de 2026.
 
 > **Inteligencia que mueve el tráfico.**
 

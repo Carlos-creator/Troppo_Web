@@ -1,7 +1,7 @@
 # TROPPO — Contexto del Proyecto
 
 > **Inteligencia que mueve el tráfico.**
-> Landing page para la 33.ª Feria de Software USM.
+> Landing page para la 34.ª Feria de Software USM.
 
 ---
 
