@@ -1,6 +1,7 @@
 ---
-// Sección de confianza / atributos técnicos
-// Sección nueva — no estaba en el mockup v0 pero sí en el plan del CLAUDE.md
+// Sección de confianza — 6 flip cards.
+// Frente: sólo el título (impacto visual). Reverso: la explicación.
+// Se voltea con hover en desktop y con tap en mobile (JS toggle).
 
 const attributes = [
   {
@@ -41,13 +42,26 @@ const attributes = [
     <div class="trust-head">
       <div class="eyebrow">POR QUÉ CONFIAR</div>
       <h2>Ingeniería para decisiones que importan.</h2>
+      <p class="trust-hint">Pasa el mouse (o toca en móvil) para ver el detalle de cada garantía.</p>
     </div>
     <div class="trust-grid">
       {
         attributes.map((a) => (
-          <article class="trust-card">
-            <h3>{a.title}</h3>
-            <p>{a.body}</p>
+          <article class="trust-card" tabindex="0" data-flip>
+            <div class="tc-inner">
+              <div class="tc-face tc-front">
+                <span class="tc-badge" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="21 12 21 6 15 6" />
+                    <path d="M21 12A9 9 0 0 1 5.6 18.4L3 21" />
+                  </svg>
+                </span>
+                <h3>{a.title}</h3>
+              </div>
+              <div class="tc-face tc-back">
+                <p>{a.body}</p>
+              </div>
+            </div>
           </article>
         ))
       }
@@ -76,39 +90,166 @@ const attributes = [
     font-size: 38px;
     margin-top: 14px;
     line-height: 1.2;
+    color: var(--navy);
   }
+  .trust-hint {
+    margin-top: 18px;
+    font-size: 13.5px;
+    color: rgba(21, 27, 32, 0.55);
+    font-style: italic;
+  }
+
   .trust-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
   }
+
+  /* ============ FLIP CARD ============
+     Combina rotateY 3D (efecto visual) + opacity crossfade
+     (garantía de que sólo un lado se ve a la vez, incluso si
+     backface-visibility no aplica por scoping de Astro). */
   .trust-card {
-    background: #fff;
-    border: 1px solid rgba(4, 69, 89, 0.12);
+    perspective: 1200px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    height: 200px;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+  }
+  .tc-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+  }
+
+  .tc-face {
+    position: absolute;
+    inset: 0;
     border-radius: 14px;
-    padding: 28px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 26px 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition:
+      transform 700ms cubic-bezier(0.34, 1.2, 0.5, 1),
+      opacity 350ms ease;
+    will-change: transform, opacity;
   }
-  .trust-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(4, 69, 89, 0.08);
+
+  /* --- FRENTE: visible por defecto --- */
+  .tc-front {
+    background: #fff;
+    border: 1px solid rgba(4, 69, 89, 0.14);
+    box-shadow: 0 6px 18px rgba(4, 69, 89, 0.06);
+    transform: rotateY(0deg);
+    opacity: 1;
+    z-index: 2;
   }
-  .trust-card h3 {
-    font-family: var(--font-title);
-    font-size: 17px;
-    font-weight: 700;
+  .tc-front h3 {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 500;
     color: var(--navy);
-    margin-bottom: 12px;
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -0.2px;
   }
-  .trust-card p {
+
+  /* --- REVERSO: oculto por defecto (rotado + invisible) --- */
+  .tc-back {
+    background: var(--navy);
+    border: 1px solid rgba(97, 225, 230, 0.35);
+    box-shadow: 0 8px 22px rgba(4, 69, 89, 0.2);
+    transform: rotateY(-180deg);
+    opacity: 0;
+    z-index: 1;
+  }
+  .tc-back p {
     font-size: 14px;
-    color: rgba(21, 27, 32, 0.7);
-    line-height: 1.55;
+    line-height: 1.6;
+    color: rgba(255, 248, 234, 0.9);
+    margin: 0;
+  }
+
+  /* --- HOVER / FOCUS / FLIPPED: swap opacity + rotación --- */
+  .trust-card:hover .tc-front,
+  .trust-card:focus-visible .tc-front,
+  .trust-card.flipped .tc-front {
+    transform: rotateY(180deg);
+    opacity: 0;
+    z-index: 1;
+  }
+  .trust-card:hover .tc-back,
+  .trust-card:focus-visible .tc-back,
+  .trust-card.flipped .tc-back {
+    transform: rotateY(0deg);
+    opacity: 1;
+    z-index: 2;
+  }
+
+  /* Badge indicador de "voltear" en el frente */
+  .tc-badge {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(97, 225, 230, 0.15);
+    color: var(--navy);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 400ms ease, background 400ms ease;
+  }
+  .trust-card:hover .tc-badge,
+  .trust-card:focus-visible .tc-badge,
+  .trust-card.flipped .tc-badge {
+    background: var(--cyan);
+    color: var(--navy-deep);
+    transform: rotate(180deg);
   }
 
   @media (max-width: 860px) {
-    .trust-grid {
-      grid-template-columns: 1fr;
+    .trust-grid { grid-template-columns: 1fr; }
+    .trust-card { height: 180px; }
+    .tc-front h3 { font-size: 20px; }
+    .tc-back p { font-size: 13.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tc-inner {
+      transition: none;
+    }
+    .tc-badge {
+      transition: none;
     }
   }
 </style>
+
+<script>
+  // Tap toggle en dispositivos táctiles (mouse hover ya funciona por CSS).
+  // Usamos click (que se dispara tanto en tap como en clic) y stopPropagation
+  // por si el evento burbujea a algún handler global.
+  const cards = document.querySelectorAll<HTMLElement>('[data-flip]');
+  cards.forEach((card) => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+    });
+    // Soporte teclado — Enter/Espacio voltean la card
+    card.addEventListener('keydown', (e) => {
+      const ke = e as KeyboardEvent;
+      if (ke.key === 'Enter' || ke.key === ' ') {
+        ke.preventDefault();
+        card.classList.toggle('flipped');
+      }
+    });
+  });
+</script>
