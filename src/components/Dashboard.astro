@@ -762,44 +762,80 @@
     transform: rotateX(0deg);
   }
 
-  /* Estado inicial oculto (activo mientras .pre está en el stage) */
-  .rd-stage.pre .rd-lid {
+  /* Estado oculto — compartido por .pre (mount inicial) y .exiting
+     (cuando la sección sale del viewport tras scroll). La diferencia:
+     .pre añade transition-duration:0s para SNAP inmediato al montar;
+     .exiting deja las transitions naturales para animar el cierre. */
+  .rd-stage.pre .rd-lid,
+  .rd-stage.exiting .rd-lid {
     transform: rotateX(-92deg);
-    transition-duration: 0s; /* aplicar instantáneamente al montar */
   }
   .rd-stage.pre .rd-app,
   .rd-stage.pre .rd-phone,
   .rd-stage.pre .rd-row,
-  .rd-stage.pre .rd-prow {
+  .rd-stage.pre .rd-prow,
+  .rd-stage.exiting .rd-app,
+  .rd-stage.exiting .rd-phone,
+  .rd-stage.exiting .rd-row,
+  .rd-stage.exiting .rd-prow {
     opacity: 0;
-    transition-duration: 0s;
   }
-  .rd-stage.pre .rd-notif {
+  .rd-stage.pre .rd-notif,
+  .rd-stage.exiting .rd-notif {
     opacity: 0;
     transform: translateY(-90px);
+  }
+
+  /* Snap instantáneo sólo en el mount inicial (.pre) */
+  .rd-stage.pre .rd-lid,
+  .rd-stage.pre .rd-app,
+  .rd-stage.pre .rd-phone,
+  .rd-stage.pre .rd-row,
+  .rd-stage.pre .rd-prow,
+  .rd-stage.pre .rd-notif {
     transition-duration: 0s;
   }
 
-  /* Al remover .pre → transitions activas con delays escalonados */
-  .rd-stage:not(.pre) .rd-lid {
+  /* Delays de ENTRADA (revelado) — sin .pre ni .exiting */
+  .rd-stage:not(.pre):not(.exiting) .rd-lid {
     transition-delay: 300ms;
   }
-  .rd-stage:not(.pre) .rd-app {
+  .rd-stage:not(.pre):not(.exiting) .rd-app {
     transition-delay: 1300ms;
   }
-  .rd-stage:not(.pre) .rd-phone {
+  .rd-stage:not(.pre):not(.exiting) .rd-phone {
     transition-delay: 700ms;
   }
-  .rd-stage:not(.pre) .rd-notif {
+  .rd-stage:not(.pre):not(.exiting) .rd-notif {
     transition-delay: 2100ms;
     transition-duration: 700ms;
   }
-  .rd-stage:not(.pre) .rd-list .rd-row:nth-child(1) { transition-delay: 1600ms; }
-  .rd-stage:not(.pre) .rd-list .rd-row:nth-child(2) { transition-delay: 1750ms; }
-  .rd-stage:not(.pre) .rd-list .rd-row:nth-child(3) { transition-delay: 1900ms; }
-  .rd-stage:not(.pre) .rd-plist .rd-prow:nth-child(1) { transition-delay: 2400ms; }
-  .rd-stage:not(.pre) .rd-plist .rd-prow:nth-child(2) { transition-delay: 2550ms; }
-  .rd-stage:not(.pre) .rd-plist .rd-prow:nth-child(3) { transition-delay: 2700ms; }
+  .rd-stage:not(.pre):not(.exiting) .rd-list .rd-row:nth-child(1) { transition-delay: 1600ms; }
+  .rd-stage:not(.pre):not(.exiting) .rd-list .rd-row:nth-child(2) { transition-delay: 1750ms; }
+  .rd-stage:not(.pre):not(.exiting) .rd-list .rd-row:nth-child(3) { transition-delay: 1900ms; }
+  .rd-stage:not(.pre):not(.exiting) .rd-plist .rd-prow:nth-child(1) { transition-delay: 2400ms; }
+  .rd-stage:not(.pre):not(.exiting) .rd-plist .rd-prow:nth-child(2) { transition-delay: 2550ms; }
+  .rd-stage:not(.pre):not(.exiting) .rd-plist .rd-prow:nth-child(3) { transition-delay: 2700ms; }
+
+  /* Delays de SALIDA (.exiting) — orden inverso, más rápido:
+     primero desaparece la notif, después las filas del phone, el phone,
+     las filas del laptop, la app del laptop, y finalmente se cierra la tapa */
+  .rd-stage.exiting .rd-notif {
+    transition-delay: 0ms;
+    transition-duration: 400ms;
+  }
+  .rd-stage.exiting .rd-plist .rd-prow:nth-child(3) { transition-delay: 80ms; }
+  .rd-stage.exiting .rd-plist .rd-prow:nth-child(2) { transition-delay: 160ms; }
+  .rd-stage.exiting .rd-plist .rd-prow:nth-child(1) { transition-delay: 240ms; }
+  .rd-stage.exiting .rd-phone { transition-delay: 320ms; }
+  .rd-stage.exiting .rd-list .rd-row:nth-child(3) { transition-delay: 180ms; }
+  .rd-stage.exiting .rd-list .rd-row:nth-child(2) { transition-delay: 260ms; }
+  .rd-stage.exiting .rd-list .rd-row:nth-child(1) { transition-delay: 340ms; }
+  .rd-stage.exiting .rd-app { transition-delay: 420ms; }
+  .rd-stage.exiting .rd-lid {
+    transition-delay: 550ms;
+    transition-duration: 900ms;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .rd-stage.pre .rd-lid,
@@ -807,7 +843,13 @@
     .rd-stage.pre .rd-phone,
     .rd-stage.pre .rd-row,
     .rd-stage.pre .rd-prow,
-    .rd-stage.pre .rd-notif {
+    .rd-stage.pre .rd-notif,
+    .rd-stage.exiting .rd-lid,
+    .rd-stage.exiting .rd-app,
+    .rd-stage.exiting .rd-phone,
+    .rd-stage.exiting .rd-row,
+    .rd-stage.exiting .rd-prow,
+    .rd-stage.exiting .rd-notif {
       transform: none;
       opacity: 1;
     }
@@ -839,27 +881,32 @@
   // el navegador respete correctamente el fill mode contra la cascada).
   const stage = document.querySelector<HTMLElement>('.rd-stage');
   if (stage) {
-    // Añadir .pre inmediatamente antes del primer paint
+    // Mount: aplicar .pre para snap-hidden inmediato antes del primer paint
     stage.classList.add('pre');
 
-    const reveal = () => stage.classList.remove('pre');
-
     if ('IntersectionObserver' in window) {
+      // Observer bidireccional: al entrar quita .pre/.exiting → coreografía
+      // de apertura. Al salir agrega .exiting → coreografía de cierre inversa.
+      // No hacemos unobserve — queremos que reaccione en cada scroll pasada.
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              reveal();
-              observer.unobserve(stage);
+              stage.classList.remove('pre', 'exiting');
+            } else {
+              // Sólo animamos el cierre si ya se había abierto (skip primer render)
+              if (!stage.classList.contains('pre')) {
+                stage.classList.add('exiting');
+              }
             }
           });
         },
-        { threshold: 0.3 }
+        { threshold: 0.2 }
       );
       observer.observe(stage);
     } else {
-      // Fallback: mostrar inmediatamente
-      reveal();
+      // Fallback: mostrar inmediatamente sin observer
+      stage.classList.remove('pre');
     }
   }
 </script>
