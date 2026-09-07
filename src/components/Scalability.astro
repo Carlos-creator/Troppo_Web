@@ -468,6 +468,24 @@
     .scal-grid { grid-template-columns: 1fr; gap: 32px; }
     .scal-viewport { aspect-ratio: 4 / 3; }
     h2 { font-size: 26px; }
+
+    /* HUD y zone-name apilados verticalmente para no chocar en pantalla
+       angosta. Antes ambos estaban en top:16 y colisionaban. */
+    .scal-hud {
+      top: 10px;
+      left: 10px;
+      padding: 5px 10px;
+      font-size: 9px;
+      letter-spacing: 1.2px;
+    }
+    .scal-zone-name {
+      top: 48px;
+      right: 10px;
+      padding: 6px 10px;
+      max-width: 62%;
+    }
+    .scal-zone-name span { font-size: 11px; }
+    .scal-zone-name small { font-size: 8.5px; letter-spacing: 0.3px; }
   }
 </style>
 

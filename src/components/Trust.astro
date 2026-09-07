@@ -178,20 +178,34 @@ const attributes = [
     margin: 0;
   }
 
-  /* --- HOVER / FOCUS / FLIPPED: swap opacity + rotación --- */
-  .trust-card:hover .tc-front,
-  .trust-card:focus-visible .tc-front,
+  /* --- FLIPPED (via tap en mobile o toggle programático) --- */
   .trust-card.flipped .tc-front {
     transform: rotateY(180deg);
     opacity: 0;
     z-index: 1;
   }
-  .trust-card:hover .tc-back,
-  .trust-card:focus-visible .tc-back,
   .trust-card.flipped .tc-back {
     transform: rotateY(0deg);
     opacity: 1;
     z-index: 2;
+  }
+
+  /* --- HOVER + FOCUS: sólo en dispositivos con hover real (desktop).
+     En touch el :hover se queda "pegado" tras el tap y colisiona con
+     el toggle .flipped, así que lo gateamos con @media hover:hover. --- */
+  @media (hover: hover) {
+    .trust-card:hover .tc-front,
+    .trust-card:focus-visible .tc-front {
+      transform: rotateY(180deg);
+      opacity: 0;
+      z-index: 1;
+    }
+    .trust-card:hover .tc-back,
+    .trust-card:focus-visible .tc-back {
+      transform: rotateY(0deg);
+      opacity: 1;
+      z-index: 2;
+    }
   }
 
   /* Badge indicador de "voltear" en el frente */
@@ -209,12 +223,18 @@ const attributes = [
     justify-content: center;
     transition: transform 400ms ease, background 400ms ease;
   }
-  .trust-card:hover .tc-badge,
-  .trust-card:focus-visible .tc-badge,
   .trust-card.flipped .tc-badge {
     background: var(--cyan);
     color: var(--navy-deep);
     transform: rotate(180deg);
+  }
+  @media (hover: hover) {
+    .trust-card:hover .tc-badge,
+    .trust-card:focus-visible .tc-badge {
+      background: var(--cyan);
+      color: var(--navy-deep);
+      transform: rotate(180deg);
+    }
   }
 
   @media (max-width: 860px) {
