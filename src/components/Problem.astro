@@ -1,8 +1,76 @@
 ---
-// Sección del problema — cifras duras del acceso a San Antonio
+// Sección del problema — cifras duras del acceso a San Antonio.
+// Banda cinematográfica arriba: dos fotos del puerto que hacen transición
+// dissolve orgánica (fractalNoise) mientras un filtro cyan de marca las
+// tinta como en el mockup puerto_cyan.png.
 ---
 
 <section class="problem" id="problema">
+  <div class="port-band" aria-hidden="true">
+    <svg
+      class="port-svg"
+      viewBox="0 0 1600 500"
+      preserveAspectRatio="xMidYMid slice"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+    >
+      <defs>
+        <!--
+          Filtro turbulent-dissolve:
+          feTurbulence genera ruido fractal → convertimos a alpha por
+          luminancia → animamos el slope para que el umbral suba y baje
+          (0 → 2 → 0) creando el efecto de disolución orgánica entre
+          la imagen SourceGraphic (puerto-1) y feImage (puerto-2).
+        -->
+        <filter id="turbulent-dissolve" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency=".009" seed="5" />
+          <feColorMatrix type="luminanceToAlpha" />
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0">
+              <animate
+                attributeName="slope"
+                values="0;0;0;0;0;0.5;1;1.5;2;2;2;2;2;2;1.5;1;0.5;0"
+                dur="14s"
+                repeatCount="indefinite"
+              />
+            </feFuncA>
+          </feComponentTransfer>
+          <feComponentTransfer>
+            <feFuncA type="discrete" tableValues="0 1" />
+          </feComponentTransfer>
+          <feGaussianBlur stdDeviation="1" />
+          <feComposite operator="in" in="SourceGraphic" result="overlay" />
+          <feImage
+            href="/images/puerto/puerto-2.jpg"
+            xlink:href="/images/puerto/puerto-2.jpg"
+            width="1600"
+            height="500"
+            preserveAspectRatio="xMidYMid slice"
+            result="underlay"
+          />
+          <feComposite operator="over" in="overlay" in2="underlay" />
+        </filter>
+      </defs>
+
+      <image
+        filter="url(#turbulent-dissolve)"
+        width="1600"
+        height="500"
+        href="/images/puerto/puerto-1.jpg"
+        xlink:href="/images/puerto/puerto-1.jpg"
+        preserveAspectRatio="xMidYMid slice"
+      />
+    </svg>
+
+    <div class="port-overlay"></div>
+
+    <div class="port-caption">
+      <span class="port-loc">PUERTO DE SAN ANTONIO</span>
+      <span class="port-sep"></span>
+      <span class="port-sub">Corredor logístico bajo presión</span>
+    </div>
+  </div>
+
   <div class="wrap">
     <div class="problem-head">
       <div class="eyebrow">El punto de partida</div>
@@ -27,9 +95,99 @@
 
 <style>
   .problem {
-    padding: 110px 0;
+    padding: 0 0 110px;
     background: var(--cream);
   }
+
+  /* ------- BANDA CINEMATOGRÁFICA DEL PUERTO ------- */
+  .port-band {
+    position: relative;
+    width: 100%;
+    height: clamp(280px, 42vw, 520px);
+    overflow: hidden;
+    background: var(--navy-deep);
+    margin-bottom: 80px;
+  }
+  .port-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    /* Duotone cyan de marca — approximación con filter chain:
+       grayscale → sepia (tono cálido base) → hue-rotate hacia cyan →
+       saturate para reforzar → brightness para ajustar densidad. */
+    filter:
+      grayscale(1)
+      contrast(1.12)
+      sepia(1)
+      hue-rotate(155deg)
+      saturate(1.9)
+      brightness(0.92);
+    will-change: filter;
+  }
+  /* Gradiente cyan/navy encima y fade a cream abajo para blend suave con
+     el fondo cream de la sección */
+  .port-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(4, 69, 89, 0.15) 0%,
+        rgba(4, 69, 89, 0.25) 55%,
+        rgba(255, 248, 234, 0.85) 92%,
+        var(--cream) 100%
+      );
+    pointer-events: none;
+  }
+  /* Caption inferior con dot pulsante — sensación "en vivo" */
+  .port-caption {
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 18px;
+    background: rgba(21, 27, 32, 0.65);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 100px;
+    border: 1px solid rgba(97, 225, 230, 0.3);
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--cream);
+    z-index: 2;
+    white-space: nowrap;
+  }
+  .port-loc {
+    color: var(--cyan);
+  }
+  .port-sep {
+    width: 4px;
+    height: 4px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--cyan);
+    animation: port-dot-pulse 1.6s ease-in-out infinite;
+  }
+  .port-sub {
+    color: rgba(255, 248, 234, 0.7);
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    text-transform: none;
+    font-size: 11px;
+  }
+  @keyframes port-dot-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.35; transform: scale(0.7); }
+  }
+
+  /* ------- HEAD + STATS (contenido original) ------- */
   .problem-head {
     max-width: 640px;
   }
@@ -70,9 +228,23 @@
   }
 
   @media (max-width: 860px) {
+    .port-band {
+      height: clamp(220px, 55vw, 340px);
+      margin-bottom: 56px;
+    }
+    .port-caption {
+      font-size: 9.5px;
+      padding: 7px 14px;
+      letter-spacing: 1.5px;
+    }
     .stat-grid {
       grid-template-columns: 1fr;
     }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .port-band .port-svg animate { display: none; }
+    .port-sep { animation: none; }
   }
 </style>
 
