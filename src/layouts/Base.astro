@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import CursorGlow from '../components/CursorGlow.astro';
 
 interface Props {
   title?: string;
@@ -39,6 +40,7 @@ const {
     <meta property="og:type" content="website" />
   </head>
   <body>
+    <CursorGlow />
     <slot />
   </body>
 </html>

@@ -1,0 +1,90 @@
+---
+// Efecto de iluminación sutil que sigue al cursor por toda la página.
+// Se monta una sola vez en Base.astro. En touch o reduced-motion se
+// deshabilita completamente.
+---
+
+<div class="cursor-glow" aria-hidden="true"></div>
+
+<style>
+  .cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* Círculo lo suficientemente grande para que el gradiente se sienta
+       ambiental. El centro exacto se ubica con translate por CSS var. */
+    width: 620px;
+    height: 620px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0);
+    /* Suave respuesta al movimiento — no laggy pero tampoco duro */
+    transition: opacity 400ms ease;
+    /* Radial cyan de marca. Bordes muy suaves para que no se vea el corte. */
+    background: radial-gradient(
+      circle,
+      rgba(97, 225, 230, 0.16) 0%,
+      rgba(97, 225, 230, 0.07) 30%,
+      rgba(97, 225, 230, 0.02) 55%,
+      transparent 72%
+    );
+    /* Blend-mode: sobre fondos oscuros suma luz (screen), sobre claros
+       queda más discreto. plus-lighter da mejor uniformidad. */
+    mix-blend-mode: plus-lighter;
+    -webkit-mix-blend-mode: plus-lighter;
+    filter: blur(4px);
+    will-change: transform, opacity;
+  }
+  .cursor-glow.active {
+    opacity: 1;
+  }
+  /* Desactivar en touch (no hay cursor real) y respetar reduced-motion */
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    .cursor-glow { display: none; }
+  }
+</style>
+
+<script>
+  const glow = document.querySelector<HTMLElement>('.cursor-glow');
+  // Sólo montar si hover fino y no reduced-motion (misma condición que CSS)
+  const canHover = window.matchMedia('(hover: hover)').matches;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (glow && canHover && !reducedMotion) {
+    let ticking = false;
+    let latestX = 0;
+    let latestY = 0;
+    let firstMove = true;
+
+    const update = () => {
+      // translate3d disparado por GPU — barato de mover cada frame
+      glow.style.transform = `translate3d(${latestX}px, ${latestY}px, 0) translate3d(-50%, -50%, 0)`;
+      ticking = false;
+    };
+
+    window.addEventListener(
+      'mousemove',
+      (e) => {
+        latestX = e.clientX;
+        latestY = e.clientY;
+        if (firstMove) {
+          firstMove = false;
+          glow.classList.add('active');
+        }
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+      },
+      { passive: true },
+    );
+
+    // Fade out cuando el mouse sale del documento (mucho más elegante que
+    // dejarlo pegado a un borde)
+    document.addEventListener('mouseleave', () => glow.classList.remove('active'));
+    document.addEventListener('mouseenter', () => {
+      if (!firstMove) glow.classList.add('active');
+    });
+  }
+</script>
