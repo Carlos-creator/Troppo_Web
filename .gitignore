@@ -2,6 +2,9 @@
 ideas/
 .claude/
 
+# Briefing interno (mensaje / pitch) — sólo uso local
+docs/PITCH.md
+
 # Node / Astro
 node_modules/
 dist/
