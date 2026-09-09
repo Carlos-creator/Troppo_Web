@@ -22,9 +22,16 @@
 
 <style>
   .desafio {
-    /* Extiende la atmósfera del Hero — sin card, el texto flota sobre
-       el navy como un fragmento tipográfico. */
-    background: rgba(4, 69, 89, 0.55);
+    /* Continúa el gradient del Hero: arriba matchea exacto la opacidad
+       del final del Hero (0.55) para que la transición sea invisible,
+       y hacia el bottom sube un poco (0.68) para preparar el navy-deep
+       del port-band de Problem que viene después. */
+    background: linear-gradient(
+      180deg,
+      rgba(4, 69, 89, 0.55) 0%,
+      rgba(4, 69, 89, 0.55) 55%,
+      rgba(4, 69, 89, 0.68) 100%
+    );
     color: var(--cream);
     padding: 100px 0 110px;
     position: relative;

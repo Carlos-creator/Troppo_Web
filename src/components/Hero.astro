@@ -53,11 +53,25 @@
 
 <style>
   .hero {
-    /* Semi-transparente para que el SiteBiome se vea de fondo */
-    background: rgba(4, 69, 89, 0.82);
+    /* Gradient: arriba más denso para que el h1 se lea claro contra
+       el biome, y hacia el bottom afloja para que el paisaje se vea
+       nítido (matcheando la nitidez de la sección Desafio que sigue). */
+    background: linear-gradient(
+      180deg,
+      rgba(4, 69, 89, 0.78) 0%,
+      rgba(4, 69, 89, 0.68) 40%,
+      rgba(4, 69, 89, 0.55) 100%
+    );
     color: var(--cream);
     position: relative;
-    overflow: hidden;
+    /* overflow visible en Y para que el detector LiDAR (scanner-arm, blip,
+       HUD) pueda extenderse desde la brújula hacia abajo dentro de Desafio.
+       Se mantiene clip horizontal para no generar scroll lateral. */
+    overflow-x: clip;
+    overflow-y: visible;
+    /* z-index elevado para que los elementos del scanner que se extienden
+       hacia abajo rendericen por encima del gradiente de Desafio. */
+    z-index: 4;
     padding: 100px 0 120px;
   }
   .hero-inner {
@@ -471,16 +485,29 @@
     };
 
     // ---- MOUSE ----
-    hero.addEventListener('mouseenter', () => {
-      scanner.classList.add('active');
-    });
+    // Zona detectora extendida: desde el top del Hero hasta apenas
+    // encima del eyebrow "¿Tienes algún desafío…" en Desafio. El scanner
+    // se activa mientras el cursor esté dentro de esa banda vertical.
+    const desafioEyebrow = document.querySelector<HTMLElement>('.desafio-eyebrow');
 
-    hero.addEventListener('mouseleave', () => {
-      scanner.classList.remove('active');
-    });
+    const isInDetectorZone = (clientY: number) => {
+      const heroRect = hero.getBoundingClientRect();
+      if (clientY < heroRect.top) return false;
+      if (desafioEyebrow) {
+        const eyebrowRect = desafioEyebrow.getBoundingClientRect();
+        // 14px de aire encima del eyebrow para que no lo tape el HUD
+        return clientY < eyebrowRect.top - 14;
+      }
+      return clientY < heroRect.bottom;
+    };
 
-    hero.addEventListener('mousemove', (e) => {
-      updatePosition(e.clientX, e.clientY);
+    document.addEventListener('mousemove', (e) => {
+      if (isInDetectorZone(e.clientY)) {
+        scanner.classList.add('active');
+        updatePosition(e.clientX, e.clientY);
+      } else {
+        scanner.classList.remove('active');
+      }
     });
 
     // ---- TOUCH ----
