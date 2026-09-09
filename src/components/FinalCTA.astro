@@ -38,6 +38,16 @@
             <span class="event-meta-label">Fecha</span>
             <span class="event-meta-val">13 de noviembre, 2026</span>
           </div>
+          <div>
+            <span class="event-meta-label">Contacto</span>
+            <a class="event-contact-link" href="mailto:troppo2026@gmail.com">
+              <svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2.5" y="4.5" width="15" height="11" rx="2" />
+                <path d="M2.5 6 L10 11 L17.5 6" />
+              </svg>
+              <span>troppo2026@gmail.com</span>
+            </a>
+          </div>
         </div>
       </div>
       <div class="event-map">
@@ -179,6 +189,23 @@
     font-size: 13.5px;
     color: var(--cream);
     font-weight: 500;
+  }
+  .event-contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13.5px;
+    color: var(--cream);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 260ms ease;
+  }
+  .event-contact-link svg {
+    color: var(--cyan);
+    flex-shrink: 0;
+  }
+  .event-contact-link:hover {
+    color: var(--cyan);
   }
   .event-map {
     border-radius: 14px;

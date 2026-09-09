@@ -7,11 +7,6 @@
 
 const attributes = [
   {
-    title: 'Privacy-preserving',
-    body:
-      'Sensores LiDAR en lugar de cámaras. Ningún dato personal identificable, sin video, cumpliendo la Ley 21.719.',
-  },
-  {
     title: 'Escalabilidad probada',
     body:
       'Diseñado para pasar de 50 a 500 nodos viales con menos de 15 % de latencia adicional.',
@@ -24,7 +19,7 @@ const attributes = [
   {
     title: 'Trazabilidad de resultados',
     body:
-      'Cada corrida queda registrada con seed, políticas y métricas. Reproducibilidad total.',
+      'Cada ejecución queda registrada con seed, políticas y métricas. Reproducibilidad total.',
   },
   {
     title: 'IA aprendida, no programada',
@@ -44,7 +39,6 @@ const attributes = [
     <div class="trust-head">
       <div class="eyebrow">POR QUÉ CONFIAR</div>
       <h2>Ingeniería para decisiones que importan.</h2>
-      <p class="trust-hint">Pasa el mouse (o toca en móvil) para ver el detalle de cada garantía.</p>
     </div>
     <div class="trust-grid">
       {
@@ -139,13 +133,6 @@ const attributes = [
     line-height: 1.2;
     color: var(--navy);
   }
-  .trust-hint {
-    margin-top: 18px;
-    font-size: 13.5px;
-    color: rgba(21, 27, 32, 0.55);
-    font-style: italic;
-  }
-
   .trust-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

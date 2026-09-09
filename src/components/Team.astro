@@ -1,44 +1,50 @@
 ---
 // Sección de equipo — parte de "Zona empresa" (rúbrica sección 8).
-// Cada miembro con iniciales, nombre, rol y correo.
-// TODO: reemplazar iniciales por fotos reales en public/images/team/ cuando estén.
+// Cada miembro con foto de perfil, nombre, rol, email y LinkedIn.
+// Fotos self-hosted en /public/images/team/*.png
 
 const members = [
   {
-    initials: 'CC',
     name: 'Cristóbal Césped',
     role: 'Product Owner',
     email: 'cristobal.cesped@usm.cl',
+    linkedin: 'https://www.linkedin.com/in/cristobal-cesped/',
+    photo: '/images/team/Cristobal.png',
   },
   {
-    initials: 'CR',
     name: 'Carlos Ramírez',
     role: 'UI/UX Lead',
     email: 'carlos.ramirezv@usm.cl',
+    linkedin: 'https://www.linkedin.com/in/carlos-ram%C3%ADrez-b51a5339b/',
+    photo: '/images/team/Carlos.png',
   },
   {
-    initials: 'CT',
     name: 'Cristian Tapia',
     role: 'Fullstack Developer',
     email: 'cristian.tapia@usm.cl',
+    linkedin: 'https://www.linkedin.com/in/cristi%C3%A1n-alexis-tapia-llant%C3%A9n-71a091257/',
+    photo: '/images/team/Cristian.png',
   },
   {
-    initials: 'AA',
     name: 'Andrés Araya D.',
     role: 'Scrum Master',
     email: 'andres.araya@usm.cl',
+    linkedin: 'https://www.linkedin.com/in/andresarayadiaz/',
+    photo: '/images/team/Andres.png',
   },
   {
-    initials: 'LC',
     name: 'Leonardo Chacón G.',
     role: 'Tester + Brand Identity Lead',
     email: 'leonardo.chacon@usm.cl',
+    linkedin: 'https://www.linkedin.com/in/leonardo-chac%C3%B3n-geminiani-513b813b8/',
+    photo: '/images/team/Leonardo.png',
   },
   {
-    initials: 'BP',
     name: 'Baltazar Portilla R.',
     role: 'Lead Developer',
     email: 'baltazar.portilla@usm.cl',
+    linkedin: 'https://www.linkedin.com/in/baltazar-portilla-reyes/',
+    photo: '/images/team/Baltazar.png',
   },
 ];
 ---
@@ -53,16 +59,34 @@ const members = [
       {
         members.map((m) => (
           <article class="member" data-reveal>
-            <div class="avatar" aria-hidden="true">{m.initials}</div>
+            <div class="avatar">
+              <img src={m.photo} alt={`Foto de ${m.name}`} loading="lazy" width="72" height="72" />
+            </div>
             <h4>{m.name}</h4>
             <div class="role">{m.role}</div>
-            <a class="email" href={`mailto:${m.email}`}>
-              <svg class="email-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="2.5" y="4.5" width="15" height="11" rx="2" />
-                <path d="M2.5 6 L10 11 L17.5 6" />
-              </svg>
-              <span>{m.email}</span>
-            </a>
+            <div class="member-links">
+              <a class="member-link email" href={`mailto:${m.email}`} aria-label={`Enviar email a ${m.name}`}>
+                <svg class="email-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="2.5" y="4.5" width="15" height="11" rx="2" />
+                  <path d="M2.5 6 L10 11 L17.5 6" />
+                </svg>
+                <span>{m.email}</span>
+              </a>
+              <a
+                class="member-link linkedin"
+                href={m.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`LinkedIn de ${m.name}`}
+              >
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="2.5" y="2.5" width="15" height="15" rx="2" />
+                  <path d="M6.4 8.4 L6.4 14" />
+                  <circle cx="6.4" cy="6" r="0.9" fill="currentColor" stroke="none" />
+                  <path d="M9.4 14 L9.4 8.4 M9.4 11 C 9.4 9.5 10.5 8.4 11.9 8.4 C 13.3 8.4 13.9 9.5 13.9 11 L13.9 14" />
+                </svg>
+              </a>
+            </div>
           </article>
         ))
       }
@@ -128,18 +152,25 @@ const members = [
     box-shadow: 0 14px 32px rgba(0, 0, 0, 0.25);
   }
   .avatar {
-    width: 52px;
-    height: 52px;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
     background: var(--cyan);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-serif);
-    font-weight: 600;
-    color: var(--navy-deep);
-    font-size: 18px;
+    overflow: hidden;
     margin-bottom: 18px;
+    position: relative;
+    box-shadow: 0 0 0 2px rgba(97, 225, 230, 0.35);
+    transition: box-shadow 300ms ease, transform 300ms ease;
+  }
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .member:hover .avatar {
+    box-shadow: 0 0 0 3px var(--cyan);
+    transform: scale(1.04);
   }
   .member h4 {
     font-family: var(--font-title);
@@ -157,11 +188,17 @@ const members = [
     font-weight: 600;
     letter-spacing: 0.2px;
   }
-  .email {
+  .member-links {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .member-link {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-top: 16px;
     padding: 7px 12px;
     background: rgba(255, 248, 234, 0.06);
     border: 1px solid rgba(255, 248, 234, 0.14);
@@ -173,14 +210,27 @@ const members = [
     transition:
       background 260ms ease,
       border-color 260ms ease,
-      color 260ms ease;
+      color 260ms ease,
+      transform 260ms ease;
   }
-  .email:hover {
+  .member-link:hover {
     background: rgba(97, 225, 230, 0.12);
     border-color: rgba(97, 225, 230, 0.42);
     color: var(--cream);
+    transform: translateY(-1px);
+  }
+  .member-link svg {
+    width: 14px;
+    height: 14px;
+    color: var(--cyan);
+    flex-shrink: 0;
+  }
+  /* El chip de LinkedIn es sólo el icono — más chico, cuadrado-ish */
+  .member-link.linkedin {
+    padding: 7px 10px;
   }
   .email-icon {
+    /* Selector legado, mantenido para el mail */
     width: 14px;
     height: 14px;
     color: var(--cyan);
