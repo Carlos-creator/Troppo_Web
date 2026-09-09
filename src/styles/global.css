@@ -31,6 +31,12 @@
   --lime: #D1EB78;
   --ink: #151B20;
 
+  /* Variante oscura del cyan para texto sobre fondos crema (contraste AA).
+     Usar en eyebrows, acentos italic y elementos tipográficos que aparecen
+     sobre secciones con background cream. NO usar para acentos gráficos
+     (líneas, glow, pins, botones) — esos deben mantener --cyan. */
+  --cyan-ink: #0A6B76;
+
   /* Tipografías
      - --font-brand: Arsenica Trial (Zetafonts, CC-BY-NC). Solo para el
        wordmark TROPPO — no usar en texto largo.

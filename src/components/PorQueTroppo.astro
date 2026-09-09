@@ -54,7 +54,64 @@ const pasos = [
       {
         pasos.map((p, i) => (
           <>
-            <article class={`pq-step ${p.troppoOnly ? 'is-troppo' : ''}`} data-reveal role="listitem">
+            <article class={`pq-step pq-step--${p.icon} ${p.troppoOnly ? 'is-troppo' : ''}`} data-reveal role="listitem">
+              {/* Overlay animado temático que cubre toda la card a baja opacidad */}
+              <svg
+                class={`pq-card-fx pq-card-fx--${p.icon}`}
+                viewBox="0 0 100 100"
+                preserveAspectRatio={p.icon === 'radar' ? 'xMidYMid slice' : 'none'}
+                aria-hidden="true"
+              >
+                {p.icon === 'test' && (
+                  <>
+                    <circle class="pq-fx-probe" cx="15" cy="18" r="2.6" fill="currentColor" />
+                    <circle class="pq-fx-probe" cx="85" cy="14" r="2.6" fill="currentColor" />
+                    <circle class="pq-fx-probe" cx="30" cy="78" r="2.6" fill="currentColor" />
+                    <circle class="pq-fx-probe" cx="72" cy="62" r="2.6" fill="currentColor" />
+                    <circle class="pq-fx-probe" cx="50" cy="35" r="2.6" fill="currentColor" />
+                    <circle class="pq-fx-probe" cx="12" cy="55" r="2.6" fill="currentColor" />
+                    <circle class="pq-fx-probe" cx="88" cy="86" r="2.6" fill="currentColor" />
+                    <circle class="pq-fx-probe" cx="55" cy="92" r="2.6" fill="currentColor" />
+                  </>
+                )}
+                {p.icon === 'chart' && (
+                  <>
+                    <circle class="pq-fx-dp" cx="20" cy="40" r="1.8" fill="currentColor" />
+                    <circle class="pq-fx-dp" cx="45" cy="70" r="1.8" fill="currentColor" />
+                    <circle class="pq-fx-dp" cx="70" cy="30" r="1.8" fill="currentColor" />
+                    <circle class="pq-fx-dp" cx="88" cy="58" r="1.8" fill="currentColor" />
+                    <rect class="pq-fx-scan" x="0" y="0" width="2.4" height="100" fill="currentColor" />
+                  </>
+                )}
+                {p.icon === 'ai' && (
+                  <>
+                    <line x1="15" y1="20" x2="50" y2="50" stroke="currentColor" stroke-width="0.5" opacity="0.5" />
+                    <line x1="82" y1="22" x2="50" y2="50" stroke="currentColor" stroke-width="0.5" opacity="0.5" />
+                    <line x1="20" y1="80" x2="50" y2="50" stroke="currentColor" stroke-width="0.5" opacity="0.5" />
+                    <line x1="80" y1="80" x2="50" y2="50" stroke="currentColor" stroke-width="0.5" opacity="0.5" />
+                    <circle cx="15" cy="20" r="2" fill="currentColor" opacity="0.75" />
+                    <circle cx="82" cy="22" r="2" fill="currentColor" opacity="0.75" />
+                    <circle cx="20" cy="80" r="2" fill="currentColor" opacity="0.75" />
+                    <circle cx="80" cy="80" r="2" fill="currentColor" opacity="0.75" />
+                    <circle class="pq-fx-brain" cx="50" cy="50" r="3" fill="currentColor" />
+                    <circle class="pq-fx-syn pq-fx-syn-1" cx="15" cy="20" r="1.4" fill="currentColor" />
+                    <circle class="pq-fx-syn pq-fx-syn-2" cx="82" cy="22" r="1.4" fill="currentColor" />
+                    <circle class="pq-fx-syn pq-fx-syn-3" cx="20" cy="80" r="1.4" fill="currentColor" />
+                    <circle class="pq-fx-syn pq-fx-syn-4" cx="80" cy="80" r="1.4" fill="currentColor" />
+                  </>
+                )}
+                {p.icon === 'radar' && (
+                  <>
+                    <circle class="pq-fx-sonar pq-fx-sonar-1" cx="50" cy="50" r="8" fill="none" stroke="currentColor" stroke-width="0.55" />
+                    <circle class="pq-fx-sonar pq-fx-sonar-2" cx="50" cy="50" r="8" fill="none" stroke="currentColor" stroke-width="0.55" />
+                    <circle class="pq-fx-sonar pq-fx-sonar-3" cx="50" cy="50" r="8" fill="none" stroke="currentColor" stroke-width="0.55" />
+                    <g class="pq-fx-arm">
+                      <line x1="50" y1="50" x2="88" y2="50" stroke="currentColor" stroke-width="1" />
+                      <circle cx="88" cy="50" r="1.6" fill="currentColor" />
+                    </g>
+                  </>
+                )}
+              </svg>
               <div class="pq-step-head">
                 <span class="pq-num">{p.num}</span>
                 {p.troppoOnly && <span class="pq-badge">Sólo Troppo</span>}
@@ -65,17 +122,23 @@ const pasos = [
                     <>
                       <rect x="6" y="6" width="20" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2" />
                       <path d="M6 12 L26 12 M6 20 L26 20 M12 6 L12 26 M20 6 L20 26" stroke="currentColor" stroke-width="1" opacity="0.35" />
-                      <circle cx="12" cy="12" r="1.8" fill="currentColor" />
-                      <circle cx="20" cy="20" r="1.8" fill="currentColor" />
+                      {/* Dots ancla + probe pulses en distintas intersecciones */}
+                      <circle cx="12" cy="12" r="1.4" fill="currentColor" opacity="0.5" />
+                      <circle cx="20" cy="20" r="1.4" fill="currentColor" opacity="0.5" />
+                      <circle class="pq-probe pq-probe-1" cx="20" cy="12" r="2.2" fill="currentColor" />
+                      <circle class="pq-probe pq-probe-2" cx="12" cy="20" r="2.2" fill="currentColor" />
+                      <circle class="pq-probe pq-probe-3" cx="16" cy="16" r="2.2" fill="currentColor" />
                     </>
                   )}
                   {p.icon === 'chart' && (
                     <>
                       <path d="M5 27 L5 6 M5 27 L27 27" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                       <path d="M8 22 L14 17 L19 20 L24 11" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-                      <circle cx="14" cy="17" r="1.6" fill="currentColor" />
-                      <circle cx="19" cy="20" r="1.6" fill="currentColor" />
-                      <circle cx="24" cy="11" r="1.6" fill="currentColor" />
+                      {/* Scan vertical + data points pulsantes en secuencia */}
+                      <rect class="pq-scan" x="5" y="6" width="0.9" height="21" fill="currentColor" opacity="0.75" rx="0.4" />
+                      <circle class="pq-dp pq-dp-1" cx="14" cy="17" r="1.6" fill="currentColor" />
+                      <circle class="pq-dp pq-dp-2" cx="19" cy="20" r="1.6" fill="currentColor" />
+                      <circle class="pq-dp pq-dp-3" cx="24" cy="11" r="1.6" fill="currentColor" />
                     </>
                   )}
                   {p.icon === 'ai' && (
@@ -84,11 +147,16 @@ const pasos = [
                       <circle cx="26" cy="10" r="2.2" fill="currentColor" />
                       <circle cx="7" cy="23" r="2.2" fill="currentColor" />
                       <circle cx="25" cy="23" r="2.2" fill="currentColor" />
-                      <circle cx="16" cy="16" r="3.2" fill="currentColor" />
                       <line x1="6" y1="10" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" opacity="0.7" />
                       <line x1="26" y1="10" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" opacity="0.7" />
                       <line x1="7" y1="23" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" opacity="0.7" />
                       <line x1="25" y1="23" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" opacity="0.7" />
+                      {/* Núcleo pulsante + sinapsis viajando desde cada nodo hacia el centro */}
+                      <circle class="pq-brain" cx="16" cy="16" r="3.2" fill="currentColor" />
+                      <circle class="pq-syn pq-syn-1" cx="6" cy="10" r="1.2" fill="currentColor" />
+                      <circle class="pq-syn pq-syn-2" cx="26" cy="10" r="1.2" fill="currentColor" />
+                      <circle class="pq-syn pq-syn-3" cx="7" cy="23" r="1.2" fill="currentColor" />
+                      <circle class="pq-syn pq-syn-4" cx="25" cy="23" r="1.2" fill="currentColor" />
                     </>
                   )}
                   {p.icon === 'radar' && (
@@ -96,8 +164,14 @@ const pasos = [
                       <circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="1" opacity="0.35" />
                       <circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5" />
                       <circle cx="16" cy="16" r="2.4" fill="currentColor" />
-                      <line x1="16" y1="16" x2="24" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                      <circle cx="24" cy="10" r="1.6" fill="currentColor" />
+                      {/* Sonar rings expandiéndose desde el centro */}
+                      <circle class="pq-sonar pq-sonar-1" cx="16" cy="16" r="4" fill="none" stroke="currentColor" stroke-width="0.9" vector-effect="non-scaling-stroke" />
+                      <circle class="pq-sonar pq-sonar-2" cx="16" cy="16" r="4" fill="none" stroke="currentColor" stroke-width="0.9" vector-effect="non-scaling-stroke" />
+                      {/* Brazo del radar rotando alrededor del centro */}
+                      <g class="pq-arm">
+                        <line x1="16" y1="16" x2="24" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        <circle cx="24" cy="10" r="1.6" fill="currentColor" />
+                      </g>
                     </>
                   )}
                 </svg>
@@ -168,8 +242,8 @@ const pasos = [
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 2.5px;
-    color: var(--cyan);
-    opacity: 0.9;
+    color: var(--cyan-ink);
+    opacity: 1;
     margin-bottom: 14px;
   }
   .porque-head h2 {
@@ -216,6 +290,15 @@ const pasos = [
       box-shadow 350ms ease,
       border-color 350ms ease;
     position: relative;
+    overflow: hidden;
+  }
+  /* Contenido por encima del overlay animado */
+  .pq-step-head,
+  .pq-step .pq-icon-wrap,
+  .pq-step h3,
+  .pq-step p {
+    position: relative;
+    z-index: 1;
   }
   .pq-step:hover {
     transform: translateY(-4px);
@@ -245,7 +328,7 @@ const pasos = [
   .pq-num {
     font-family: var(--font-serif);
     font-size: 24px;
-    color: var(--cyan);
+    color: var(--cyan-ink);
     font-weight: 600;
     line-height: 1;
   }
@@ -393,7 +476,7 @@ const pasos = [
   .pq-highlight em {
     font-family: var(--font-serif);
     font-style: italic;
-    color: var(--cyan);
+    color: var(--cyan-ink);
     font-weight: 500;
   }
 
@@ -412,6 +495,244 @@ const pasos = [
     opacity: 1;
     transform: translateY(0);
   }
+
+  /* ============ ANIMACIONES POR ICONO ============
+     Cada card tiene una animación temática que refuerza su título.
+     Uso CSS animations (respetan prefers-reduced-motion) sobre elementos
+     SVG con transform-box para centrar el origen correctamente. */
+
+  /* --- 1. PROBAR — dots que aparecen y desaparecen como toques de prueba --- */
+  @keyframes pq-probe-pulse {
+    0%, 100% { transform: scale(0); opacity: 0; }
+    35%      { transform: scale(1); opacity: 1; }
+    75%      { transform: scale(1.4); opacity: 0.25; }
+  }
+  .pq-probe {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pq-probe-pulse 2.1s ease-out infinite;
+  }
+  .pq-probe-2 { animation-delay: 0.7s; }
+  .pq-probe-3 { animation-delay: 1.4s; }
+
+  /* --- 2. ANALIZAR — scan vertical + data points pulsantes en secuencia --- */
+  @keyframes pq-scan-move {
+    0%   { transform: translateX(0); opacity: 0.75; }
+    88%  { transform: translateX(19px); opacity: 0.75; }
+    100% { transform: translateX(19px); opacity: 0; }
+  }
+  .pq-scan {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pq-scan-move 2.4s ease-in-out infinite;
+  }
+  @keyframes pq-datapoint {
+    0%, 55%, 100% { transform: scale(1); }
+    65%, 80%      { transform: scale(1.55); }
+  }
+  .pq-dp {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pq-datapoint 2.4s ease-in-out infinite;
+  }
+  .pq-dp-2 { animation-delay: 0.5s; }
+  .pq-dp-3 { animation-delay: 1.0s; }
+
+  /* --- 3. OPTIMIZAR CON IA — núcleo pulsante + sinapsis fluyendo al centro --- */
+  @keyframes pq-brain-pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.22); }
+  }
+  .pq-brain {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pq-brain-pulse 1.6s ease-in-out infinite;
+  }
+  .pq-syn {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  /* Deltas de cada nodo esquina hacia (16,16):
+     (6,10)  → +10,+6    (26,10) → -10,+6
+     (7,23)  → +9,-7     (25,23) → -9,-7 */
+  @keyframes pq-syn-1 {
+    0%   { transform: translate(0,0); opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translate(10px, 6px); opacity: 0; }
+  }
+  @keyframes pq-syn-2 {
+    0%   { transform: translate(0,0); opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translate(-10px, 6px); opacity: 0; }
+  }
+  @keyframes pq-syn-3 {
+    0%   { transform: translate(0,0); opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translate(9px, -7px); opacity: 0; }
+  }
+  @keyframes pq-syn-4 {
+    0%   { transform: translate(0,0); opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translate(-9px, -7px); opacity: 0; }
+  }
+  .pq-syn-1 { animation: pq-syn-1 1.8s linear infinite 0s; }
+  .pq-syn-2 { animation: pq-syn-2 1.8s linear infinite 0.45s; }
+  .pq-syn-3 { animation: pq-syn-3 1.8s linear infinite 0.9s; }
+  .pq-syn-4 { animation: pq-syn-4 1.8s linear infinite 1.35s; }
+
+  /* --- 4. MONITOREAR EN VIVO — radar arm rotando + sonar pulses --- */
+  @keyframes pq-arm-rot {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .pq-arm {
+    transform-box: view-box;
+    transform-origin: 16px 16px;
+    animation: pq-arm-rot 3.2s linear infinite;
+  }
+  @keyframes pq-sonar-pulse {
+    0%   { transform: scale(0.35); opacity: 0.9; }
+    100% { transform: scale(2.1); opacity: 0; }
+  }
+  .pq-sonar {
+    transform-box: view-box;
+    transform-origin: 16px 16px;
+    animation: pq-sonar-pulse 2s ease-out infinite;
+  }
+  .pq-sonar-2 { animation-delay: 1s; }
+
+  /* ============ EFECTO A NIVEL DE CARD COMPLETA ============
+     El mismo tema del icono pero cubriendo toda la card a baja opacidad.
+     El SVG cubre el 100% del card con viewBox 0 0 100 100 (radar mantiene
+     aspect ratio para que los círculos sonar sigan siendo redondos, el
+     resto usa preserveAspectRatio="none"). */
+  .pq-card-fx {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    color: var(--navy);
+    opacity: 0.10;
+    z-index: 0;
+  }
+  .pq-step.is-troppo .pq-card-fx {
+    color: var(--navy-deep);
+    opacity: 0.14;
+  }
+
+  /* --- Card-level PROBAR — 8 probes dispersos --- */
+  @keyframes pq-fx-probe {
+    0%, 100% { transform: scale(0); opacity: 0; }
+    40%      { transform: scale(1); opacity: 1; }
+    75%      { transform: scale(1.7); opacity: 0.2; }
+  }
+  .pq-fx-probe {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pq-fx-probe 2.8s ease-out infinite;
+  }
+  .pq-fx-probe:nth-of-type(2) { animation-delay: 0.35s; }
+  .pq-fx-probe:nth-of-type(3) { animation-delay: 0.7s; }
+  .pq-fx-probe:nth-of-type(4) { animation-delay: 1.05s; }
+  .pq-fx-probe:nth-of-type(5) { animation-delay: 1.4s; }
+  .pq-fx-probe:nth-of-type(6) { animation-delay: 1.75s; }
+  .pq-fx-probe:nth-of-type(7) { animation-delay: 2.1s; }
+  .pq-fx-probe:nth-of-type(8) { animation-delay: 2.45s; }
+
+  /* --- Card-level ANALIZAR — scan bar full-height + 4 data points --- */
+  @keyframes pq-fx-scan {
+    0%   { transform: translateX(0); opacity: 0; }
+    10%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translateX(97px); opacity: 0; }
+  }
+  .pq-fx-scan {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pq-fx-scan 4s ease-in-out infinite;
+  }
+  @keyframes pq-fx-dp {
+    0%, 55%, 100% { transform: scale(1); }
+    65%, 80%      { transform: scale(1.7); }
+  }
+  .pq-fx-dp {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pq-fx-dp 4s ease-in-out infinite;
+  }
+  .pq-fx-dp:nth-of-type(2) { animation-delay: 0.6s; }
+  .pq-fx-dp:nth-of-type(3) { animation-delay: 1.2s; }
+  .pq-fx-dp:nth-of-type(4) { animation-delay: 1.8s; }
+
+  /* --- Card-level OPTIMIZAR CON IA — brain pulsante + 4 sinapsis fluyendo --- */
+  @keyframes pq-fx-brain {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.35); }
+  }
+  .pq-fx-brain {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pq-fx-brain 2.2s ease-in-out infinite;
+  }
+  .pq-fx-syn {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  @keyframes pq-fx-syn-1 {
+    0%   { transform: translate(0, 0); opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translate(35px, 30px); opacity: 0; }
+  }
+  @keyframes pq-fx-syn-2 {
+    0%   { transform: translate(0, 0); opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translate(-32px, 28px); opacity: 0; }
+  }
+  @keyframes pq-fx-syn-3 {
+    0%   { transform: translate(0, 0); opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translate(30px, -30px); opacity: 0; }
+  }
+  @keyframes pq-fx-syn-4 {
+    0%   { transform: translate(0, 0); opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translate(-30px, -30px); opacity: 0; }
+  }
+  .pq-fx-syn-1 { animation: pq-fx-syn-1 2.2s linear infinite 0s; }
+  .pq-fx-syn-2 { animation: pq-fx-syn-2 2.2s linear infinite 0.55s; }
+  .pq-fx-syn-3 { animation: pq-fx-syn-3 2.2s linear infinite 1.1s; }
+  .pq-fx-syn-4 { animation: pq-fx-syn-4 2.2s linear infinite 1.65s; }
+
+  /* --- Card-level MONITOREAR — sonar rings + arm rotating full card --- */
+  @keyframes pq-fx-arm-rot {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .pq-fx-arm {
+    transform-box: view-box;
+    transform-origin: 50px 50px;
+    animation: pq-fx-arm-rot 4s linear infinite;
+  }
+  @keyframes pq-fx-sonar {
+    0%   { transform: scale(0.4); opacity: 0.9; }
+    100% { transform: scale(2.6); opacity: 0; }
+  }
+  .pq-fx-sonar {
+    transform-box: view-box;
+    transform-origin: 50px 50px;
+    animation: pq-fx-sonar 3s ease-out infinite;
+  }
+  .pq-fx-sonar-2 { animation-delay: 1s; }
+  .pq-fx-sonar-3 { animation-delay: 2s; }
 
   /* --- MOBILE --- */
   @media (max-width: 960px) {
@@ -459,6 +780,14 @@ const pasos = [
       transform: none;
       transition: none;
     }
+    /* Detenemos todas las animaciones temáticas por icono */
+    .pq-probe, .pq-scan, .pq-dp, .pq-brain, .pq-syn, .pq-arm, .pq-sonar {
+      animation: none;
+    }
+    /* Ocultamos elementos que sólo tienen sentido animándose */
+    .pq-probe, .pq-scan, .pq-syn, .pq-sonar { display: none; }
+    /* El overlay a nivel de card completa se oculta por completo */
+    .pq-card-fx { display: none; }
   }
 </style>
 
