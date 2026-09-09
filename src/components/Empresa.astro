@@ -1,0 +1,401 @@
+---
+// Sección 8 rúbrica — "Zona empresa" (parte MVV)
+// Contiene Misión + Visión side-by-side y luego los 5 Valores en grid.
+// El componente Team.astro sigue debajo con el equipo (fotos + correos).
+
+const valores = [
+  {
+    num: '01',
+    titulo: 'Innovación',
+    desc: 'Integramos simulación de tráfico, inteligencia artificial y monitoreo en vivo para transformar la forma en que se evalúan y gestionan las decisiones de movilidad.',
+    icon: 'spark',
+  },
+  {
+    num: '02',
+    titulo: 'Precisión',
+    desc: 'Sustento en datos reales y validación, calibrando el programa a medida de cada corredor.',
+    icon: 'target',
+  },
+  {
+    num: '03',
+    titulo: 'Transparencia',
+    desc: 'Los reportes incluyen la configuración completa utilizada; cada mejora se justifica en métricas y no en meras promesas.',
+    icon: 'eye',
+  },
+  {
+    num: '04',
+    titulo: 'Cercanía',
+    desc: 'Se diseña con quien nos contrata, no para él. Escuchamos, iteramos y validamos en conjunto.',
+    icon: 'handshake',
+  },
+  {
+    num: '05',
+    titulo: 'Sustentabilidad operacional',
+    desc: 'Al optimizar el flujo se reduce el combustible quemado en detención y la huella de la operación logística.',
+    icon: 'leaf',
+  },
+];
+---
+
+<section class="empresa" id="empresa">
+  <div class="wrap">
+    <header class="empresa-head">
+      <div class="empresa-eyebrow">ZONA EMPRESA</div>
+      <h2>Quiénes somos, hacia dónde vamos, cómo trabajamos.</h2>
+    </header>
+
+    <!-- Misión + Visión lado a lado -->
+    <div class="mv-grid">
+      <article class="mv-card mv-mision" data-reveal>
+        <div class="mv-label">
+          <svg class="mv-label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" opacity="0.35" />
+            <circle cx="12" cy="12" r="6" opacity="0.55" />
+            <circle cx="12" cy="12" r="2" fill="currentColor" />
+            <line x1="12" y1="2" x2="12" y2="4" />
+            <line x1="12" y1="20" x2="12" y2="22" />
+            <line x1="2" y1="12" x2="4" y2="12" />
+            <line x1="20" y1="12" x2="22" y2="12" />
+          </svg>
+          <span>Misión</span>
+        </div>
+        <p>
+          Optimizar la gestión del tráfico portuario mediante
+          <strong>simulación bimodal</strong> y
+          <strong>análisis inteligente en tiempo real</strong>, entregando a
+          entidades importantes herramientas basadas en datos que reduzcan
+          tiempos de espera, mejoren el flujo vehicular y respalden decisiones
+          operativas con <em>evidencia cuantificable</em>.
+        </p>
+      </article>
+
+      <article class="mv-card mv-vision" data-reveal>
+        <div class="mv-label">
+          <svg class="mv-label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 12 C 6 6, 18 6, 21 12 C 18 18, 6 18, 3 12 Z" />
+            <circle cx="12" cy="12" r="3.5" />
+            <circle cx="12" cy="12" r="1.2" fill="currentColor" />
+          </svg>
+          <span>Visión</span>
+        </div>
+        <p>
+          Ser la <strong>plataforma de referencia</strong> en gestión inteligente
+          de tráfico para la industria portuaria y logística de
+          <strong>Chile y Latinoamérica</strong>, integrando gemelos digitales,
+          IA aplicada y sensórica real para transformar la manera en que puertos,
+          municipalidades y entidades grandes planifican y operan su
+          infraestructura vial.
+        </p>
+      </article>
+    </div>
+
+    <!-- Valores -->
+    <div class="valores-head" data-reveal>
+      <div class="valores-eyebrow">LOS 5 VALORES QUE NOS GUÍAN</div>
+      <h3>Lo que hacemos cuando nadie está mirando.</h3>
+    </div>
+    <div class="valores-grid">
+      {
+        valores.map((v) => (
+          <article class="valor-card" data-reveal>
+            <div class="valor-head">
+              <span class="valor-num">{v.num}</span>
+              <div class="valor-icon-wrap">
+                <svg class="valor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  {v.icon === 'spark' && (
+                    <>
+                      <path d="M12 3 L14 10 L21 12 L14 14 L12 21 L10 14 L3 12 L10 10 Z" />
+                    </>
+                  )}
+                  {v.icon === 'target' && (
+                    <>
+                      <circle cx="12" cy="12" r="10" opacity="0.5" />
+                      <circle cx="12" cy="12" r="6" opacity="0.75" />
+                      <circle cx="12" cy="12" r="2" fill="currentColor" />
+                    </>
+                  )}
+                  {v.icon === 'eye' && (
+                    <>
+                      <path d="M2 12 C 5 6, 19 6, 22 12 C 19 18, 5 18, 2 12 Z" />
+                      <circle cx="12" cy="12" r="3.5" />
+                      <circle cx="12" cy="12" r="1" fill="currentColor" />
+                    </>
+                  )}
+                  {v.icon === 'handshake' && (
+                    <>
+                      <path d="M4 14 L8 10 L12 12 L16 10 L20 14" />
+                      <path d="M8 10 L10 8 L14 8 L16 10" opacity="0.6" />
+                      <path d="M4 14 L4 18 L20 18 L20 14" />
+                    </>
+                  )}
+                  {v.icon === 'leaf' && (
+                    <>
+                      <path d="M4 20 C 4 12, 12 4, 20 4 C 20 12, 12 20, 4 20 Z" />
+                      <path d="M4 20 L12 12" opacity="0.6" />
+                    </>
+                  )}
+                </svg>
+              </div>
+            </div>
+            <h4>{v.titulo}</h4>
+            <p>{v.desc}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .empresa {
+    padding: 110px 0 120px;
+    background: rgba(255, 248, 234, 0.72);
+    position: relative;
+    overflow: hidden;
+  }
+  .wrap { position: relative; z-index: 1; }
+
+  /* ---- HEAD ---- */
+  .empresa-head {
+    max-width: 760px;
+    margin: 0 auto 60px;
+    text-align: center;
+  }
+  .empresa-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--cyan);
+    opacity: 0.9;
+    margin-bottom: 14px;
+  }
+  .empresa-head h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 38px;
+    line-height: 1.18;
+    color: var(--navy);
+    margin: 0;
+    letter-spacing: -0.3px;
+  }
+
+  /* ---- MISIÓN + VISIÓN ---- */
+  .mv-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .mv-card {
+    background: #fff;
+    border: 1px solid rgba(4, 69, 89, 0.12);
+    border-radius: 20px;
+    padding: 38px 40px;
+    box-shadow: 0 10px 28px rgba(4, 69, 89, 0.06);
+    position: relative;
+    transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 400ms ease;
+  }
+  .mv-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(4, 69, 89, 0.12);
+  }
+  .mv-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px 6px 6px;
+    background: rgba(97, 225, 230, 0.14);
+    border: 1px solid rgba(97, 225, 230, 0.35);
+    border-radius: 100px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    color: var(--navy);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .mv-label-icon {
+    width: 22px;
+    height: 22px;
+    padding: 4px;
+    background: var(--cyan);
+    border-radius: 50%;
+    color: var(--navy-deep);
+    box-sizing: border-box;
+  }
+  .mv-card p {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--navy);
+    margin: 0;
+    font-weight: 400;
+  }
+  .mv-card strong {
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .mv-card em {
+    font-style: italic;
+    color: var(--cyan);
+    font-weight: 500;
+  }
+
+  /* Diferenciación sutil misión vs visión */
+  .mv-vision {
+    background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), #fff);
+    border-color: rgba(97, 225, 230, 0.28);
+  }
+
+  /* ---- VALORES ---- */
+  .valores-head {
+    max-width: 640px;
+    margin: 76px auto 40px;
+    text-align: center;
+  }
+  .valores-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.2px;
+    color: var(--cyan);
+    opacity: 0.85;
+    margin-bottom: 10px;
+  }
+  .valores-head h3 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.2;
+    color: var(--navy);
+    margin: 0;
+  }
+  .valores-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .valor-card {
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(4, 69, 89, 0.14);
+    border-radius: 16px;
+    padding: 24px 22px 26px;
+    transition:
+      transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
+      background 400ms ease,
+      border-color 400ms ease,
+      box-shadow 400ms ease;
+  }
+  .valor-card:hover {
+    transform: translateY(-4px);
+    background: rgba(97, 225, 230, 0.08);
+    border-color: rgba(97, 225, 230, 0.42);
+    box-shadow: 0 14px 32px rgba(4, 69, 89, 0.12);
+  }
+  .valor-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .valor-num {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: var(--cyan);
+    font-weight: 600;
+    line-height: 1;
+  }
+  .valor-icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(97, 225, 230, 0.14);
+    border: 1px solid rgba(97, 225, 230, 0.30);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--navy);
+    transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .valor-card:hover .valor-icon-wrap {
+    transform: scale(1.08) rotate(-3deg);
+    background: rgba(97, 225, 230, 0.24);
+    border-color: var(--cyan);
+  }
+  .valor-icon { width: 22px; height: 22px; }
+  .valor-card h4 {
+    font-family: var(--font-title);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0 0 8px;
+    letter-spacing: 0.2px;
+  }
+  .valor-card p {
+    font-size: 13px;
+    line-height: 1.55;
+    color: rgba(21, 27, 32, 0.72);
+    margin: 0;
+  }
+
+  /* ---- REVEAL ---- */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 700ms ease, transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  [data-reveal].revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* --- MOBILE --- */
+  @media (max-width: 960px) {
+    .mv-grid { grid-template-columns: 1fr; }
+    .valores-grid { grid-template-columns: repeat(2, 1fr); }
+    .empresa-head h2 { font-size: 28px; }
+    .valores-head h3 { font-size: 22px; }
+    .mv-card { padding: 28px 26px; }
+    .mv-card p { font-size: 15px; }
+  }
+  @media (max-width: 520px) {
+    .valores-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] { opacity: 1; transform: none; transition: none; }
+    .mv-card, .valor-card, .valor-icon-wrap { transition: none; }
+  }
+</style>
+
+<script>
+  // Se re-anima cada vez que los items vuelven al viewport
+  const items = document.querySelectorAll<HTMLElement>('.empresa [data-reveal]');
+  if (items.length) {
+    const timers = new WeakMap<Element, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e, i) => {
+          const prev = timers.get(e.target);
+          if (prev) window.clearTimeout(prev);
+          if (e.isIntersecting) {
+            const t = window.setTimeout(() => {
+              e.target.classList.add('revealed');
+              timers.delete(e.target);
+            }, i * 90);
+            timers.set(e.target, t);
+          } else {
+            e.target.classList.remove('revealed');
+          }
+        });
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.12 },
+    );
+    items.forEach((el) => observer.observe(el));
+  }
+</script>

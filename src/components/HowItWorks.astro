@@ -1,143 +1,139 @@
 ---
-// "Cómo funciona" — carretera serpenteante que se dibuja con scroll.
-// 4 hitos alternan lados (izq/der) sobre la ruta y un camión viaja
-// realmente por la curva usando getPointAtLength + tangente.
+// "Cómo funciona" — El flujo del panel al resultado ilustrado como un
+// viaje por Chile de norte a sur.
 //
-// Desktop: carretera con 4 apex points (S-curves), hitos alternando.
-// Mobile:  carretera recta a la izquierda, hitos apilados a la derecha.
-// Ambas comparten la misma lógica de progreso relativo a la sección.
+// Layout: grid 2-cols. Cards a la izquierda scrolleables. Mapa de
+// Chile sticky a la derecha con un camión que recorre la costa a medida
+// que el usuario avanza en el scroll. 4 hitos posicionados en ciudades
+// reales:
+//   1. Arica          — Se define el escenario
+//   2. Valparaíso     — Troppo arranca la simulación
+//   3. Concepción     — El tráfico virtual replica la realidad
+//   4. Punta Arenas   — Aparecen los resultados
 ---
 
 <section class="how" id="como-funciona">
-  <div class="wrap how-inner">
+  <div class="wrap">
     <header class="how-header">
-      <div class="how-eyebrow">EL FLUJO</div>
+      <div class="how-eyebrow">EL FLUJO · DE NORTE A SUR</div>
       <h2>Del panel al resultado, en pocos minutos.</h2>
       <p>
-        Desde el panel se define qué probar. La IA lo simula en un gemelo
-        digital del tráfico real y entrega los resultados en minutos, sin
-        necesidad de intervenir el corredor en operación.
+        Definís qué querés probar, la IA lo simula en un gemelo digital del
+        tráfico real y entrega los resultados en minutos. El proceso recorre
+        el país como una ruta, del panel al resultado.
       </p>
     </header>
 
-    <div class="how-road" data-road>
-      <!-- Carretera desktop: 3 capas (asfalto ancho + línea central discontinua + progreso cyan) -->
-      <svg
-        class="road-svg road-desktop"
-        viewBox="0 0 900 1400"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <!-- Asfalto ancho oscuro -->
-        <path
-          class="road-asphalt"
-          d="M 450 30 C 850 150 850 250 450 350 C 50 450 50 550 450 650 C 850 750 850 850 450 950 C 50 1050 50 1150 450 1250 L 450 1370"
-        />
-        <!-- Línea central discontinua (marcas viales) -->
-        <path
-          class="road-center"
-          d="M 450 30 C 850 150 850 250 450 350 C 50 450 50 550 450 650 C 850 750 850 850 450 950 C 50 1050 50 1150 450 1250 L 450 1370"
-        />
-        <!-- Ruta óptima calculada por la IA — se dibuja con scroll -->
-        <path
-          class="road-progress"
-          d="M 450 30 C 850 150 850 250 450 350 C 50 450 50 550 450 650 C 850 750 850 850 450 950 C 50 1050 50 1150 450 1250 L 450 1370"
-        />
-      </svg>
-
-      <!-- Carretera mobile (recta a la izquierda) -->
-      <svg
-        class="road-svg road-mobile"
-        viewBox="0 0 60 1400"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path class="road-asphalt" d="M 30 30 L 30 1370" />
-        <path class="road-center" d="M 30 30 L 30 1370" />
-        <path class="road-progress" d="M 30 30 L 30 1370" />
-      </svg>
-
-      <!-- Semáforos a la vera de la ruta — cambian a verde cuando el camión pasa -->
-      <div class="tl tl-1 state-red" data-tl aria-hidden="true">
-        <svg viewBox="0 0 24 60" width="22" height="55">
-          <rect x="0" y="0" width="24" height="60" rx="4" fill="#151B20" stroke="rgba(255,248,234,0.2)" stroke-width="1"/>
-          <line x1="12" y1="60" x2="12" y2="72" stroke="#151B20" stroke-width="2"/>
-          <circle class="tl-light tl-red" cx="12" cy="12" r="5.5" fill="#ff5b5b"/>
-          <circle class="tl-light tl-amber" cx="12" cy="30" r="5.5" fill="#ffc93c"/>
-          <circle class="tl-light tl-green" cx="12" cy="48" r="5.5" fill="#D1EB78"/>
-        </svg>
-      </div>
-      <div class="tl tl-2 state-red" data-tl aria-hidden="true">
-        <svg viewBox="0 0 24 60" width="22" height="55">
-          <rect x="0" y="0" width="24" height="60" rx="4" fill="#151B20" stroke="rgba(255,248,234,0.2)" stroke-width="1"/>
-          <line x1="12" y1="60" x2="12" y2="72" stroke="#151B20" stroke-width="2"/>
-          <circle class="tl-light tl-red" cx="12" cy="12" r="5.5" fill="#ff5b5b"/>
-          <circle class="tl-light tl-amber" cx="12" cy="30" r="5.5" fill="#ffc93c"/>
-          <circle class="tl-light tl-green" cx="12" cy="48" r="5.5" fill="#D1EB78"/>
-        </svg>
-      </div>
-      <div class="tl tl-3 state-red" data-tl aria-hidden="true">
-        <svg viewBox="0 0 24 60" width="22" height="55">
-          <rect x="0" y="0" width="24" height="60" rx="4" fill="#151B20" stroke="rgba(255,248,234,0.2)" stroke-width="1"/>
-          <line x1="12" y1="60" x2="12" y2="72" stroke="#151B20" stroke-width="2"/>
-          <circle class="tl-light tl-red" cx="12" cy="12" r="5.5" fill="#ff5b5b"/>
-          <circle class="tl-light tl-amber" cx="12" cy="30" r="5.5" fill="#ffc93c"/>
-          <circle class="tl-light tl-green" cx="12" cy="48" r="5.5" fill="#D1EB78"/>
-        </svg>
-      </div>
-      <div class="tl tl-4 state-red" data-tl aria-hidden="true">
-        <svg viewBox="0 0 24 60" width="22" height="55">
-          <rect x="0" y="0" width="24" height="60" rx="4" fill="#151B20" stroke="rgba(255,248,234,0.2)" stroke-width="1"/>
-          <line x1="12" y1="60" x2="12" y2="72" stroke="#151B20" stroke-width="2"/>
-          <circle class="tl-light tl-red" cx="12" cy="12" r="5.5" fill="#ff5b5b"/>
-          <circle class="tl-light tl-amber" cx="12" cy="30" r="5.5" fill="#ffc93c"/>
-          <circle class="tl-light tl-green" cx="12" cy="48" r="5.5" fill="#D1EB78"/>
-        </svg>
-      </div>
-
-      <!-- Camión que viaja sobre la ruta -->
-      <div class="road-truck" data-truck aria-hidden="true">
-        <svg viewBox="0 0 32 16" width="38" height="19">
-          <rect x="0" y="2" width="22" height="12" fill="#61E1E6" stroke="#044559" stroke-width="0.6" />
-          <path d="M22 5 h6 l4 5 v4 h-10 z" fill="#61E1E6" stroke="#044559" stroke-width="0.6" />
-          <circle cx="7" cy="15" r="2" fill="#151B20" />
-          <circle cx="17" cy="15" r="2" fill="#151B20" />
-          <circle cx="27" cy="15" r="2" fill="#151B20" />
-        </svg>
-      </div>
-
-      <!-- 4 hitos alternando lados -->
-      <article class="hito hito-1" data-hito="1">
-        <div class="hito-num">01</div>
-        <div class="hito-body">
+    <div class="how-container" data-road>
+      <!-- Columna izquierda: 4 hito cards apilados -->
+      <div class="how-cards">
+        <article class="hito hito-1" data-hito="1">
+          <div class="hito-header-row">
+            <span class="hito-num">01</span>
+            <span class="hito-dot"></span>
+          </div>
           <h3>Se define el escenario</h3>
-          <p>Desde el panel se configura qué probar: cambios en la semaforización, aumento de flujo, un accidente que bloquea una calle. Cualquier variante que se necesite evaluar.</p>
-        </div>
-      </article>
+          <p>
+            Desde el panel se elige qué probar: cambios en semaforización,
+            aumento de flujo, un accidente que bloquea una calle. Cualquier
+            variante que se necesite evaluar.
+          </p>
+        </article>
 
-      <article class="hito hito-2" data-hito="2">
-        <div class="hito-num">02</div>
-        <div class="hito-body">
+        <article class="hito hito-2" data-hito="2">
+          <div class="hito-header-row">
+            <span class="hito-num">02</span>
+            <span class="hito-dot"></span>
+          </div>
           <h3>Troppo arranca la simulación</h3>
-          <p>El sistema arma el gemelo digital con esas condiciones y activa la IA que coordina el tráfico en tiempo real, aprendiendo de cada segundo simulado.</p>
-        </div>
-      </article>
+          <p>
+            El sistema arma el gemelo digital con esas condiciones y activa la
+            IA que coordina el tráfico en tiempo real, aprendiendo de cada
+            segundo simulado.
+          </p>
+        </article>
 
-      <article class="hito hito-3" data-hito="3">
-        <div class="hito-num">03</div>
-        <div class="hito-body">
+        <article class="hito hito-3" data-hito="3">
+          <div class="hito-header-row">
+            <span class="hito-num">03</span>
+            <span class="hito-dot"></span>
+          </div>
           <h3>El tráfico virtual replica la realidad</h3>
-          <p>Miles de vehículos circulan en el gemelo digital siguiendo la red vial real. La IA prueba distintas políticas de semaforización sin intervenir el corredor en operación.</p>
-        </div>
-      </article>
+          <p>
+            Miles de vehículos circulan en el gemelo digital siguiendo la red
+            vial real. La IA prueba distintas políticas de semaforización sin
+            intervenir el corredor en operación.
+          </p>
+        </article>
 
-      <article class="hito hito-4" data-hito="4">
-        <div class="hito-num">04</div>
-        <div class="hito-body">
+        <article class="hito hito-4" data-hito="4">
+          <div class="hito-header-row">
+            <span class="hito-num">04</span>
+            <span class="hito-dot"></span>
+          </div>
           <h3>Aparecen los resultados</h3>
-          <p>Cuánto se reduce la espera, cuánto CO₂ se ahorra, qué política funciona mejor. Todo antes de aplicar el cambio en terreno.</p>
+          <p>
+            Cuánto se reduce la espera, cuánto CO₂ se ahorra, qué política
+            funciona mejor. Todo antes de aplicar el cambio en terreno.
+          </p>
+        </article>
+      </div>
+
+      <!-- Columna derecha: Chile map FULL HEIGHT (no sticky) — se
+           extiende a lo largo de toda la sección para acompañar los 4
+           hitos. El camión baja proporcional al scroll. -->
+      <div class="how-map-column">
+        <!-- Silueta de Chile como mask-image (fondo cyan) -->
+        <div class="chile-silhouette" aria-hidden="true"></div>
+
+        <!-- SVG con la ruta que el camión recorre + marcadores de ciudad -->
+        <svg
+          class="chile-route"
+          viewBox="0 0 400 2000"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            class="route-base"
+            d="M 195 90 C 175 220 158 400 148 620 C 138 780 130 900 140 1050 C 155 1200 175 1400 200 1780"
+          />
+          <path
+            class="route-progress"
+            d="M 195 90 C 175 220 158 400 148 620 C 138 780 130 900 140 1050 C 155 1200 175 1400 200 1780"
+          />
+          <g class="city-pin pin-1" data-pin="1">
+            <circle cx="195" cy="90" r="14" class="pin-halo" />
+            <circle cx="195" cy="90" r="7" class="pin-dot" />
+            <circle cx="195" cy="90" r="3.5" class="pin-core" />
+          </g>
+          <g class="city-pin pin-2" data-pin="2">
+            <circle cx="148" cy="620" r="14" class="pin-halo" />
+            <circle cx="148" cy="620" r="7" class="pin-dot" />
+            <circle cx="148" cy="620" r="3.5" class="pin-core" />
+          </g>
+          <g class="city-pin pin-3" data-pin="3">
+            <circle cx="135" cy="960" r="14" class="pin-halo" />
+            <circle cx="135" cy="960" r="7" class="pin-dot" />
+            <circle cx="135" cy="960" r="3.5" class="pin-core" />
+          </g>
+          <g class="city-pin pin-4" data-pin="4">
+            <circle cx="200" cy="1780" r="14" class="pin-halo" />
+            <circle cx="200" cy="1780" r="7" class="pin-dot" />
+            <circle cx="200" cy="1780" r="3.5" class="pin-core" />
+          </g>
+        </svg>
+
+        <!-- Camión que viaja por la ruta -->
+        <div class="chile-truck" data-truck aria-hidden="true">
+          <svg viewBox="0 0 32 16" width="34" height="17">
+            <rect x="0" y="2" width="22" height="12" fill="#61E1E6" stroke="#044559" stroke-width="0.6" />
+            <path d="M22 5 h6 l4 5 v4 h-10 z" fill="#61E1E6" stroke="#044559" stroke-width="0.6" />
+            <circle cx="7" cy="15" r="2" fill="#151B20" />
+            <circle cx="17" cy="15" r="2" fill="#151B20" />
+            <circle cx="27" cy="15" r="2" fill="#151B20" />
+          </svg>
         </div>
-      </article>
+      </div>
     </div>
   </div>
 </section>
@@ -149,124 +145,227 @@
     position: relative;
     overflow: hidden;
   }
+  .wrap { position: relative; z-index: 1; }
+
+  /* ============ HEADER ============ */
   .how-header {
     max-width: 640px;
-    margin: 0 auto 70px;
+    margin: 0 auto 80px;
     text-align: center;
   }
   .how-eyebrow {
+    font-family: var(--font-sans);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 2.5px;
     color: var(--cyan);
-    opacity: 0.85;
+    opacity: 0.9;
     margin-bottom: 14px;
   }
   .how h2 {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: 38px;
-    line-height: 1.18;
+    font-size: 40px;
+    line-height: 1.15;
     color: var(--navy);
     margin: 0;
   }
-  .how-header p {
-    margin-top: 18px;
+  .how-header > p {
+    margin-top: 20px;
     font-size: 15.5px;
     line-height: 1.6;
     color: rgba(21, 27, 32, 0.7);
   }
 
-  /* ------- Contenedor de la carretera ------- */
-  .how-road {
-    position: relative;
-    width: 100%;
-    max-width: 960px;
-    height: 1400px;
+  /* ============ CONTAINER 2-COL ============ */
+  .how-container {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 60px;
+    max-width: 1100px;
     margin: 0 auto;
+    position: relative;
+    align-items: stretch;
   }
 
-  .road-svg {
+  /* ============ CARDS COLUMN ============ */
+  .how-cards {
+    display: flex;
+    flex-direction: column;
+    /* space-between distribuye las 4 cards uniformemente en la altura
+       del container. La 1era arriba (Arica), la 4ta abajo (Punta Arenas). */
+    justify-content: space-between;
+    gap: 80px;
+    padding: 20px 0 40px;
+    min-height: 1400px;
+  }
+  .hito {
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(4, 69, 89, 0.14);
+    border-radius: 16px;
+    padding: 26px 28px 28px;
+    box-shadow: 0 8px 22px rgba(4, 69, 89, 0.08);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    max-width: 520px;
+    position: relative;
+    opacity: 0;
+    transition:
+      opacity 850ms ease,
+      transform 950ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 300ms ease;
+  }
+  /* Los hitos 1 y 3 "vuelan" desde la izquierda con rotación negativa;
+     los 2 y 4 desde la derecha con rotación positiva. Al revelarse
+     aterrizan en su posición final. Estado estático después del reveal. */
+  .hito-1, .hito-3 {
+    transform: translateX(-160px) rotate(-4deg);
+  }
+  .hito-2, .hito-4 {
+    transform: translateX(160px) rotate(4deg);
+  }
+  .hito.revealed {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg);
+  }
+  .hito:hover {
+    box-shadow: 0 14px 32px rgba(4, 69, 89, 0.14);
+  }
+  .hito-header-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .hito-num {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    color: var(--navy);
+    font-weight: 500;
+    line-height: 1;
+    text-shadow: 0 0 8px rgba(97, 225, 230, 0.3);
+  }
+  .hito-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(4, 69, 89, 0.25);
+  }
+  .hito h3 {
+    font-family: var(--font-title);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0 0 10px;
+    letter-spacing: 0.2px;
+  }
+  .hito p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(21, 27, 32, 0.72);
+    margin: 0;
+  }
+
+  /* ============ CHILE MAP COLUMN ============
+     La columna del mapa se ESTIRA para ocupar toda la altura del
+     container (align-items: stretch en el grid). Así el mapa acompaña
+     a los 4 hitos: Arica arriba, Punta Arenas abajo. */
+  .how-map-column {
+    position: relative;
+    min-height: 100%;
+  }
+  /* Silueta de Chile — cubre TODA la columna vertical con preserveAspectRatio:none
+     para que se estire uniformemente y coincida con la ruta */
+  .chile-silhouette {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      rgba(97, 225, 230, 0.32) 0%,
+      rgba(97, 225, 230, 0.22) 45%,
+      rgba(4, 69, 89, 0.38) 100%
+    );
+    -webkit-mask-image: url("/images/chile_blank_map.svg");
+    mask-image: url("/images/chile_blank_map.svg");
+    /* mask-size 100% 100% para que se estire con la columna
+       (aspect ratio no se mantiene pixel-perfect pero visualmente ok) */
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+
+  /* SVG con ruta + pins — coincide con silueta */
+  .chile-route {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
     height: 100%;
     pointer-events: none;
     overflow: visible;
   }
-  .road-svg.road-mobile { display: none; }
 
-  /* Asfalto: capa gruesa oscura tipo carretera real */
-  .road-asphalt {
+  .route-base {
     fill: none;
-    stroke: #1c2530;
-    stroke-width: 32;
+    stroke: rgba(4, 69, 89, 0.35);
+    stroke-width: 4;
     stroke-linecap: round;
-    stroke-linejoin: round;
+    stroke-dasharray: 6 8;
     vector-effect: non-scaling-stroke;
-    opacity: 0.92;
   }
-  /* Línea central discontinua — marcas viales cream sobre el asfalto */
-  .road-center {
-    fill: none;
-    stroke: rgba(255, 248, 234, 0.85);
-    stroke-width: 2.5;
-    stroke-dasharray: 22 18;
-    stroke-linecap: round;
-    vector-effect: non-scaling-stroke;
-    pointer-events: none;
-  }
-  /* Ruta óptima calculada — cyan con glow, se dibuja con scroll */
-  .road-progress {
+  .route-progress {
     fill: none;
     stroke: var(--cyan);
     stroke-width: 5;
     stroke-linecap: round;
     vector-effect: non-scaling-stroke;
-    filter: drop-shadow(0 0 8px rgba(97, 225, 230, 0.75));
-    /* strokeDasharray + strokeDashoffset se setean por JS */
+    filter: drop-shadow(0 0 6px rgba(97, 225, 230, 0.75));
+    /* strokeDasharray + offset set via JS */
   }
 
-  /* ------- Semáforos ------- */
-  .tl {
-    position: absolute;
-    filter: drop-shadow(0 6px 10px rgba(4, 69, 89, 0.35));
-    z-index: 2;
-    opacity: 0;
-    transform: translateY(-8px) scale(0.92);
-    transition: opacity 400ms ease, transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
-    pointer-events: none;
+  /* Pins de ciudades */
+  .city-pin {
+    transition: opacity 400ms ease;
   }
-  .tl.visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+  .pin-halo {
+    fill: rgba(97, 225, 230, 0.2);
+    transition: fill 400ms ease, r 400ms ease;
   }
-  .tl-light {
-    opacity: 0.16;
-    transition: opacity 350ms ease, filter 350ms ease;
+  .pin-dot {
+    fill: rgba(4, 69, 89, 0.5);
+    stroke: rgba(255, 248, 234, 0.6);
+    stroke-width: 1;
+    transition: fill 400ms ease;
   }
-  .tl.state-red .tl-red {
-    opacity: 1;
-    filter: drop-shadow(0 0 5px #ff5b5b);
+  .pin-core {
+    fill: rgba(255, 248, 234, 0.4);
+    transition: fill 400ms ease;
   }
-  .tl.state-amber .tl-amber {
-    opacity: 1;
-    filter: drop-shadow(0 0 5px #ffc93c);
+  /* Pin activo — cuando el camión ya pasó */
+  .city-pin.active .pin-halo {
+    fill: rgba(97, 225, 230, 0.45);
+    r: 18;
+    animation: pin-pulse 2s ease-in-out infinite;
   }
-  .tl.state-green .tl-green {
-    opacity: 1;
-    filter: drop-shadow(0 0 5px #D1EB78);
+  .city-pin.active .pin-dot {
+    fill: var(--cyan);
   }
-  /* Posiciones de los semáforos — al costado opuesto de cada hito
-     (siempre cerca del apex de la carretera). */
-  .tl-1 { top: 165px;  right: 60px; }
-  .tl-2 { top: 465px;  left: 60px; }
-  .tl-3 { top: 765px;  right: 60px; }
-  .tl-4 { top: 1065px; left: 60px; }
+  .city-pin.active .pin-core {
+    fill: var(--cream);
+  }
+  @keyframes pin-pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
 
-  /* ------- Camión que viaja ------- */
-  .road-truck {
+  /* Camión */
+  .chile-truck {
     position: absolute;
     top: 0;
     left: 0;
@@ -278,261 +377,122 @@
     transition: opacity 300ms ease;
     z-index: 3;
   }
-  .road-truck.active { opacity: 1; }
+  .chile-truck.active { opacity: 1; }
 
-  /* ------- Hitos (cards) — entrada con slide desde el lado de la carretera ------- */
-  .hito {
-    position: absolute;
-    width: 340px;
-    padding: 22px 24px;
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(4, 69, 89, 0.14);
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-    box-shadow: 0 10px 28px rgba(4, 69, 89, 0.10);
-    border-radius: 14px;
-    display: grid;
-    grid-template-columns: 44px 1fr;
-    gap: 14px;
-    opacity: 0;
-    /* Estado base — se sobrescribe por hito según el lado desde el que entra */
-    transform: translateY(24px);
-    transition:
-      opacity 600ms ease,
-      transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 300ms ease;
-    z-index: 2;
-  }
-  /* Cards a la izquierda entran desde la derecha (lado de la carretera) */
-  .hito-1, .hito-3 {
-    transform: translateX(60px) translateY(12px);
-  }
-  /* Cards a la derecha entran desde la izquierda (lado de la carretera) */
-  .hito-2, .hito-4 {
-    transform: translateX(-60px) translateY(12px);
-  }
-  .hito.visible {
-    opacity: 1;
-    transform: translateX(0) translateY(0);
-  }
-  .hito:hover {
-    box-shadow: 0 14px 34px rgba(4, 69, 89, 0.16);
-  }
-
-  /* Contenido interno con fade escalonado */
-  .hito-num,
-  .hito h3,
-  .hito p {
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 500ms ease, transform 500ms ease;
-  }
-  .hito-num {
-    transform: scale(0.7);
-    transition:
-      opacity 500ms ease 150ms,
-      transform 550ms cubic-bezier(0.34, 1.56, 0.64, 1) 150ms;
-    font-family: var(--font-serif);
-    font-size: 30px;
-    color: var(--cyan);
-    font-weight: 600;
-    line-height: 1;
-    padding-top: 2px;
-    text-shadow: 0 0 8px rgba(97, 225, 230, 0.35);
-  }
-  .hito h3 {
-    transition: opacity 450ms ease 280ms, transform 450ms ease 280ms;
-    font-family: var(--font-title);
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--navy);
-    margin: 0;
-    letter-spacing: 0.2px;
-  }
-  .hito p {
-    transition: opacity 450ms ease 400ms, transform 450ms ease 400ms;
-    margin-top: 6px;
-    font-size: 13.5px;
-    line-height: 1.55;
-    color: rgba(21, 27, 32, 0.72);
-  }
-  .hito.visible .hito-num,
-  .hito.visible h3,
-  .hito.visible p {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-
-  /* Posiciones alternadas — desktop.
-     La ruta hace 4 apex: derecho(y≈200), izquierdo(y≈500),
-     derecho(y≈800), izquierdo(y≈1100). Cards en el lado OPUESTO.
-     IMPORTANTE: cada card debe quedar DENTRO de su segmento y (30-350,
-     350-650, 650-950, 950-1250) para que no lo cruce el road en las
-     transiciones center-through. */
-  .hito-1 { top: 60px;   left: 30px; }   /* seg 1 (y=30-350),  road right → card left */
-  .hito-2 { top: 380px;  right: 30px; }  /* seg 2 (y=350-650), road left  → card right */
-  .hito-3 { top: 700px;  left: 30px; }   /* seg 3 (y=650-950), road right → card left */
-  .hito-4 { top: 1020px; right: 30px; }  /* seg 4 (y=950-1250),road left  → card right */
-
-  /* --------- MOBILE --------- */
-  @media (max-width: 860px) {
-    .how { padding: 80px 0 100px; }
-    .how h2 { font-size: 28px; }
-    .how-header { margin-bottom: 40px; }
-
-    .how-road { height: 1400px; }
-    .road-svg.road-desktop { display: none; }
-    .road-svg.road-mobile {
-      display: block;
-      width: 60px;
-      height: 100%;
-      left: 8px;
+  /* ============ MOBILE ============ */
+  @media (max-width: 960px) {
+    .how-container {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      max-width: 480px;
     }
-
-    .hito {
-      width: calc(100% - 90px);
-      left: 78px;
-      right: auto;
-      grid-template-columns: 38px 1fr;
-      padding: 18px 20px;
+    .how-cards {
+      gap: 40px;
+      padding: 0;
     }
-    /* En mobile todos los cards entran desde la derecha (del lado de la ruta) */
-    .hito-1, .hito-2, .hito-3, .hito-4 {
-      transform: translateX(30px) translateY(12px);
+    /* En mobile la fly-in desde los costados se ve pobre — hitos usan
+       slide vertical sutil. Overrides sobrescriben los transform de
+       .hito-1/2/3/4 con selectors más específicos. */
+    .hito.hito-1,
+    .hito.hito-2,
+    .hito.hito-3,
+    .hito.hito-4 {
+      max-width: 100%;
+      transform: translateY(24px) rotate(0deg);
     }
-    .hito-1 { top: 20px; }
-    .hito-2 { top: 360px; }
-    .hito-3 { top: 700px; }
-    .hito-4 { top: 1040px; }
-    .hito-num { font-size: 26px; }
-    .hito h3 { font-size: 15px; }
-    .hito p { font-size: 13px; }
-
-    /* Semáforos en mobile: más chicos y pegados a la ruta */
-    .tl svg { width: 16px; height: 40px; }
-    .tl-1, .tl-3 { right: auto; left: 44px; }
-    .tl-2, .tl-4 { left: 44px; }
-    .tl-1 { top: -8px; }
-    .tl-2 { top: 332px; }
-    .tl-3 { top: 672px; }
-    .tl-4 { top: 1012px; }
+    .hito.hito-1.revealed,
+    .hito.hito-2.revealed,
+    .hito.hito-3.revealed,
+    .hito.hito-4.revealed {
+      transform: translateY(0) rotate(0deg);
+    }
+    /* En mobile ocultamos el mapa (demasiado ancho vertical) */
+    .how-map-column { display: none; }
+    .how h2 { font-size: 30px; }
   }
 
-  /* --------- REDUCED MOTION --------- */
   @media (prefers-reduced-motion: reduce) {
-    .hito,
-    .hito-num,
-    .hito h3,
-    .hito p,
-    .road-truck,
-    .tl,
-    .tl-light {
+    .hito, .chile-truck, .city-pin, .pin-halo, .pin-dot, .pin-core {
       transition: none;
     }
-    .road-progress {
-      filter: none;
-    }
+    .hito { opacity: 1; transform: none; }
+    .city-pin.active .pin-halo { animation: none; }
   }
 </style>
 
 <script>
-  // ============================================================
-  // Carretera con scroll — dibuja la ruta y mueve el camión
-  // ============================================================
-  const roadEl = document.querySelector<HTMLElement>('.how-road');
-  const svgDesktop = roadEl?.querySelector<SVGSVGElement>('.road-desktop');
-  const svgMobile = roadEl?.querySelector<SVGSVGElement>('.road-mobile');
-  const pathDesktop = svgDesktop?.querySelector<SVGPathElement>('.road-progress');
-  const pathMobile = svgMobile?.querySelector<SVGPathElement>('.road-progress');
-  const truck = roadEl?.querySelector<HTMLElement>('[data-truck]');
-  const hitos = Array.from(roadEl?.querySelectorAll<HTMLElement>('.hito') ?? []);
-  const trafficLights = Array.from(roadEl?.querySelectorAll<HTMLElement>('[data-tl]') ?? []);
+  // Controlador del flujo Chile:
+  // - Reveal escalonado de las 4 cards con IntersectionObserver
+  // - Ruta se dibuja proporcional al scroll dentro de la sección
+  // - Camión viaja por la ruta usando getPointAtLength
+  // - Pins de ciudad se activan cuando el camión llega
 
-  if (roadEl && pathDesktop && pathMobile && truck && hitos.length) {
-    const lenDesktop = pathDesktop.getTotalLength();
-    const lenMobile = pathMobile.getTotalLength();
+  const section = document.querySelector<HTMLElement>('.how');
+  const container = section?.querySelector<HTMLElement>('.how-container');
+  const routeProgress = section?.querySelector<SVGPathElement>('.route-progress');
+  const truck = section?.querySelector<HTMLElement>('[data-truck]');
+  const hitos = Array.from(section?.querySelectorAll<HTMLElement>('.hito') ?? []);
+  const pins = Array.from(section?.querySelectorAll<SVGGElement>('.city-pin') ?? []);
 
-    // Ocultar ambas rutas inicialmente
-    pathDesktop.style.strokeDasharray = String(lenDesktop);
-    pathDesktop.style.strokeDashoffset = String(lenDesktop);
-    pathMobile.style.strokeDasharray = String(lenMobile);
-    pathMobile.style.strokeDashoffset = String(lenMobile);
+  if (section && container && routeProgress && truck && hitos.length) {
+    const routeLen = routeProgress.getTotalLength();
+    routeProgress.style.strokeDasharray = String(routeLen);
+    routeProgress.style.strokeDashoffset = String(routeLen);
 
-    // Semáforos: aparecen (fade in) un poco antes que el hito respectivo,
-    // pasan a AMBER cuando el camión se acerca, y a GREEN cuando pasa.
-    // Se controlan por el progreso del road (para que "sepan" que el
-    // camión pasó por ahí).
-    const TL_VISIBLE   = [0.02, 0.28, 0.52, 0.75];
-    const TL_AMBER     = [0.08, 0.32, 0.55, 0.79];
-    const TL_GREEN     = [0.13, 0.38, 0.61, 0.85];
+    // ViewBox del SVG donde vive la ruta y los pins
+    const VBOX = { w: 400, h: 2000 };
 
-    // ViewBox de cada SVG — necesario para convertir user-space → CSS
-    const VBOX_DESKTOP = { w: 900, h: 1400 };
-    const VBOX_MOBILE = { w: 60, h: 1400 };
+    // Umbrales de "camión pasó por esta ciudad" (0..1 sobre la ruta)
+    // Estimados en base a la posición Y de cada pin sobre la longitud total.
+    const PIN_THRESHOLDS = [0.05, 0.35, 0.55, 0.94];
 
     let ticking = false;
     let inView = false;
 
-    const isMobile = () => window.innerWidth <= 860;
-
     const update = () => {
-      const rect = roadEl.getBoundingClientRect();
+      const rect = container.getBoundingClientRect();
       const vh = window.innerHeight;
-
-      // Progreso relativo a la sección — empieza a dibujar cuando el
-      // top se acerca al bottom del viewport y termina cuando el bottom
-      // sale por arriba. Ajustable con los factores 0.85 / 0.15.
-      const start = rect.top - vh * 0.85;
-      const end = rect.bottom - vh * 0.15;
+      // Progreso relativo al container: 0 cuando el top entra al viewport
+      // por abajo, 1 cuando el bottom sale por arriba.
+      const start = rect.top - vh * 0.75;
+      const end = rect.bottom - vh * 0.25;
       const range = end - start;
       const raw = -start / range;
       const progress = Math.max(0, Math.min(1, raw));
 
-      const mobile = isMobile();
-      const path = mobile ? pathMobile : pathDesktop;
-      const len = mobile ? lenMobile : lenDesktop;
-      const vbox = mobile ? VBOX_MOBILE : VBOX_DESKTOP;
-      const svgEl = mobile ? svgMobile! : svgDesktop!;
+      // Dibujo progresivo de la ruta
+      routeProgress.style.strokeDashoffset = String(routeLen * (1 - progress));
 
-      // Actualizar dashoffset (dibujo progresivo)
-      path.style.strokeDashoffset = String(len * (1 - progress));
-
-      // Posición del camión sobre la ruta dibujada
-      if (progress > 0.008) {
+      // Camión en la ruta
+      if (progress > 0.005) {
         truck.classList.add('active');
-        const drawnLen = len * progress;
-        const pt = path.getPointAtLength(drawnLen);
-        // Tangente para rotar el camión: mismo punto + 1 unidad de longitud
-        const ahead = path.getPointAtLength(Math.min(drawnLen + 1, len));
+        const drawnLen = routeLen * progress;
+        const pt = routeProgress.getPointAtLength(drawnLen);
+        const ahead = routeProgress.getPointAtLength(Math.min(drawnLen + 1, routeLen));
         const angle = (Math.atan2(ahead.y - pt.y, ahead.x - pt.x) * 180) / Math.PI;
 
-        // Convertir user-space (viewBox) a CSS coords relativas al road container.
-        // Usamos bounding rects para obtener el offset del SVG respecto a la
-        // sección — offsetLeft/Top no existen en SVGSVGElement.
-        const roadRect = roadEl.getBoundingClientRect();
-        const svgRect = svgEl.getBoundingClientRect();
-        const offsetX = svgRect.left - roadRect.left;
-        const offsetY = svgRect.top - roadRect.top;
-        const cssX = (pt.x / vbox.w) * svgRect.width + offsetX;
-        const cssY = (pt.y / vbox.h) * svgRect.height + offsetY;
-
-        truck.style.left = `${cssX}px`;
-        truck.style.top = `${cssY}px`;
-        truck.style.setProperty('--truck-rot', `${angle}deg`);
+        // Convertir user-space (viewBox) a CSS coords relativas al
+        // contenedor del mapa (parent del camión)
+        const svgEl = routeProgress.ownerSVGElement;
+        if (svgEl) {
+          const svgRect = svgEl.getBoundingClientRect();
+          const mapColRect = truck.parentElement!.getBoundingClientRect();
+          const offsetX = svgRect.left - mapColRect.left;
+          const offsetY = svgRect.top - mapColRect.top;
+          const cssX = (pt.x / VBOX.w) * svgRect.width + offsetX;
+          const cssY = (pt.y / VBOX.h) * svgRect.height + offsetY;
+          truck.style.left = `${cssX}px`;
+          truck.style.top = `${cssY}px`;
+          truck.style.setProperty('--truck-rot', `${angle}deg`);
+        }
       } else {
         truck.classList.remove('active');
       }
 
-      // Estado de semáforos — fade in + transición rojo→amber→verde según
-      // se acerca y pasa el camión
-      trafficLights.forEach((tl, i) => {
-        if (progress >= TL_VISIBLE[i]) tl.classList.add('visible');
-        else tl.classList.remove('visible');
-
-        tl.classList.remove('state-red', 'state-amber', 'state-green');
-        if (progress >= TL_GREEN[i]) tl.classList.add('state-green');
-        else if (progress >= TL_AMBER[i]) tl.classList.add('state-amber');
-        else tl.classList.add('state-red');
+      // Activar pins cuando el camión pasa por ellos
+      pins.forEach((pin, i) => {
+        if (progress >= PIN_THRESHOLDS[i]) pin.classList.add('active');
+        else pin.classList.remove('active');
       });
 
       ticking = false;
@@ -545,47 +505,34 @@
       requestAnimationFrame(update);
     };
 
-    // IntersectionObserver de sección: sólo escuchamos scroll cuando la
-    // sección está en/cerca del viewport, para ahorrar CPU.
+    // IntersectionObserver de la sección — sólo actualiza si está en view
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           inView = e.isIntersecting;
-          if (inView) {
-            requestAnimationFrame(update);
-          }
+          if (inView) requestAnimationFrame(update);
         });
       },
       { rootMargin: '200px 0px 200px 0px' },
     );
-    io.observe(roadEl);
+    io.observe(container);
 
-    // IntersectionObserver POR HITO: cada card revela cuando entra al
-    // viewport (no cuando el road-progress alcanza cierto valor). Así el
-    // reveal se sincroniza con lo que el usuario está mirando, no con el
-    // dibujo del camión — importante para cards que quedan bajas en el
-    // scroll (hitos 3 y 4).
+    // Reveal por card: se re-anima cada vez que el hito vuelve al
+    // viewport. Al salir se quita .revealed para que el fly-in dispare
+    // de nuevo al re-entrar.
     const hitoObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add('visible');
-            hitoObserver.unobserve(e.target);
-          }
+          if (e.isIntersecting) e.target.classList.add('revealed');
+          else e.target.classList.remove('revealed');
         });
       },
-      { rootMargin: '0px 0px -22% 0px', threshold: 0.15 },
+      { rootMargin: '0px 0px -20% 0px', threshold: 0.15 },
     );
     hitos.forEach((h) => hitoObserver.observe(h));
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
-
-    // Pausar cuando la pestaña no es visible
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && inView) requestAnimationFrame(update);
-    });
-
     update();
   }
 </script>

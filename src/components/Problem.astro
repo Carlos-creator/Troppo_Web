@@ -90,6 +90,36 @@
         <p>Transportistas de carga pesada que transitan la zona a diario.</p>
       </div>
     </div>
+
+    <!-- Escala nacional: la cifra sistémica del rúbrica -->
+    <div class="stat-nacional">
+      <div class="stat-nacional-eyebrow">Impacto sistémico · Escala nacional</div>
+      <div class="stat-nacional-num">
+        <span class="nac-currency">$</span>
+        <span class="nac-num" data-count-to="50" data-suffix="">50</span>
+        <span class="nac-dash">–</span>
+        <span class="nac-num" data-count-to="100" data-suffix="">100</span>
+        <em>mil millones</em>
+      </div>
+      <p>
+        Es lo que pierde el sector portuario chileno <strong>cada año</strong> por
+        congestión y brechas de gestión en sus accesos viales.
+      </p>
+    </div>
+
+    <!-- Bridge hacia sección 3: por qué surge Troppo -->
+    <div class="stat-bridge">
+      <p>
+        Pero saber qué medida realmente resuelve el problema no es simple.
+        Cambiar la programación de los semáforos o invertir en nueva infraestructura
+        son <strong>decisiones costosas</strong>, y probarlas directamente en
+        terreno, <strong>riesgoso</strong>.
+      </p>
+      <p class="stat-bridge-hook">
+        Por eso surge la necesidad de
+        <em>evaluar alternativas antes de implementarlas.</em>
+      </p>
+    </div>
   </div>
 </section>
 
@@ -128,16 +158,20 @@
   }
   /* Gradiente cyan/navy encima y fade a cream abajo para blend suave con
      el fondo cream de la sección */
+  /* Overlay que fade la banda del puerto hacia el fondo de la sección
+     (cream 0.72). La zona de fade se hace amplia (desde 60% a 100%)
+     para que la transición se sienta orgánica y no como un corte. */
   .port-overlay {
     position: absolute;
     inset: 0;
     background:
       linear-gradient(
         180deg,
-        rgba(4, 69, 89, 0.15) 0%,
-        rgba(4, 69, 89, 0.25) 55%,
-        rgba(255, 248, 234, 0.85) 92%,
-        var(--cream) 100%
+        rgba(4, 69, 89, 0.12) 0%,
+        rgba(4, 69, 89, 0.20) 40%,
+        rgba(4, 69, 89, 0.08) 60%,
+        rgba(255, 248, 234, 0.45) 82%,
+        rgba(255, 248, 234, 0.72) 100%
       );
     pointer-events: none;
   }
@@ -227,6 +261,110 @@
     max-width: 230px;
   }
 
+  /* ---- BLOQUE NACIONAL (cifra sistémica 50-100mil MM) ---- */
+  .stat-nacional {
+    margin-top: 72px;
+    padding: 40px 46px;
+    background: rgba(4, 69, 89, 0.055);
+    border-left: 4px solid var(--cyan);
+    border-radius: 2px 10px 10px 2px;
+    position: relative;
+  }
+  .stat-nacional-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
+  .stat-nacional-num {
+    margin-top: 14px;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    color: var(--navy);
+    line-height: 1;
+    letter-spacing: -1.5px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .nac-currency {
+    font-size: 42px;
+    font-weight: 500;
+    color: var(--navy);
+    opacity: 0.75;
+    margin-right: 2px;
+  }
+  .nac-num {
+    font-size: 68px;
+    font-weight: 500;
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+  }
+  .nac-dash {
+    font-size: 44px;
+    color: var(--navy);
+    opacity: 0.55;
+    margin: 0 4px;
+    font-weight: 300;
+  }
+  .stat-nacional-num em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--navy);
+    opacity: 0.7;
+    margin-left: 10px;
+  }
+  .stat-nacional > p {
+    margin-top: 20px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: rgba(21, 27, 32, 0.78);
+    max-width: 640px;
+  }
+  .stat-nacional > p strong {
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  /* ---- BRIDGE HACIA SECCIÓN 3 ---- */
+  .stat-bridge {
+    margin-top: 42px;
+    max-width: 760px;
+    padding-left: 24px;
+    border-left: 2px solid rgba(4, 69, 89, 0.14);
+  }
+  .stat-bridge p {
+    font-size: 15px;
+    color: rgba(21, 27, 32, 0.72);
+    line-height: 1.65;
+  }
+  .stat-bridge p + p {
+    margin-top: 14px;
+  }
+  .stat-bridge strong {
+    color: var(--navy);
+    font-weight: 700;
+  }
+  .stat-bridge-hook {
+    font-family: var(--font-serif);
+    font-size: 18px !important;
+    color: var(--navy) !important;
+    font-weight: 500;
+    line-height: 1.5 !important;
+  }
+  .stat-bridge-hook em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--cyan);
+    font-weight: 500;
+  }
+
   @media (max-width: 860px) {
     .port-band {
       height: clamp(220px, 55vw, 340px);
@@ -240,6 +378,21 @@
     .stat-grid {
       grid-template-columns: 1fr;
     }
+    .stat-nacional {
+      padding: 28px 24px;
+      margin-top: 52px;
+    }
+    .nac-currency { font-size: 30px; }
+    .nac-num { font-size: 48px; }
+    .nac-dash { font-size: 32px; }
+    .stat-nacional-num em { font-size: 22px; margin-left: 6px; }
+    .stat-nacional > p { font-size: 14.5px; }
+    .stat-bridge {
+      padding-left: 18px;
+      margin-top: 32px;
+    }
+    .stat-bridge p { font-size: 14px; }
+    .stat-bridge-hook { font-size: 16px !important; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -249,43 +402,72 @@
 </style>
 
 <script>
-  // Animación de conteo — respeta prefers-reduced-motion.
-  // Si JS falla, el HTML ya muestra el valor final (fallback seguro).
-  const nums = document.querySelectorAll<HTMLElement>('.num[data-count-to]');
+  // Animación de conteo — re-anima cada vez que el elemento vuelve al
+  // viewport (para dar sensación de "vivo" al scrollear ida y vuelta).
+  // Cuando el elemento SALE del viewport se resetea a 0; al re-entrar,
+  // el contador vuelve a subir hasta el valor. Cancela el rAF anterior
+  // si el usuario entra/sale rápido para evitar solapes.
+  const nums = document.querySelectorAll<HTMLElement>('[data-count-to]');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (nums.length && !reducedMotion && 'IntersectionObserver' in window) {
-    // Reset a 0 para que el conteo se sienta completo desde el inicio
+    const easeOutCubic = (t: number): number => 1 - Math.pow(1 - t, 3);
+
+    // Guardamos el rAF handle por elemento para poder cancelarlo
+    const rafHandles = new WeakMap<HTMLElement, number>();
+
+    // Estado inicial: mostrar 0 en todos
     nums.forEach((el) => {
       const suffix = el.dataset.suffix ?? '';
       el.textContent = '0' + suffix;
     });
 
-    const easeOutCubic = (t: number): number => 1 - Math.pow(1 - t, 3);
+    const startCount = (el: HTMLElement) => {
+      const prev = rafHandles.get(el);
+      if (prev) cancelAnimationFrame(prev);
+
+      const target = Number(el.dataset.countTo);
+      const suffix = el.dataset.suffix ?? '';
+      const duration = 1400;
+      const start = performance.now();
+
+      const tick = (now: number) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = easeOutCubic(progress);
+        const current = Math.floor(target * eased);
+        el.textContent = current.toLocaleString('es-CL') + suffix;
+        if (progress < 1) {
+          rafHandles.set(el, requestAnimationFrame(tick));
+        } else {
+          rafHandles.delete(el);
+        }
+      };
+
+      rafHandles.set(el, requestAnimationFrame(tick));
+    };
+
+    const resetCount = (el: HTMLElement) => {
+      const prev = rafHandles.get(el);
+      if (prev) {
+        cancelAnimationFrame(prev);
+        rafHandles.delete(el);
+      }
+      const suffix = el.dataset.suffix ?? '';
+      el.textContent = '0' + suffix;
+    };
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
           const el = entry.target as HTMLElement;
-          const target = Number(el.dataset.countTo);
-          const suffix = el.dataset.suffix ?? '';
-          const duration = 1400;
-          const start = performance.now();
-
-          function tick(now: number) {
-            const progress = Math.min((now - start) / duration, 1);
-            const eased = easeOutCubic(progress);
-            const current = Math.floor(target * eased);
-            el.textContent = current.toLocaleString('es-CL') + suffix;
-            if (progress < 1) requestAnimationFrame(tick);
+          if (entry.isIntersecting) {
+            startCount(el);
+          } else {
+            resetCount(el);
           }
-
-          requestAnimationFrame(tick);
-          observer.unobserve(el);
         });
       },
-      { threshold: 0.4 }
+      { threshold: 0.4 },
     );
 
     nums.forEach((el) => observer.observe(el));

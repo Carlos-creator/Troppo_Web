@@ -36,14 +36,16 @@ const SNOW_FLAKES = Array.from({ length: 55 }, (_, i) => {
   };
 });
 
-// Gaviotas en cyan oscuro (navy) para contrastar con secciones cream
+// Gaviotas en cyan oscuro (navy) para contrastar con secciones cream.
+// Cada gaviota tiene su propio flapDur (duración de aleteo) ligeramente
+// distinto para que no se muevan sincronizadas.
 const GULLS = [
-  { top: 14, size: 40, dur: 15, delay: 0,   dir: 'a', opacity: 0.9 },
-  { top: 22, size: 30, dur: 19, delay: -4,  dir: 'b', opacity: 0.8 },
-  { top: 19, size: 34, dur: 17, delay: -8,  dir: 'a', opacity: 0.85 },
-  { top: 28, size: 26, dur: 21, delay: -12, dir: 'b', opacity: 0.75 },
-  { top: 16, size: 36, dur: 16, delay: -6,  dir: 'a', opacity: 0.88 },
-  { top: 24, size: 28, dur: 20, delay: -14, dir: 'b', opacity: 0.78 },
+  { top: 14, size: 40, dur: 15, delay: 0,   dir: 'a', opacity: 0.9,  flapDur: '0.55s' },
+  { top: 22, size: 30, dur: 19, delay: -4,  dir: 'b', opacity: 0.8,  flapDur: '0.68s' },
+  { top: 19, size: 34, dur: 17, delay: -8,  dir: 'a', opacity: 0.85, flapDur: '0.6s'  },
+  { top: 28, size: 26, dur: 21, delay: -12, dir: 'b', opacity: 0.75, flapDur: '0.72s' },
+  { top: 16, size: 36, dur: 16, delay: -6,  dir: 'a', opacity: 0.88, flapDur: '0.5s'  },
+  { top: 24, size: 28, dur: 20, delay: -14, dir: 'b', opacity: 0.78, flapDur: '0.65s' },
 ];
 ---
 
@@ -79,7 +81,15 @@ const GULLS = [
         stroke-linecap="round"
         style={`top: ${g.top}%; width: ${g.size}px; animation-duration: ${g.dur}s; animation-delay: ${g.delay}s;`}
       >
-        <path d="M2 8 Q 7 2 12 8 Q 17 2 22 8" />
+        <path d="M2 8 Q 7 2 12 8 Q 17 2 22 8">
+          {/* Aleteo: la alas suben (Q y=2) → bajan (Q y=10) → suben → repite */}
+          <animate
+            attributeName="d"
+            values="M2 8 Q 7 2 12 8 Q 17 2 22 8;M2 8 Q 7 10 12 8 Q 17 10 22 8;M2 8 Q 7 2 12 8 Q 17 2 22 8"
+            dur={g.flapDur}
+            repeatCount="indefinite"
+          />
+        </path>
       </svg>
     ))}
   </div>
@@ -152,9 +162,11 @@ const GULLS = [
     },
   ];
 
-  // Triggers de zona basados en IDs de sección concretos
+  // Triggers de zona basados en IDs de sección concretos.
+  // Norte se extiende hasta que termina "Qué ofrece Troppo" (Values);
+  // Centro empieza recién en PorQueTroppo para dar más aire al Norte.
   const TRIGGERS = {
-    centroStart: 'nosotros',      // Values → empieza Centro
+    centroStart: 'porque-troppo', // PorQueTroppo → empieza Centro
     surTempladoStart: 'pitch',    // Video → empieza lluvia
     surExtremoStart: 'equipo',    // Team → empieza nieve
   };
@@ -451,28 +463,34 @@ const GULLS = [
     to   { transform: translateX(-8vw) translateY(25px); }
   }
 
-  /* --- Lluvia (Sur templado) — gotas reales cayendo --- */
+  /* --- Lluvia (Sur templado) — gotas visibles sobre cream y navy ---
+     Uso un azul medio-oscuro que contraste sobre secciones cream + sombra
+     dark sutil para reforzar el borde. Ancho aumentado a 2.5px. */
   .rain-drop {
     position: absolute;
     top: -25px;
-    width: 2px;
+    width: 2.5px;
     background: linear-gradient(
       to bottom,
-      rgba(180, 220, 235, 0) 0%,
-      rgba(180, 220, 235, 0.85) 50%,
-      rgba(200, 230, 240, 0.95) 100%
+      transparent 0%,
+      rgba(50, 100, 155, 0.55) 35%,
+      rgba(30, 75, 130, 0.9) 100%
     );
-    border-radius: 0 0 2px 2px;
+    border-radius: 0 0 3px 3px;
     animation-name: rain-drop-fall;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
-    transform: rotate(8deg);
+    transform: rotate(10deg);
     will-change: transform;
-    box-shadow: 0 0 2px rgba(180, 220, 235, 0.4);
+    /* Doble box-shadow: dark para verse sobre cream, light glow para
+       reforzar sobre navy. Combinación resistente a cualquier fondo. */
+    box-shadow:
+      0 0 2px rgba(0, 0, 0, 0.35),
+      0 0 4px rgba(150, 200, 235, 0.4);
   }
   @keyframes rain-drop-fall {
-    from { transform: rotate(8deg) translateY(0); }
-    to   { transform: rotate(8deg) translateY(calc(100vh + 40px)); }
+    from { transform: rotate(10deg) translateY(0); }
+    to   { transform: rotate(10deg) translateY(calc(100vh + 40px)); }
   }
 
   /* --- Nieve (Sur extremo) — copos con leve balanceo --- */

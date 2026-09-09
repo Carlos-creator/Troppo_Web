@@ -1,51 +1,81 @@
 ---
-// Sección de propuesta de valor — 3 columnas con iconos SVG
+// Sección "Qué ofrece Troppo" (rúbrica sección 3) — 3 pilares:
+// simulación de red vial + IA con aprendizaje por refuerzo + evidencia digital.
+// Nota: mantenemos id="nosotros" temporalmente para no romper el link del
+// header nav; se reasignará al crear la sección "Empresa" (rúbrica sección 8).
 ---
 
 <section class="values" id="nosotros">
   <div class="wrap">
     <div class="values-head">
-      <h2>Menos obra civil. Más algoritmo.</h2>
+      <div class="values-eyebrow">QUÉ OFRECE TROPPO</div>
+      <h2>Probar antes. Optimizar con IA. Decidir con evidencia.</h2>
       <p>
-        Troppo traslada la complejidad del problema al software, no al hormigón ni a
-        las cámaras.
+        Troppo integra simulación de la red vial, aprendizaje por refuerzo y análisis
+        de resultados en un mismo lugar. El cliente deja de decidir por estimación y
+        pasa a decidir con evidencia del gemelo digital.
       </p>
     </div>
     <div class="value-grid">
       <article class="value-card" data-reveal>
         <div class="icon-wrap">
+          <!-- Simulación: grid/red vial + trazado -->
           <svg class="icon" viewBox="0 0 34 34" aria-hidden="true">
             <rect x="4" y="4" width="26" height="26" rx="4" fill="none" stroke="#61E1E6" stroke-width="2" />
-            <path d="M10 22 L16 12 L22 22" stroke="#D1EB78" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M4 12 L30 12 M4 22 L30 22 M12 4 L12 30 M22 4 L22 30" stroke="#61E1E6" stroke-width="1" opacity="0.4" />
+            <circle cx="12" cy="12" r="2" fill="#D1EB78" />
+            <circle cx="22" cy="22" r="2" fill="#D1EB78" />
+            <path d="M12 12 L22 22" stroke="#D1EB78" stroke-width="1.5" stroke-linecap="round" />
           </svg>
         </div>
-        <h3>Simulación sin riesgo</h3>
+        <h3>Simulaciones de la red vial</h3>
         <p>
-          Prueba cada política de semaforización en el gemelo digital antes de tocar
-          un semáforo real.
+          Reconstruimos el corredor completo en un gemelo digital. Se prueban
+          distintos escenarios de tráfico y se comparan sus resultados — sin
+          arriesgar una sola maniobra en terreno.
         </p>
       </article>
+
       <article class="value-card" data-reveal>
         <div class="icon-wrap">
+          <!-- IA / red neuronal -->
           <svg class="icon" viewBox="0 0 34 34" aria-hidden="true">
-            <circle cx="17" cy="17" r="6" fill="#61E1E6" />
-            <circle cx="17" cy="17" r="13" fill="none" stroke="#D1EB78" stroke-width="2" />
+            <circle cx="7" cy="9" r="2.4" fill="#61E1E6" />
+            <circle cx="27" cy="10" r="2.4" fill="#61E1E6" />
+            <circle cx="8" cy="25" r="2.4" fill="#61E1E6" />
+            <circle cx="26" cy="25" r="2.4" fill="#61E1E6" />
+            <circle cx="17" cy="17" r="3.2" fill="#D1EB78" />
+            <line x1="7" y1="9" x2="17" y2="17" stroke="#61E1E6" stroke-width="1.2" opacity="0.7" />
+            <line x1="27" y1="10" x2="17" y2="17" stroke="#61E1E6" stroke-width="1.2" opacity="0.7" />
+            <line x1="8" y1="25" x2="17" y2="17" stroke="#61E1E6" stroke-width="1.2" opacity="0.7" />
+            <line x1="26" y1="25" x2="17" y2="17" stroke="#61E1E6" stroke-width="1.2" opacity="0.7" />
           </svg>
         </div>
-        <h3>Sensórica sin cámaras</h3>
+        <h3>IA con aprendizaje por refuerzo</h3>
         <p>
-          LiDAR bajo un enfoque privacy-preserving: sin video invasivo, sin datos
-          personales expuestos.
+          Las políticas de semaforización no vienen de reglas fijas: la IA
+          aprende de cada corrida y ajusta el flujo para reducir congestión y
+          tiempos de espera.
         </p>
       </article>
+
       <article class="value-card" data-reveal>
         <div class="icon-wrap">
+          <!-- Evidencia / gráfico ascendente -->
           <svg class="icon" viewBox="0 0 34 34" aria-hidden="true">
-            <path d="M6 26 L14 14 L20 20 L28 6" stroke="#61E1E6" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M4 28 L4 6 M4 28 L30 28" stroke="#61E1E6" stroke-width="2" stroke-linecap="round" />
+            <path d="M6 24 L12 18 L18 22 L24 12 L28 8" stroke="#D1EB78" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="12" cy="18" r="1.8" fill="#D1EB78" />
+            <circle cx="18" cy="22" r="1.8" fill="#D1EB78" />
+            <circle cx="24" cy="12" r="1.8" fill="#D1EB78" />
           </svg>
         </div>
-        <h3>Bimodal por diseño</h3>
-        <p>Optimiza el flujo de carga pesada sin asfixiar la movilidad civil de la ciudad.</p>
+        <h3>Evidencia para decidir</h3>
+        <p>
+          De estimaciones a evidencia cuantificable. Cada simulación deja
+          métricas y configuración registradas para justificar el próximo
+          paso con números, no con supuestos.
+        </p>
       </article>
     </div>
   </div>
@@ -85,24 +115,41 @@
   .wrap { position: relative; z-index: 1; }
 
   .values-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 40px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 48px;
+    align-items: end;
+  }
+  .values-head > div:first-child { grid-column: 1; }
+  .values-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--cyan);
+    opacity: 0.9;
+    margin-bottom: 14px;
   }
   .values-head h2 {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: 38px;
-    max-width: 520px;
-    line-height: 1.2;
+    font-size: 40px;
+    max-width: 620px;
+    line-height: 1.15;
+    color: var(--cream);
   }
   .values-head p {
-    max-width: 380px;
-    color: rgba(255, 248, 234, 0.85);   /* antes 0.7 — mejor contraste */
+    color: rgba(255, 248, 234, 0.85);
     font-size: 15.5px;
-    line-height: 1.55;
+    line-height: 1.6;
+    max-width: 440px;
+  }
+
+  @media (max-width: 860px) {
+    .values-head {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
   }
 
   /* --------- GRID DE CARDS --------- */
@@ -237,16 +284,16 @@
 </style>
 
 <script>
-  // Reveal escalonado de los 3 cards al entrar al viewport
+  // Reveal escalonado — se re-anima cada vez que las cards vuelven al
+  // viewport (no unobserve). Al salir se quita .revealed para que la
+  // próxima entrada dispare la animación de nuevo.
   const cards = document.querySelectorAll<HTMLElement>('.values [data-reveal]');
   if (cards.length) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add('revealed');
-            observer.unobserve(e.target);
-          }
+          if (e.isIntersecting) e.target.classList.add('revealed');
+          else e.target.classList.remove('revealed');
         });
       },
       { rootMargin: '0px 0px -12% 0px', threshold: 0.15 },

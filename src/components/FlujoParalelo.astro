@@ -1,0 +1,533 @@
+---
+// Sección "Flujo Principal + Proceso Paralelo" — diagrama que muestra
+// que Troppo tiene dos procesos corriendo simultáneamente: uno para
+// generar la solución (flujo principal) y otro para observarla y
+// operarla en tiempo real (proceso paralelo).
+//
+// Se conectan con líneas dashed entre pasos específicos.
+// Panel izq (navy) fly-in desde la izquierda. Panel der (lime) fly-in
+// desde la derecha. Los conectores se dibujan después.
+
+const flujoPrincipal = [
+  { num: '01', titulo: 'Definir zona de estudio',        icon: 'pin' },
+  { num: '02', titulo: 'Construir red vial',              icon: 'grid' },
+  { num: '03', titulo: 'Ejecutar simulaciones de tráfico',icon: 'cars' },
+  { num: '04', titulo: 'Optimizar políticas de semaforización', icon: 'chip' },
+  { num: '05', titulo: 'Entrega de resultados',           icon: 'doc' },
+];
+
+const procesoParalelo = [
+  { titulo: 'Visualizar tráfico en tiempo real', icon: 'monitor' },
+  { titulo: 'Monitorear semáforos',              icon: 'traffic' },
+  { titulo: 'Intervención del operador',         icon: 'operator' },
+];
+---
+
+<section class="flujop" id="flujo-paralelo">
+  <div class="wrap">
+    <header class="flujop-head">
+      <div class="flujop-eyebrow">DOS PROCESOS EN PARALELO</div>
+      <h2>El motor y el observador trabajan al mismo tiempo.</h2>
+      <p>
+        Mientras el flujo principal ejecuta simulaciones y optimiza políticas,
+        un proceso paralelo mantiene visibilidad y control en tiempo real:
+        el operador siempre puede intervenir sobre la operación.
+      </p>
+    </header>
+
+    <div class="flujop-diagram" data-diagram>
+      <!-- Panel IZQUIERDO: Flujo Principal (navy) -->
+      <div class="panel panel-principal" data-panel="left">
+        <header class="panel-head">
+          <h3>Flujo Principal</h3>
+        </header>
+        <ul class="panel-steps">
+          {
+            flujoPrincipal.map((s) => (
+              <li class={`step step-${s.num}`} data-src={s.num}>
+                <span class="step-num">{s.num}</span>
+                <span class="step-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    {s.icon === 'pin' && (
+                      <>
+                        <path d="M4 6 L20 4 L20 20 L4 22 Z" opacity="0.35" />
+                        <path d="M4 6 L4 22" opacity="0.35" />
+                        <path d="M14 8 C 14 6 16 4 18 4 C 20 4 22 6 22 8 C 22 12 18 16 18 16 C 18 16 14 12 14 8 Z" fill="currentColor" fill-opacity="0.9" />
+                        <circle cx="18" cy="8" r="1.5" fill="var(--cream)" />
+                      </>
+                    )}
+                    {s.icon === 'grid' && (
+                      <>
+                        <path d="M3 5 L21 3 L21 21 L3 19 Z" opacity="0.4" />
+                        <path d="M3 12 L21 11" />
+                        <path d="M9 4 L9 20" />
+                        <path d="M15 3.5 L15 20.5" />
+                      </>
+                    )}
+                    {s.icon === 'cars' && (
+                      <>
+                        <path d="M2 18 L22 18" opacity="0.35" />
+                        <rect x="3" y="12" width="8" height="5" rx="1" />
+                        <rect x="13" y="12" width="8" height="5" rx="1" />
+                        <circle cx="5.5" cy="18" r="1.2" fill="currentColor" />
+                        <circle cx="8.5" cy="18" r="1.2" fill="currentColor" />
+                        <circle cx="15.5" cy="18" r="1.2" fill="currentColor" />
+                        <circle cx="18.5" cy="18" r="1.2" fill="currentColor" />
+                      </>
+                    )}
+                    {s.icon === 'chip' && (
+                      <>
+                        <rect x="6" y="6" width="12" height="12" rx="1.5" />
+                        <rect x="9" y="9" width="6" height="6" fill="currentColor" fill-opacity="0.75" />
+                        <line x1="3" y1="9" x2="6" y2="9" />
+                        <line x1="3" y1="12" x2="6" y2="12" />
+                        <line x1="3" y1="15" x2="6" y2="15" />
+                        <line x1="18" y1="9" x2="21" y2="9" />
+                        <line x1="18" y1="12" x2="21" y2="12" />
+                        <line x1="18" y1="15" x2="21" y2="15" />
+                        <line x1="9" y1="3" x2="9" y2="6" />
+                        <line x1="12" y1="3" x2="12" y2="6" />
+                        <line x1="15" y1="3" x2="15" y2="6" />
+                        <line x1="9" y1="18" x2="9" y2="21" />
+                        <line x1="12" y1="18" x2="12" y2="21" />
+                        <line x1="15" y1="18" x2="15" y2="21" />
+                      </>
+                    )}
+                    {s.icon === 'doc' && (
+                      <>
+                        <path d="M5 3 L15 3 L19 7 L19 21 L5 21 Z" />
+                        <path d="M15 3 L15 7 L19 7" opacity="0.6" />
+                        <line x1="8" y1="12" x2="16" y2="12" opacity="0.6" />
+                        <line x1="8" y1="15" x2="16" y2="15" opacity="0.6" />
+                        <line x1="8" y1="18" x2="13" y2="18" opacity="0.6" />
+                      </>
+                    )}
+                  </svg>
+                </span>
+                <span class="step-label">{s.titulo}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- Conectores animados: dashed base + packets luminosos que viajan
+           llevando "data" del flujo principal al proceso paralelo.
+           - Paso 2 → Visualizar tráfico en tiempo real
+           - Paso 3 → Monitorear semáforos
+           - Paso 4 → Intervención del operador -->
+      <svg class="connectors" viewBox="0 0 200 400" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <path id="conn-path-1" d="M 4 120 C 60 120 140 68 196 68" />
+          <path id="conn-path-2" d="M 4 200 C 60 200 140 200 196 200" />
+          <path id="conn-path-3" d="M 4 280 C 60 280 140 332 196 332" />
+        </defs>
+
+        <!-- Conexión 1: paso 2 → visualizar tráfico -->
+        <g class="conn-group">
+          <use href="#conn-path-1" class="conn-base" />
+          <use href="#conn-path-1" class="conn-flow" />
+          <circle class="conn-endpoint" cx="196" cy="68" r="4" />
+          <circle class="conn-packet" r="2.6">
+            <animateMotion dur="2.6s" repeatCount="indefinite" begin="0s">
+              <mpath href="#conn-path-1" />
+            </animateMotion>
+          </circle>
+        </g>
+
+        <!-- Conexión 2: paso 3 → monitorear semáforos -->
+        <g class="conn-group">
+          <use href="#conn-path-2" class="conn-base" />
+          <use href="#conn-path-2" class="conn-flow" />
+          <circle class="conn-endpoint" cx="196" cy="200" r="4" />
+          <circle class="conn-packet" r="2.6">
+            <animateMotion dur="2.9s" repeatCount="indefinite" begin="-0.9s">
+              <mpath href="#conn-path-2" />
+            </animateMotion>
+          </circle>
+        </g>
+
+        <!-- Conexión 3: paso 4 → intervención del operador -->
+        <g class="conn-group">
+          <use href="#conn-path-3" class="conn-base" />
+          <use href="#conn-path-3" class="conn-flow" />
+          <circle class="conn-endpoint" cx="196" cy="332" r="4" />
+          <circle class="conn-packet" r="2.6">
+            <animateMotion dur="3.2s" repeatCount="indefinite" begin="-1.8s">
+              <mpath href="#conn-path-3" />
+            </animateMotion>
+          </circle>
+        </g>
+      </svg>
+
+      <!-- Panel DERECHO: Proceso Paralelo (lime) -->
+      <div class="panel panel-paralelo" data-panel="right">
+        <header class="panel-head">
+          <h3>Proceso Paralelo</h3>
+        </header>
+        <ul class="panel-steps">
+          {
+            procesoParalelo.map((s, i) => (
+              <li class="step" data-tgt={i + 1}>
+                <span class="step-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    {s.icon === 'monitor' && (
+                      <>
+                        <rect x="3" y="4" width="18" height="12" rx="1.5" />
+                        <path d="M9 20 L15 20" />
+                        <path d="M12 16 L12 20" />
+                        <line x1="6" y1="8" x2="11" y2="8" opacity="0.65" />
+                        <line x1="6" y1="11" x2="14" y2="11" opacity="0.65" />
+                        <line x1="6" y1="13.5" x2="10" y2="13.5" opacity="0.65" />
+                      </>
+                    )}
+                    {s.icon === 'traffic' && (
+                      <>
+                        <rect x="7" y="2" width="10" height="18" rx="2" />
+                        <circle cx="12" cy="6.5" r="1.8" fill="currentColor" />
+                        <circle cx="12" cy="11" r="1.8" fill="currentColor" fill-opacity="0.4" />
+                        <circle cx="12" cy="15.5" r="1.8" fill="currentColor" fill-opacity="0.4" />
+                        <line x1="12" y1="20" x2="12" y2="22" />
+                      </>
+                    )}
+                    {s.icon === 'operator' && (
+                      <>
+                        <rect x="2" y="5" width="20" height="13" rx="1.5" />
+                        <path d="M8 22 L16 22" />
+                        <path d="M12 18 L12 22" />
+                        <circle cx="12" cy="11.5" r="3" opacity="0.6" />
+                        <path d="M9 15 L12 12 L15 15" opacity="0.6" />
+                        <path d="M12 8 L12 8.5" />
+                      </>
+                    )}
+                  </svg>
+                </span>
+                <span class="step-label">{s.titulo}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .flujop {
+    padding: 100px 0 130px;
+    background: rgba(255, 248, 234, 0.72);
+    position: relative;
+    overflow: hidden;
+  }
+  .wrap { position: relative; z-index: 1; }
+
+  /* ---- HEAD ---- */
+  .flujop-head {
+    max-width: 720px;
+    margin: 0 auto 68px;
+    text-align: center;
+  }
+  .flujop-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--cyan);
+    opacity: 0.9;
+    margin-bottom: 14px;
+  }
+  .flujop h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 38px;
+    line-height: 1.18;
+    color: var(--navy);
+    margin: 0;
+  }
+  .flujop-head p {
+    margin-top: 20px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: rgba(21, 27, 32, 0.72);
+  }
+
+  /* ---- DIAGRAM ---- */
+  .flujop-diagram {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) minmax(140px, 200px) minmax(260px, 1fr);
+    gap: 0;
+    align-items: stretch;
+    max-width: 980px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* ---- PANELS ---- */
+  .panel {
+    border-radius: 22px;
+    padding: 24px 22px 26px;
+    box-shadow: 0 12px 28px rgba(4, 69, 89, 0.14);
+    opacity: 0;
+    transition:
+      opacity 900ms ease,
+      transform 1000ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .panel-principal {
+    background: var(--navy);
+    color: var(--cream);
+    transform: translateX(-140px) rotate(-4deg);
+  }
+  .panel-paralelo {
+    background: var(--lime);
+    color: var(--navy-deep);
+    transform: translateX(140px) rotate(4deg);
+  }
+  .panel.revealed {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg);
+  }
+
+  .panel-head {
+    padding: 4px 14px 12px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid currentColor;
+    border-color: rgba(255, 248, 234, 0.18);
+  }
+  .panel-paralelo .panel-head {
+    border-color: rgba(4, 69, 89, 0.22);
+  }
+  .panel-head h3 {
+    font-family: var(--font-title);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    margin: 0;
+  }
+
+  /* ---- STEPS ---- */
+  .panel-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 32px 32px 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 100px;
+    background: rgba(255, 248, 234, 0.10);
+    font-size: 13.5px;
+    line-height: 1.25;
+  }
+  .panel-paralelo .step {
+    background: rgba(255, 248, 234, 0.28);
+    grid-template-columns: 32px 1fr;
+  }
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--cyan);
+    color: var(--navy-deep);
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .step-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: currentColor;
+    opacity: 0.9;
+  }
+  .step-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  .step-label {
+    font-weight: 500;
+    color: inherit;
+  }
+
+  /* ============ CONECTORES CON EFECTO TECH ============
+     Cada conexión tiene 4 elementos:
+     - conn-base: línea dashed navy tenue (canal estático)
+     - conn-flow: dashes cyan que fluyen (marching ants continuo)
+     - conn-endpoint: círculo cyan pulsante en el destino (receptor)
+     - conn-packet: dot que viaja desde origen a destino (paquete de datos)
+  */
+  .connectors {
+    width: 100%;
+    height: 100%;
+    align-self: stretch;
+    min-height: 200px;
+    padding: 24px 6px 26px;
+    box-sizing: border-box;
+    overflow: visible;
+  }
+  .conn-group {
+    opacity: 0;
+    transition: opacity 600ms ease 400ms;
+  }
+  .flujop-diagram.revealed .conn-group {
+    opacity: 1;
+  }
+
+  /* Canal base — dashed navy sutil, siempre visible */
+  .conn-base {
+    fill: none;
+    stroke: rgba(4, 69, 89, 0.28);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-dasharray: 4 4;
+  }
+  /* Flujo cyan — dashes que se mueven continuamente = marching ants */
+  .conn-flow {
+    fill: none;
+    stroke: rgba(97, 225, 230, 0.9);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-dasharray: 6 10;
+    stroke-dashoffset: 0;
+    filter: drop-shadow(0 0 3px rgba(97, 225, 230, 0.55));
+    animation: conn-marching 1.4s linear infinite;
+  }
+  @keyframes conn-marching {
+    from { stroke-dashoffset: 0; }
+    to   { stroke-dashoffset: -16; }
+  }
+
+  /* Endpoint pulsante en el destino */
+  .conn-endpoint {
+    fill: var(--cyan);
+    filter: drop-shadow(0 0 6px rgba(97, 225, 230, 0.75));
+    animation: conn-endpoint-pulse 1.8s ease-in-out infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  @keyframes conn-endpoint-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50%      { transform: scale(1.35); opacity: 1; }
+  }
+
+  /* Packet — dot cream que viaja del origen al destino con animateMotion */
+  .conn-packet {
+    fill: var(--cream);
+    filter: drop-shadow(0 0 4px rgba(255, 248, 234, 0.85));
+  }
+
+  /* ---- MOBILE ---- */
+  @media (max-width: 860px) {
+    .flujop-diagram {
+      grid-template-columns: 1fr;
+      max-width: 480px;
+      gap: 24px;
+    }
+    .connectors { display: none; }
+    .panel-principal, .panel-paralelo {
+      transform: translateY(30px) rotate(0);
+    }
+    .panel-principal.revealed, .panel-paralelo.revealed {
+      transform: translateY(0);
+    }
+    .flujop h2 { font-size: 28px; }
+    .step { font-size: 13px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panel, .conn-group { transition: none; }
+    .panel { opacity: 1; transform: none; }
+    .conn-group { opacity: 1; }
+    .conn-flow, .conn-endpoint { animation: none; }
+    .conn-packet { display: none; }
+  }
+</style>
+
+<script>
+  const diagram = document.querySelector<HTMLElement>('.flujop-diagram');
+  const panels = Array.from(diagram?.querySelectorAll<HTMLElement>('.panel') ?? []);
+  const connectorsSvg = diagram?.querySelector<SVGSVGElement>('.connectors');
+
+  if (diagram && panels.length && connectorsSvg) {
+    /* -------- Posicionamiento dinámico de los conectores --------
+       Las conexiones son (source → target):
+         Paso 2 → item paralelo 1 (Visualizar tráfico)
+         Paso 3 → item paralelo 2 (Monitorear semáforos)
+         Paso 4 → item paralelo 3 (Intervención del operador)
+       El JS mide las Y reales de cada elemento y actualiza los path d + cy
+       de los endpoint circles para alinearlos pixel-perfect. */
+    const CONNECTIONS = [
+      { srcSel: '[data-src="02"]', tgtSel: '[data-tgt="1"]', pathId: 'conn-path-1', epIdx: 0 },
+      { srcSel: '[data-src="03"]', tgtSel: '[data-tgt="2"]', pathId: 'conn-path-2', epIdx: 1 },
+      { srcSel: '[data-src="04"]', tgtSel: '[data-tgt="3"]', pathId: 'conn-path-3', epIdx: 2 },
+    ];
+    const endpoints = Array.from(connectorsSvg.querySelectorAll<SVGCircleElement>('.conn-endpoint'));
+    const VBOX_H = 400;
+
+    const updateConnectors = () => {
+      const svgRect = connectorsSvg.getBoundingClientRect();
+      if (svgRect.height === 0) return;
+      const scaleY = VBOX_H / svgRect.height;
+
+      CONNECTIONS.forEach((c) => {
+        const src = document.querySelector<HTMLElement>(c.srcSel);
+        const tgt = document.querySelector<HTMLElement>(c.tgtSel);
+        const path = document.querySelector<SVGPathElement>(`#${c.pathId}`);
+        if (!src || !tgt || !path) return;
+
+        const srcRect = src.getBoundingClientRect();
+        const tgtRect = tgt.getBoundingClientRect();
+
+        // Y de origen y destino (centros verticales), convertidas a viewBox space
+        const srcY = ((srcRect.top + srcRect.height / 2) - svgRect.top) * scaleY;
+        const tgtY = ((tgtRect.top + tgtRect.height / 2) - svgRect.top) * scaleY;
+
+        // Curva bezier suave del origen al destino
+        path.setAttribute('d', `M 4 ${srcY} C 60 ${srcY} 140 ${tgtY} 196 ${tgtY}`);
+
+        // Actualizar cy del endpoint circle (donde late en el destino)
+        const ep = endpoints[c.epIdx];
+        if (ep) ep.setAttribute('cy', String(tgtY));
+      });
+    };
+
+    // Actualizar en varios momentos: al cargar, al resize y después de las fuentes
+    updateConnectors();
+    window.addEventListener('resize', updateConnectors, { passive: true });
+    if ('fonts' in document) {
+      (document as any).fonts?.ready?.then(updateConnectors);
+    }
+    // Extra: re-medir después de un tick para asegurar layout listo
+    window.setTimeout(updateConnectors, 100);
+
+    // Reveal de los paneles + conectores — se re-anima cada vez que el
+    // diagrama vuelve al viewport. Los paneles vuelven a "volar" desde
+    // los costados y los conectores se re-encienden.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            panels.forEach((p) => p.classList.add('revealed'));
+            diagram.classList.add('revealed');
+            // Re-medir por si el layout cambió con la clase revealed
+            window.setTimeout(updateConnectors, 50);
+          } else {
+            panels.forEach((p) => p.classList.remove('revealed'));
+            diagram.classList.remove('revealed');
+          }
+        });
+      },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.2 },
+    );
+    observer.observe(diagram);
+  }
+</script>

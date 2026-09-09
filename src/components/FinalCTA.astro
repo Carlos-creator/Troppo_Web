@@ -1,32 +1,75 @@
 ---
-// Sección CTA final + ubicación del evento
-// Mapa: USM Campus San Joaquín — Av. Vicuña Mackenna 3939
+// Sección 9 rúbrica — "Cierre"
+//
+// Rediseñado: menos bloques apilados, jerarquía visual clara.
+// Estructura: hero-line del cierre → CTA hero card grande con los 2
+// botones + hook line integrado → footer con datos del evento + mapa
+// en una sola tarjeta horizontal.
 ---
 
 <section class="final" id="contacto">
   <div class="wrap">
-    <div class="final-inner">
-      <div>
-        <h2>Ven a ver Troppo en la feria.</h2>
-        <p>
-          Presentamos el prototipo completo del gemelo digital, con simulaciones en
-          vivo del acceso a San Antonio.
-        </p>
-        <div class="meta">
-          <div>
-            <div class="meta-label">FECHA</div>
-            13 de noviembre, 2026
-          </div>
-          <div>
-            <div class="meta-label">LUGAR</div>
-            USM Campus San Joaquín
-          </div>
-        </div>
-        <div class="cta-row">
-          <button class="btn-primary" type="button">Hablemos</button>
+
+    <!-- Hero-line del cierre -->
+    <header class="final-lead">
+      <div class="final-eyebrow">HORA DE DECIDIR</div>
+      <h2>
+        El futuro de la movilidad se decide
+        <em>antes de llegar a la calle.</em>
+      </h2>
+      <p>
+        La congestión no tiene por qué enfrentarse mediante ensayo y error.
+        Con Troppo, las decisiones pueden probarse, medirse y optimizarse en un
+        entorno digital antes de llevarlas a la realidad.
+      </p>
+    </header>
+
+    <!-- CTA hero card -->
+    <div class="final-cta">
+      <div class="final-cta-glow" aria-hidden="true"></div>
+      <div class="final-cta-inner">
+        <span class="final-cta-tag">¿TIENES ALGÚN DESAFÍO DE MOVILIDAD?</span>
+        <h3>
+          Hoy comenzamos en el puerto.
+          <span class="final-cta-h3-em">Mañana, en tu infraestructura.</span>
+        </h3>
+        <p>Tomas la decisión, nos llamas, elegimos el lugar y simulamos. Mañana lo llevamos a la realidad.</p>
+        <div class="final-cta-actions">
+          <a href="#demo" class="final-btn final-btn-primary">
+            <span>Conoce nuestro proyecto</span>
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 8 L13 8" />
+              <path d="M9 4 L13 8 L9 12" />
+            </svg>
+          </a>
+          <a href="#equipo" class="final-btn final-btn-ghost">
+            <span>Conoce nuestro equipo</span>
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 8 L13 8" />
+              <path d="M9 4 L13 8 L9 12" />
+            </svg>
+          </a>
         </div>
       </div>
-      <div class="map-box">
+    </div>
+
+    <!-- Datos del evento + mapa (tarjeta horizontal única) -->
+    <div class="final-event">
+      <div class="event-info">
+        <div class="event-tag">
+          <span class="event-tag-dot"></span>
+          <span>34.ª FERIA DE SOFTWARE USM</span>
+        </div>
+        <h4>USM Campus San Joaquín</h4>
+        <p class="event-address">Av. Vicuña Mackenna 3939 · San Joaquín, Santiago</p>
+        <div class="event-meta">
+          <div>
+            <span class="event-meta-label">Fecha</span>
+            <span class="event-meta-val">13 de noviembre, 2026</span>
+          </div>
+        </div>
+      </div>
+      <div class="event-map">
         <iframe
           src="https://maps.google.com/maps?q=-33.4905109,-70.6190188&hl=es&z=17&output=embed"
           title="USM Campus San Joaquín · Av. Vicuña Mackenna 3939"
@@ -36,83 +79,281 @@
         ></iframe>
       </div>
     </div>
+
   </div>
 </section>
 
 <style>
   .final {
-    padding: 110px 0;
-  }
-  .final-inner {
+    padding: 110px 0 130px;
     background: rgba(4, 69, 89, 0.85);
     color: var(--cream);
-    border-radius: 24px;
-    padding: 64px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    align-items: center;
     position: relative;
     overflow: hidden;
   }
-  h2 {
+  .wrap { position: relative; z-index: 1; }
+
+  /* ============ HEAD ============ */
+  .final-lead {
+    max-width: 780px;
+    margin: 0 auto 56px;
+    text-align: center;
+  }
+  .final-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--cyan);
+    opacity: 0.9;
+    margin-bottom: 14px;
+  }
+  .final-lead h2 {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: 34px;
-    line-height: 1.2;
-    max-width: 420px;
+    font-size: 46px;
+    line-height: 1.13;
+    color: var(--cream);
+    margin: 0;
+    letter-spacing: -0.6px;
   }
-  p {
-    margin-top: 16px;
-    color: rgba(255, 248, 234, 0.72);
-    font-size: 15px;
-    max-width: 380px;
-  }
-  .meta {
-    margin-top: 26px;
-    display: flex;
-    gap: 28px;
-    font-size: 13.5px;
-  }
-  .meta-label {
+  .final-lead h2 em {
+    font-family: var(--font-serif);
+    font-style: italic;
     color: var(--cyan);
+    font-weight: 500;
+  }
+  .final-lead p {
+    margin: 22px auto 0;
+    font-size: 16px;
+    line-height: 1.65;
+    color: rgba(255, 248, 234, 0.78);
+    max-width: 640px;
+  }
+
+  /* ============ CTA CARD (hero de la sección) ============ */
+  .final-cta {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto 72px;
+    border-radius: 28px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* Glow gradient de fondo — sensación de "hero card" */
+  .final-cta-glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(90% 60% at 20% 0%, rgba(97, 225, 230, 0.22), transparent 60%),
+      radial-gradient(80% 60% at 100% 100%, rgba(209, 235, 120, 0.12), transparent 65%),
+      linear-gradient(180deg, rgba(4, 69, 89, 0.55), rgba(3, 53, 68, 0.85));
+    z-index: -1;
+  }
+  .final-cta-inner {
+    padding: 54px 56px 52px;
+    border: 1px solid rgba(97, 225, 230, 0.32);
+    border-radius: 28px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .final-cta-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(97, 225, 230, 0.14);
+    border: 1px solid rgba(97, 225, 230, 0.4);
+    border-radius: 100px;
+    font-family: var(--font-sans);
+    font-size: 10.5px;
     font-weight: 700;
-    margin-bottom: 4px;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    margin-bottom: 22px;
   }
-  .cta-row {
-    margin-top: 28px;
+  .final-cta h3 {
+    font-family: var(--font-serif);
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--cream);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.4px;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .final-cta-h3-em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--cyan);
+    font-weight: 500;
+    display: inline-block;
+  }
+  .final-cta p {
+    margin: 20px auto 32px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 248, 234, 0.75);
+    max-width: 560px;
+  }
+  .final-cta-actions {
     display: flex;
-    gap: 16px;
-    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
   }
-  .btn-primary {
+  .final-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 24px;
+    border-radius: 100px;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition:
+      transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 260ms ease,
+      background 260ms ease,
+      border-color 260ms ease;
+    white-space: nowrap;
+  }
+  .final-btn svg {
+    transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .final-btn:hover {
+    transform: translateY(-2px);
+  }
+  .final-btn:hover svg {
+    transform: translateX(4px);
+  }
+  .final-btn-primary {
     background: var(--lime);
     color: var(--navy-deep);
-    font-weight: 700;
-    font-size: 15px;
-    padding: 15px 28px;
-    border-radius: 100px;
+    border: 1px solid transparent;
   }
-  .map-box {
-    border: 1px solid rgba(255, 248, 234, 0.16);
-    border-radius: 16px;
-    height: 280px;
+  .final-btn-primary:hover {
+    box-shadow: 0 14px 28px rgba(209, 235, 120, 0.4);
+  }
+  .final-btn-ghost {
+    background: rgba(255, 248, 234, 0.06);
+    color: var(--cream);
+    border: 1px solid rgba(255, 248, 234, 0.32);
+  }
+  .final-btn-ghost:hover {
+    background: rgba(255, 248, 234, 0.12);
+    border-color: rgba(255, 248, 234, 0.55);
+  }
+
+  /* ============ EVENT INFO + MAP (tarjeta horizontal) ============ */
+  .final-event {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: rgba(255, 248, 234, 0.04);
+    border: 1px solid rgba(255, 248, 234, 0.14);
+    border-radius: 20px;
+    padding: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 8px;
+    overflow: hidden;
+  }
+  .event-info {
+    padding: 24px 26px;
+  }
+  .event-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    margin-bottom: 14px;
+    opacity: 0.95;
+  }
+  .event-tag-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 6px var(--cyan);
+    animation: event-tag-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes event-tag-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.35; transform: scale(0.75); }
+  }
+  .event-info h4 {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--cream);
+    margin: 0;
+    line-height: 1.2;
+  }
+  .event-address {
+    margin-top: 6px;
+    font-size: 13.5px;
+    color: rgba(255, 248, 234, 0.72);
+    line-height: 1.5;
+  }
+  .event-meta {
+    margin-top: 22px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .event-meta > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .event-meta-label {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    color: rgba(97, 225, 230, 0.85);
+    text-transform: uppercase;
+  }
+  .event-meta-val {
+    font-size: 13.5px;
+    color: var(--cream);
+    font-weight: 500;
+  }
+  .event-map {
+    border-radius: 14px;
     overflow: hidden;
     background: rgba(255, 248, 234, 0.04);
+    min-height: 220px;
   }
-  .map-box iframe {
+  .event-map iframe {
     width: 100%;
     height: 100%;
     border: 0;
     display: block;
-    /* Suaviza el mapa hacia la paleta del sitio sin ocultar detalles */
     filter: saturate(0.85);
   }
 
+  /* --- MOBILE --- */
   @media (max-width: 860px) {
-    .final-inner {
+    .final { padding: 80px 0 100px; }
+    .final-lead { margin-bottom: 44px; }
+    .final-lead h2 { font-size: 30px; }
+    .final-lead p { font-size: 14.5px; }
+    .final-cta { margin-bottom: 52px; }
+    .final-cta-inner { padding: 36px 24px 34px; }
+    .final-cta h3 { font-size: 24px; }
+    .final-cta p { font-size: 14px; margin: 16px auto 26px; }
+    .final-btn { padding: 12px 18px; font-size: 13px; }
+    .final-event {
       grid-template-columns: 1fr;
-      padding: 40px 28px;
     }
+    .event-info h4 { font-size: 20px; }
+    .event-map { min-height: 200px; }
   }
 </style>

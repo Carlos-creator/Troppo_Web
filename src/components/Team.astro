@@ -1,28 +1,69 @@
 ---
-// Sección de equipo — tarjetas con iniciales
-// TODO: reemplazar iniciales por fotos reales en public/images/team/
+// Sección de equipo — parte de "Zona empresa" (rúbrica sección 8).
+// Cada miembro con iniciales, nombre, rol y correo.
+// TODO: reemplazar iniciales por fotos reales en public/images/team/ cuando estén.
 
 const members = [
-  { initials: 'CC', name: 'Cristóbal Césped', role: 'Product Owner' },
-  { initials: 'CR', name: 'Carlos Ramírez', role: 'UI/UX Lead' },
-  { initials: 'CT', name: 'Cristian Tapia', role: 'Fullstack Developer' },
-  { initials: 'AA', name: 'Andrés Araya D.', role: 'Scrum Master' },
-  { initials: 'LC', name: 'Leonardo Chacón G.', role: 'Tester + Brand Identity Lead' },
-  { initials: 'BP', name: 'Baltazar Portilla R.', role: 'Lead Developer' },
+  {
+    initials: 'CC',
+    name: 'Cristóbal Césped',
+    role: 'Product Owner',
+    email: 'cristobal.cesped@usm.cl',
+  },
+  {
+    initials: 'CR',
+    name: 'Carlos Ramírez',
+    role: 'UI/UX Lead',
+    email: 'carlos.ramirezv@usm.cl',
+  },
+  {
+    initials: 'CT',
+    name: 'Cristian Tapia',
+    role: 'Fullstack Developer',
+    email: 'cristian.tapia@usm.cl',
+  },
+  {
+    initials: 'AA',
+    name: 'Andrés Araya D.',
+    role: 'Scrum Master',
+    email: 'andres.araya@usm.cl',
+  },
+  {
+    initials: 'LC',
+    name: 'Leonardo Chacón G.',
+    role: 'Tester + Brand Identity Lead',
+    email: 'leonardo.chacon@usm.cl',
+  },
+  {
+    initials: 'BP',
+    name: 'Baltazar Portilla R.',
+    role: 'Lead Developer',
+    email: 'baltazar.portilla@usm.cl',
+  },
 ];
 ---
 
 <section class="team" id="equipo">
   <div class="wrap">
-    <h2>El equipo detrás del gemelo digital.</h2>
+    <header class="team-head">
+      <div class="team-eyebrow">QUIÉNES SOMOS</div>
+      <h2>El equipo detrás del gemelo digital.</h2>
+    </header>
     <div class="team-grid">
       {
         members.map((m) => (
-          <div class="member">
-            <div class="avatar">{m.initials}</div>
+          <article class="member" data-reveal>
+            <div class="avatar" aria-hidden="true">{m.initials}</div>
             <h4>{m.name}</h4>
             <div class="role">{m.role}</div>
-          </div>
+            <a class="email" href={`mailto:${m.email}`}>
+              <svg class="email-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2.5" y="4.5" width="15" height="11" rx="2" />
+                <path d="M2.5 6 L10 11 L17.5 6" />
+              </svg>
+              <span>{m.email}</span>
+            </a>
+          </article>
         ))
       }
     </div>
@@ -31,32 +72,64 @@ const members = [
 
 <style>
   .team {
-    padding: 110px 0;
+    padding: 100px 0 120px;
     background: rgba(3, 53, 68, 0.84);
     color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+  .wrap { position: relative; z-index: 1; }
+
+  .team-head {
+    max-width: 640px;
+    margin: 0 auto 52px;
+    text-align: center;
+  }
+  .team-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--cyan);
+    opacity: 0.9;
+    margin-bottom: 14px;
   }
   h2 {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: 38px;
-    max-width: 500px;
+    font-size: 34px;
     line-height: 1.2;
+    color: var(--cream);
+    margin: 0;
   }
+
   .team-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 52px;
+    gap: 22px;
+    max-width: 1180px;
+    margin: 0 auto;
   }
   .member {
-    background: rgba(255, 248, 234, 0.05);
-    border: 1px solid rgba(255, 248, 234, 0.12);
-    border-radius: 14px;
-    padding: 26px;
+    background: rgba(255, 248, 234, 0.045);
+    border: 1px solid rgba(255, 248, 234, 0.14);
+    border-radius: 16px;
+    padding: 26px 24px;
+    transition:
+      transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
+      background 400ms ease,
+      border-color 400ms ease,
+      box-shadow 400ms ease;
+  }
+  .member:hover {
+    transform: translateY(-4px);
+    background: rgba(97, 225, 230, 0.055);
+    border-color: rgba(97, 225, 230, 0.4);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.25);
   }
   .avatar {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: var(--cyan);
     display: flex;
@@ -65,23 +138,100 @@ const members = [
     font-family: var(--font-serif);
     font-weight: 600;
     color: var(--navy-deep);
-    font-size: 17px;
+    font-size: 18px;
     margin-bottom: 18px;
   }
   .member h4 {
     font-family: var(--font-title);
     font-size: 16px;
     font-weight: 700;
+    color: var(--cream);
+    margin: 0;
+    letter-spacing: 0.2px;
   }
   .member .role {
-    font-size: 13px;
+    font-family: var(--font-sans);
+    font-size: 12.5px;
     color: var(--cyan);
     margin-top: 4px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  .email {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 7px 12px;
+    background: rgba(255, 248, 234, 0.06);
+    border: 1px solid rgba(255, 248, 234, 0.14);
+    border-radius: 100px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: rgba(255, 248, 234, 0.75);
+    text-decoration: none;
+    transition:
+      background 260ms ease,
+      border-color 260ms ease,
+      color 260ms ease;
+  }
+  .email:hover {
+    background: rgba(97, 225, 230, 0.12);
+    border-color: rgba(97, 225, 230, 0.42);
+    color: var(--cream);
+  }
+  .email-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--cyan);
+    flex-shrink: 0;
+  }
+
+  /* Reveal */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 700ms ease, transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  [data-reveal].revealed {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   @media (max-width: 860px) {
-    .team-grid {
-      grid-template-columns: 1fr;
-    }
+    .team-grid { grid-template-columns: 1fr; max-width: 480px; }
+    h2 { font-size: 26px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] { opacity: 1; transform: none; transition: none; }
+    .member, .email { transition: none; }
   }
 </style>
+
+<script>
+  // Se re-anima cada vez que los items vuelven al viewport
+  const items = document.querySelectorAll<HTMLElement>('.team [data-reveal]');
+  if (items.length) {
+    const timers = new WeakMap<Element, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e, i) => {
+          const prev = timers.get(e.target);
+          if (prev) window.clearTimeout(prev);
+          if (e.isIntersecting) {
+            const t = window.setTimeout(() => {
+              e.target.classList.add('revealed');
+              timers.delete(e.target);
+            }, i * 80);
+            timers.set(e.target, t);
+          } else {
+            e.target.classList.remove('revealed');
+          }
+        });
+      },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.15 },
+    );
+    items.forEach((el) => observer.observe(el));
+  }
+</script>

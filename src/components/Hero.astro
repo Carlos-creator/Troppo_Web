@@ -38,26 +38,15 @@
         </div>
         <div class="scanner-hud">DETECTADO</div>
       </div>
-      <svg class="compass-big" viewBox="0 0 200 200" aria-hidden="true">
-        <circle
-          cx="100"
-          cy="100"
-          r="94"
-          fill="none"
-          stroke="rgba(255,248,234,0.25)"
-          stroke-width="1.5"
-        />
-        <circle
-          cx="100"
-          cy="100"
-          r="70"
-          fill="none"
-          stroke="rgba(255,248,234,0.18)"
-          stroke-width="1"
-        />
-        <path d="M100 16 L112 100 L100 184 L88 100 Z" fill="#FFF8EA" />
-        <path d="M16 100 L100 88 L184 100 L100 112 Z" fill="#61E1E6" />
-      </svg>
+      <img
+        class="compass-big"
+        src="/images/logo/logo_light_sinfondo.png"
+        alt=""
+        aria-hidden="true"
+        width="420"
+        height="420"
+        draggable="false"
+      />
       <div class="hero-card">
         <div class="big-num">9h → 2h</div>
         <div>Espera estimada en horas peak con políticas optimizadas por IA.</div>
@@ -154,9 +143,14 @@
     transform: translate(-50%, -50%);
     width: 420px;
     height: 420px;
-    opacity: 0.9;
+    opacity: 0.6;
     animation: spin 60s linear infinite;
     z-index: 1;
+    /* Logo oficial cuadrado — object-fit para preservar proporciones */
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
   }
 
   /* ---------- LIDAR SWEEP ---------- */
@@ -461,15 +455,18 @@
 </style>
 
 <script>
-  // LiDAR scanner: trackea el cursor sobre el hero-visual, dibuja un brazo
-  // que apunta al cursor + un blip pulsante en el punto detectado.
+  // LiDAR scanner: la zona de detección ahora cubre TODA la sección
+  // Hero (no sólo la brújula). El brazo sigue pivotando desde el centro
+  // de la brújula pero se extiende a cualquier parte del hero. Esto
+  // duplica (y más) el área x/y del detector.
+  const hero = document.querySelector<HTMLElement>('.hero');
   const heroVisual = document.querySelector<HTMLElement>('.hero-visual');
   const scanner = heroVisual?.querySelector<HTMLElement>('.lidar-scanner');
   const arm = scanner?.querySelector<HTMLElement>('.scanner-arm');
   const blip = scanner?.querySelector<HTMLElement>('.scanner-blip');
   const hud = scanner?.querySelector<HTMLElement>('.scanner-hud');
 
-  if (heroVisual && scanner && arm && blip && hud) {
+  if (hero && heroVisual && scanner && arm && blip && hud) {
     let ticking = false;
     let latestX = 0;
     let latestY = 0;
@@ -523,15 +520,15 @@
     };
 
     // ---- MOUSE ----
-    heroVisual.addEventListener('mouseenter', () => {
+    hero.addEventListener('mouseenter', () => {
       scanner.classList.add('active');
     });
 
-    heroVisual.addEventListener('mouseleave', () => {
+    hero.addEventListener('mouseleave', () => {
       scanner.classList.remove('active');
     });
 
-    heroVisual.addEventListener('mousemove', (e) => {
+    hero.addEventListener('mousemove', (e) => {
       updatePosition(e.clientX, e.clientY);
     });
 
@@ -542,7 +539,7 @@
     // para que no parpadee.
     let touchFadeTimer = 0;
 
-    heroVisual.addEventListener(
+    hero.addEventListener(
       'touchstart',
       (e) => {
         window.clearTimeout(touchFadeTimer);
@@ -553,7 +550,7 @@
       { passive: true },
     );
 
-    heroVisual.addEventListener(
+    hero.addEventListener(
       'touchmove',
       (e) => {
         const t = e.touches[0];
@@ -562,7 +559,7 @@
       { passive: true },
     );
 
-    heroVisual.addEventListener(
+    hero.addEventListener(
       'touchend',
       () => {
         touchFadeTimer = window.setTimeout(() => {

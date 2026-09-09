@@ -1,0 +1,483 @@
+---
+// Sección 4 rúbrica — "Por qué Troppo es mejor que sus competidores"
+//
+// Concepto visual: el ciclo completo Simular → Analizar → Optimizar con IA
+// → Monitorear en tiempo real, con marcador de dónde las herramientas
+// tradicionales se detienen (después del paso 2), y arrow de loop-back
+// mostrando que Troppo cierra el círculo.
+
+const pasos = [
+  {
+    num: '01',
+    titulo: 'Probar',
+    desc: 'Reconstruimos el corredor en el gemelo digital y evaluamos escenarios sin tocar la calle real.',
+    troppoOnly: false,
+    icon: 'test',
+  },
+  {
+    num: '02',
+    titulo: 'Analizar',
+    desc: 'Se comparan los resultados de cada corrida: espera, flujo, emisiones, distribución de vehículos.',
+    troppoOnly: false,
+    icon: 'chart',
+  },
+  {
+    num: '03',
+    titulo: 'Optimizar con IA',
+    desc: 'Aprendizaje por refuerzo genera nuevas políticas de semaforización que superan a las reglas fijas.',
+    troppoOnly: true,
+    icon: 'ai',
+  },
+  {
+    num: '04',
+    titulo: 'Monitorear en vivo',
+    desc: 'Al desplegar en terreno, el sistema sigue observando la red y realimentando el modelo.',
+    troppoOnly: true,
+    icon: 'radar',
+  },
+];
+---
+
+<section class="porque" id="porque-troppo">
+  <div class="wrap">
+    <header class="porque-head">
+      <div class="porque-eyebrow">POR QUÉ TROPPO</div>
+      <h2>El único que cierra el círculo.</h2>
+      <p>
+        Otras herramientas se detienen en simular y analizar. Troppo conecta el
+        proceso completo en una sola plataforma: probar, analizar,
+        <strong>optimizar con IA</strong> y <strong>monitorear en tiempo real</strong>.
+      </p>
+    </header>
+
+    <div class="porque-flow" role="list">
+      {
+        pasos.map((p, i) => (
+          <>
+            <article class={`pq-step ${p.troppoOnly ? 'is-troppo' : ''}`} data-reveal role="listitem">
+              <div class="pq-step-head">
+                <span class="pq-num">{p.num}</span>
+                {p.troppoOnly && <span class="pq-badge">Sólo Troppo</span>}
+              </div>
+              <div class="pq-icon-wrap">
+                <svg class="pq-icon" viewBox="0 0 32 32" aria-hidden="true">
+                  {p.icon === 'test' && (
+                    <>
+                      <rect x="6" y="6" width="20" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2" />
+                      <path d="M6 12 L26 12 M6 20 L26 20 M12 6 L12 26 M20 6 L20 26" stroke="currentColor" stroke-width="1" opacity="0.35" />
+                      <circle cx="12" cy="12" r="1.8" fill="currentColor" />
+                      <circle cx="20" cy="20" r="1.8" fill="currentColor" />
+                    </>
+                  )}
+                  {p.icon === 'chart' && (
+                    <>
+                      <path d="M5 27 L5 6 M5 27 L27 27" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                      <path d="M8 22 L14 17 L19 20 L24 11" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                      <circle cx="14" cy="17" r="1.6" fill="currentColor" />
+                      <circle cx="19" cy="20" r="1.6" fill="currentColor" />
+                      <circle cx="24" cy="11" r="1.6" fill="currentColor" />
+                    </>
+                  )}
+                  {p.icon === 'ai' && (
+                    <>
+                      <circle cx="6" cy="10" r="2.2" fill="currentColor" />
+                      <circle cx="26" cy="10" r="2.2" fill="currentColor" />
+                      <circle cx="7" cy="23" r="2.2" fill="currentColor" />
+                      <circle cx="25" cy="23" r="2.2" fill="currentColor" />
+                      <circle cx="16" cy="16" r="3.2" fill="currentColor" />
+                      <line x1="6" y1="10" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" opacity="0.7" />
+                      <line x1="26" y1="10" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" opacity="0.7" />
+                      <line x1="7" y1="23" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" opacity="0.7" />
+                      <line x1="25" y1="23" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" opacity="0.7" />
+                    </>
+                  )}
+                  {p.icon === 'radar' && (
+                    <>
+                      <circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="1" opacity="0.35" />
+                      <circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5" />
+                      <circle cx="16" cy="16" r="2.4" fill="currentColor" />
+                      <line x1="16" y1="16" x2="24" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                      <circle cx="24" cy="10" r="1.6" fill="currentColor" />
+                    </>
+                  )}
+                </svg>
+              </div>
+              <h3>{p.titulo}</h3>
+              <p>{p.desc}</p>
+            </article>
+
+            {i < pasos.length - 1 && (
+              <div class={`pq-arrow ${i === 1 ? 'is-limit' : ''}`} aria-hidden="true">
+                <svg viewBox="0 0 32 12" width="28" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 6 L26 6" />
+                  <path d="M20 2 L26 6 L20 10" />
+                </svg>
+                {i === 1 && (
+                  <span class="pq-arrow-label">Otras herramientas se detienen aquí</span>
+                )}
+              </div>
+            )}
+          </>
+        ))
+      }
+    </div>
+
+    <!-- Arrow de loop-back: cierra el círculo Monitorear → Probar -->
+    <div class="pq-loop" aria-hidden="true">
+      <svg viewBox="0 0 800 60" preserveAspectRatio="none">
+        <path
+          d="M 780 8 C 780 45, 620 55, 400 55 C 180 55, 20 45, 20 8"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-dasharray="6 5"
+        />
+        <path d="M 24 14 L 20 8 L 26 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span class="pq-loop-label">Se cierra el círculo — cada corrida realimenta al modelo</span>
+    </div>
+
+    <!-- Highlight final — parafraseo del rúbrica -->
+    <div class="pq-highlight">
+      <p>
+        <strong>Troppo</strong> no sólo permite entender qué está ocurriendo:
+        también permite probar qué <em>podría ocurrir</em> y tomar mejores
+        decisiones antes de implementarlas en la realidad.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .porque {
+    padding: 110px 0 130px;
+    background: rgba(255, 248, 234, 0.72);
+    position: relative;
+    overflow: hidden;
+  }
+  .wrap { position: relative; z-index: 1; }
+
+  /* ---- HEAD ---- */
+  .porque-head {
+    max-width: 720px;
+    margin: 0 auto 64px;
+    text-align: center;
+  }
+  .porque-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--cyan);
+    opacity: 0.9;
+    margin-bottom: 14px;
+  }
+  .porque-head h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 1.15;
+    color: var(--navy);
+    margin: 0;
+  }
+  .porque-head p {
+    margin-top: 20px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: rgba(21, 27, 32, 0.75);
+  }
+  .porque-head strong {
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  /* ---- FLOW (4 pasos + 3 arrows entre ellos) ---- */
+  .porque-flow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+    gap: 0;
+    align-items: stretch;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* Card de paso */
+  .pq-step {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(4, 69, 89, 0.14);
+    border-radius: 16px;
+    padding: 26px 24px 28px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    color: var(--navy);
+    transition:
+      transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 350ms ease,
+      border-color 350ms ease;
+    position: relative;
+  }
+  .pq-step:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(4, 69, 89, 0.14);
+    border-color: rgba(4, 69, 89, 0.28);
+  }
+
+  /* Estilos especiales para pasos "Sólo Troppo" */
+  .pq-step.is-troppo {
+    background: rgba(97, 225, 230, 0.10);
+    border-color: rgba(97, 225, 230, 0.42);
+  }
+  .pq-step.is-troppo:hover {
+    background: rgba(97, 225, 230, 0.14);
+    border-color: var(--cyan);
+    box-shadow: 0 12px 30px rgba(97, 225, 230, 0.22);
+  }
+
+  .pq-step-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+    min-height: 24px;
+  }
+  .pq-num {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    color: var(--cyan);
+    font-weight: 600;
+    line-height: 1;
+  }
+  .pq-badge {
+    font-family: var(--font-sans);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    padding: 4px 8px;
+    background: var(--cyan);
+    color: var(--navy-deep);
+    border-radius: 100px;
+    text-transform: uppercase;
+  }
+
+  /* Icono central en su chip */
+  .pq-icon-wrap {
+    width: 60px;
+    height: 60px;
+    margin: 4px auto 18px;
+    border-radius: 14px;
+    background: rgba(97, 225, 230, 0.12);
+    border: 1px solid rgba(97, 225, 230, 0.28);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--navy);
+  }
+  .pq-step.is-troppo .pq-icon-wrap {
+    background: rgba(97, 225, 230, 0.2);
+    border-color: rgba(97, 225, 230, 0.5);
+    color: var(--navy-deep);
+  }
+  .pq-icon { width: 32px; height: 32px; }
+
+  .pq-step h3 {
+    font-family: var(--font-title);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0 0 8px;
+  }
+  .pq-step p {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: rgba(21, 27, 32, 0.72);
+    margin: 0;
+  }
+
+  /* Arrows entre pasos */
+  .pq-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    color: rgba(4, 69, 89, 0.35);
+    position: relative;
+  }
+  .pq-arrow.is-limit {
+    color: rgba(220, 90, 80, 0.7);
+  }
+  .pq-arrow-label {
+    position: absolute;
+    top: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: rgba(220, 90, 80, 0.85);
+    text-transform: uppercase;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(220, 90, 80, 0.35);
+    border-radius: 100px;
+  }
+  .pq-arrow-label::before {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    border-right: 1px solid rgba(220, 90, 80, 0.35);
+    border-bottom: 1px solid rgba(220, 90, 80, 0.35);
+  }
+
+  /* Loop-back arrow debajo del flow */
+  .pq-loop {
+    max-width: 1100px;
+    margin: 20px auto 0;
+    height: 60px;
+    color: rgba(97, 225, 230, 0.55);
+    position: relative;
+    text-align: center;
+  }
+  .pq-loop svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .pq-loop-label {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    color: rgba(4, 69, 89, 0.6);
+    text-transform: uppercase;
+    background: rgba(255, 248, 234, 0.72);
+    padding: 3px 12px;
+    border-radius: 100px;
+  }
+
+  /* Highlight final */
+  .pq-highlight {
+    max-width: 780px;
+    margin: 68px auto 0;
+    padding: 30px 40px;
+    background: rgba(4, 69, 89, 0.055);
+    border-left: 4px solid var(--cyan);
+    border-radius: 2px 10px 10px 2px;
+    text-align: left;
+  }
+  .pq-highlight p {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--navy);
+    margin: 0;
+    font-weight: 500;
+  }
+  .pq-highlight strong {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .pq-highlight em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--cyan);
+    font-weight: 500;
+  }
+
+  /* Reveal on scroll */
+  .pq-step {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 700ms ease,
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 350ms ease,
+      border-color 350ms ease,
+      background 350ms ease;
+  }
+  .pq-step.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* --- MOBILE --- */
+  @media (max-width: 960px) {
+    .porque-flow {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      max-width: 480px;
+    }
+    .pq-arrow {
+      transform: rotate(90deg);
+      padding: 4px 0;
+      justify-content: center;
+    }
+    .pq-arrow-label {
+      transform: rotate(-90deg) translateX(0);
+      top: 50%;
+      left: calc(50% + 96px);
+      white-space: normal;
+      max-width: 160px;
+      font-size: 9px;
+      letter-spacing: 1px;
+    }
+    .pq-arrow-label::before { display: none; }
+    .pq-loop { display: none; }
+    .porque-head h2 { font-size: 30px; }
+    .pq-highlight {
+      padding: 24px 26px;
+      margin-top: 48px;
+    }
+    .pq-highlight p { font-size: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pq-step {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Reveal escalonado — se re-anima cada vez que los steps vuelven al
+  // viewport. Trackeamos el timeout por elemento para cancelarlo si
+  // salen antes de completar el reveal.
+  const steps = document.querySelectorAll<HTMLElement>('.porque .pq-step');
+  if (steps.length) {
+    const timers = new WeakMap<Element, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e, i) => {
+          const prev = timers.get(e.target);
+          if (prev) window.clearTimeout(prev);
+          if (e.isIntersecting) {
+            const t = window.setTimeout(() => {
+              e.target.classList.add('revealed');
+              timers.delete(e.target);
+            }, i * 120);
+            timers.set(e.target, t);
+          } else {
+            e.target.classList.remove('revealed');
+          }
+        });
+      },
+      { rootMargin: '0px 0px -15% 0px', threshold: 0.2 },
+    );
+    steps.forEach((s) => observer.observe(s));
+  }
+</script>
