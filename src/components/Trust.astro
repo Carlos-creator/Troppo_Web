@@ -1,7 +1,9 @@
 ---
-// Sección de confianza — 6 flip cards.
+// Sección de confianza — 6 cards con efecto de disolución turbulenta.
 // Frente: sólo el título (impacto visual). Reverso: la explicación.
-// Se voltea con hover en desktop y con tap en mobile (JS toggle).
+// El frente se DISUELVE (fractalNoise + luminanceToAlpha + threshold)
+// para revelar el reverso — mismo efecto que las fotos puerto-1/puerto-2.
+// Trigger: hover en desktop, tap en mobile.
 
 const attributes = [
   {
@@ -46,24 +48,24 @@ const attributes = [
     </div>
     <div class="trust-grid">
       {
-        attributes.map((a) => (
-          <article class="trust-card" tabindex="0" data-flip>
+        attributes.map((a, i) => (
+          <article class="trust-card" tabindex="0" data-flip data-idx={i}>
             <div class="tc-inner">
-              <div class="tc-face tc-front">
+              <div class="tc-face tc-back">
+                <p>{a.body}</p>
+              </div>
+              <div
+                class="tc-face tc-front"
+                style={`filter: url(#tc-dissolve-${i}); -webkit-filter: url(#tc-dissolve-${i})`}
+              >
                 <span class="tc-badge" aria-hidden="true">
                   <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <!-- Flecha superior: L-curva desde abajo-izquierda hacia arriba-derecha, con punta apuntando a la derecha -->
-                    <path d="M3 15 L3 10 A4 4 0 0 1 7 6 L20 6" />
-                    <polyline points="16 2 20 6 16 10" />
-                    <!-- Flecha inferior: mirror — L-curva desde arriba-derecha hacia abajo-izquierda, con punta apuntando a la izquierda -->
-                    <path d="M21 9 L21 14 A4 4 0 0 1 17 18 L4 18" />
-                    <polyline points="8 14 4 18 8 22" />
+                    <circle cx="12" cy="12" r="9" opacity="0.35" />
+                    <path d="M8 12 L16 12" />
+                    <path d="M12 8 L16 12 L12 16" />
                   </svg>
                 </span>
                 <h3>{a.title}</h3>
-              </div>
-              <div class="tc-face tc-back">
-                <p>{a.body}</p>
               </div>
             </div>
           </article>
@@ -71,12 +73,53 @@ const attributes = [
       }
     </div>
   </div>
+
+  {/* SVG con los 6 filtros de disolución (una por card, con seed distinto
+      para que ninguna disuelva igual). Oculto pero referenciado por CSS. */}
+  <svg class="tc-defs" aria-hidden="true" width="0" height="0" style="position:absolute">
+    <defs>
+      {attributes.map((_, i) => (
+        <filter id={`tc-dissolve-${i}`} x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.022" seed={i * 11 + 3} result="noise" />
+          <feColorMatrix in="noise" type="luminanceToAlpha" result="noiseAlpha" />
+          <feComponentTransfer in="noiseAlpha">
+            <feFuncA type="linear" slope="2">
+              <animate
+                class="anim-fwd"
+                attributeName="slope"
+                from="2"
+                to="0"
+                dur="850ms"
+                begin="indefinite"
+                fill="freeze"
+              />
+              <animate
+                class="anim-bwd"
+                attributeName="slope"
+                from="0"
+                to="2"
+                dur="850ms"
+                begin="indefinite"
+                fill="freeze"
+              />
+            </feFuncA>
+          </feComponentTransfer>
+          <feComponentTransfer>
+            <feFuncA type="discrete" tableValues="0 1" />
+          </feComponentTransfer>
+          <feGaussianBlur stdDeviation="0.5" />
+          <feComposite operator="in" in="SourceGraphic" />
+        </filter>
+      ))}
+    </defs>
+  </svg>
 </section>
 
 <style>
   .trust {
     padding: 110px 0;
     background: rgba(255, 248, 234, 0.72);
+    position: relative;
   }
   .trust-head {
     max-width: 640px;
@@ -109,52 +152,52 @@ const attributes = [
     gap: 24px;
   }
 
-  /* ============ FLIP CARD ============
-     Combina rotateY 3D (efecto visual) + opacity crossfade
-     (garantía de que sólo un lado se ve a la vez, incluso si
-     backface-visibility no aplica por scoping de Astro). */
+  /* ============ DISSOLVE CARD ============
+     Estructura simple: back debajo, front encima con filter SVG
+     dinámico. Cuando el filter's slope va 2 → 0 el front se disuelve
+     píxel a píxel revelando el back. No hay 3D, no rotateY. */
   .trust-card {
-    perspective: 1200px;
+    position: relative;
+    height: 200px;
     background: transparent;
     border: none;
     padding: 0;
-    height: 200px;
     cursor: pointer;
     outline: none;
-    position: relative;
   }
   .tc-inner {
     position: relative;
     width: 100%;
     height: 100%;
-    transform-style: preserve-3d;
   }
-
   .tc-face {
     position: absolute;
     inset: 0;
     border-radius: 14px;
-    padding: 26px 26px;
+    padding: 26px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     box-sizing: border-box;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    transition:
-      transform 700ms cubic-bezier(0.34, 1.2, 0.5, 1),
-      opacity 350ms ease;
-    will-change: transform, opacity;
   }
-
-  /* --- FRENTE: visible por defecto --- */
+  .tc-back {
+    background: var(--navy);
+    border: 1px solid rgba(97, 225, 230, 0.35);
+    box-shadow: 0 8px 22px rgba(4, 69, 89, 0.2);
+    z-index: 1;
+  }
+  .tc-back p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255, 248, 234, 0.92);
+    margin: 0;
+  }
   .tc-front {
     background: #fff;
     border: 1px solid rgba(4, 69, 89, 0.14);
     box-shadow: 0 6px 18px rgba(4, 69, 89, 0.06);
-    transform: rotateY(0deg);
-    opacity: 1;
     z-index: 2;
+    /* filter: url(#tc-dissolve-N) — aplicado inline por card */
   }
   .tc-front h3 {
     font-family: var(--font-serif);
@@ -166,53 +209,6 @@ const attributes = [
     letter-spacing: -0.2px;
   }
 
-  /* --- REVERSO: oculto por defecto (rotado + invisible) --- */
-  .tc-back {
-    background: var(--navy);
-    border: 1px solid rgba(97, 225, 230, 0.35);
-    box-shadow: 0 8px 22px rgba(4, 69, 89, 0.2);
-    transform: rotateY(-180deg);
-    opacity: 0;
-    z-index: 1;
-  }
-  .tc-back p {
-    font-size: 14px;
-    line-height: 1.6;
-    color: rgba(255, 248, 234, 0.9);
-    margin: 0;
-  }
-
-  /* --- FLIPPED (via tap en mobile o toggle programático) --- */
-  .trust-card.flipped .tc-front {
-    transform: rotateY(180deg);
-    opacity: 0;
-    z-index: 1;
-  }
-  .trust-card.flipped .tc-back {
-    transform: rotateY(0deg);
-    opacity: 1;
-    z-index: 2;
-  }
-
-  /* --- HOVER + FOCUS: sólo en dispositivos con hover real (desktop).
-     En touch el :hover se queda "pegado" tras el tap y colisiona con
-     el toggle .flipped, así que lo gateamos con @media hover:hover. --- */
-  @media (hover: hover) {
-    .trust-card:hover .tc-front,
-    .trust-card:focus-visible .tc-front {
-      transform: rotateY(180deg);
-      opacity: 0;
-      z-index: 1;
-    }
-    .trust-card:hover .tc-back,
-    .trust-card:focus-visible .tc-back {
-      transform: rotateY(0deg);
-      opacity: 1;
-      z-index: 2;
-    }
-  }
-
-  /* Badge indicador de "voltear" en el frente */
   .tc-badge {
     position: absolute;
     top: 18px;
@@ -225,20 +221,19 @@ const attributes = [
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: transform 400ms ease, background 400ms ease;
+    transition: background 400ms ease, color 400ms ease;
   }
+  .trust-card:hover .tc-badge,
+  .trust-card:focus-visible .tc-badge,
   .trust-card.flipped .tc-badge {
     background: var(--cyan);
     color: var(--navy-deep);
-    transform: rotate(180deg);
   }
-  @media (hover: hover) {
-    .trust-card:hover .tc-badge,
-    .trust-card:focus-visible .tc-badge {
-      background: var(--cyan);
-      color: var(--navy-deep);
-      transform: rotate(180deg);
-    }
+
+  /* Focus ring accesible */
+  .trust-card:focus-visible {
+    box-shadow: 0 0 0 3px rgba(97, 225, 230, 0.55);
+    border-radius: 14px;
   }
 
   @media (max-width: 860px) {
@@ -249,30 +244,78 @@ const attributes = [
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .tc-inner {
-      transition: none;
-    }
-    .tc-badge {
-      transition: none;
-    }
+    .tc-badge { transition: none; }
+    /* Sin disolución — el hover simplemente cambia opacity del front */
+    .tc-front { transition: opacity 300ms ease; }
+    .trust-card:hover .tc-front,
+    .trust-card:focus-visible .tc-front,
+    .trust-card.flipped .tc-front { opacity: 0; }
   }
 </style>
 
 <script>
-  // Tap toggle en dispositivos táctiles (mouse hover ya funciona por CSS).
-  // Usamos click (que se dispara tanto en tap como en clic) y stopPropagation
-  // por si el evento burbujea a algún handler global.
+  /**
+   * Trust cards con disolución turbulenta.
+   *
+   * En vez de rotateY 3D, cada card tiene un SVG filter con feTurbulence
+   * cuya `slope` va animándose entre 2 (front visible) y 0 (front invisible,
+   * back revelado) al pasar el mouse o tap.
+   *
+   * - Desktop (mouse):  hover in → disuelve. Hover out → recompone.
+   * - Mobile (touch):   tap toggle entre estados.
+   * - Teclado:          Enter/Espacio hace toggle.
+   */
   const cards = document.querySelectorAll<HTMLElement>('[data-flip]');
-  cards.forEach((card) => {
-    card.addEventListener('click', () => {
-      card.classList.toggle('flipped');
+  cards.forEach((card, i) => {
+    const fwd = document.querySelector<SVGAnimateElement>(
+      `#tc-dissolve-${i} .anim-fwd`,
+    );
+    const bwd = document.querySelector<SVGAnimateElement>(
+      `#tc-dissolve-${i} .anim-bwd`,
+    );
+    let flipped = false;
+
+    const dissolveOut = () => {
+      try {
+        fwd?.beginElement();
+      } catch (e) { /* SMIL puede fallar en algunos navegadores muy viejos */ }
+    };
+    const dissolveIn = () => {
+      try {
+        bwd?.beginElement();
+      } catch (e) {}
+    };
+
+    // Hover — sólo dispositivos con puntero real (mouse), evita que en
+    // mobile el tap dispare hover fantasma.
+    card.addEventListener('pointerenter', (e) => {
+      if ((e as PointerEvent).pointerType !== 'mouse') return;
+      if (flipped) return; // ya en estado disuelto por tap, no re-disparar
+      dissolveOut();
     });
-    // Soporte teclado — Enter/Espacio voltean la card
+    card.addEventListener('pointerleave', (e) => {
+      if ((e as PointerEvent).pointerType !== 'mouse') return;
+      if (flipped) return;
+      dissolveIn();
+    });
+
+    // Tap/click — toggle persistente (útil en mobile y para "fijar" el reverso)
+    card.addEventListener('click', () => {
+      flipped = !flipped;
+      card.classList.toggle('flipped', flipped);
+      if (flipped) dissolveOut();
+      else dissolveIn();
+    });
+
+    // Teclado
     card.addEventListener('keydown', (e) => {
       const ke = e as KeyboardEvent;
       if (ke.key === 'Enter' || ke.key === ' ') {
         ke.preventDefault();
-        card.classList.toggle('flipped');
+        flipped = !flipped;
+        card.classList.toggle('flipped', flipped);
+        if (flipped) dissolveOut();
+        else dissolveIn();
       }
     });
   });

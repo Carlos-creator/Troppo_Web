@@ -189,8 +189,10 @@ const valores = [
     margin: 0 auto;
   }
   .mv-card {
-    background: #fff;
-    border: 1px solid rgba(4, 69, 89, 0.12);
+    /* Ambas cards (misión y visión) usan el mismo gradient sutil cyan
+       para verse con la misma transparencia/textura. */
+    background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), #fff);
+    border: 1px solid rgba(97, 225, 230, 0.28);
     border-radius: 20px;
     padding: 38px 40px;
     box-shadow: 0 10px 28px rgba(4, 69, 89, 0.06);
@@ -244,11 +246,6 @@ const valores = [
     font-weight: 500;
   }
 
-  /* Diferenciación sutil misión vs visión */
-  .mv-vision {
-    background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), #fff);
-    border-color: rgba(97, 225, 230, 0.28);
-  }
 
   /* ---- VALORES ---- */
   .valores-head {

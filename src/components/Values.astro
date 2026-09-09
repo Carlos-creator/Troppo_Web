@@ -8,13 +8,31 @@
 <section class="values" id="nosotros">
   <div class="wrap">
     <div class="values-head">
-      <div class="values-eyebrow">QUÉ OFRECE TROPPO</div>
-      <h2>Probar antes. Optimizar con IA. Decidir con evidencia.</h2>
-      <p>
-        Troppo integra simulación de la red vial, aprendizaje por refuerzo y análisis
-        de resultados en un mismo lugar. El cliente deja de decidir por estimación y
-        pasa a decidir con evidencia del gemelo digital.
-      </p>
+      <div class="values-head-left">
+        <div class="values-eyebrow" data-vh>
+          <span class="eyebrow-mark" aria-hidden="true"></span>
+          QUÉ OFRECE TROPPO
+        </div>
+        <p data-vh>
+          Troppo integra simulación de la red vial, aprendizaje por refuerzo y análisis
+          de resultados en un mismo lugar. El cliente deja de decidir por estimación y
+          pasa a decidir con evidencia del gemelo digital.
+        </p>
+      </div>
+      <h2 class="values-h2">
+        <span class="v-phrase" data-vh>
+          <span class="v-num" aria-hidden="true">01</span>
+          <span class="v-text"><em>Probar</em> antes.</span>
+        </span>
+        <span class="v-phrase" data-vh>
+          <span class="v-num" aria-hidden="true">02</span>
+          <span class="v-text">Optimizar con <em>IA</em>.</span>
+        </span>
+        <span class="v-phrase" data-vh>
+          <span class="v-num" aria-hidden="true">03</span>
+          <span class="v-text">Decidir con <em>evidencia</em>.</span>
+        </span>
+      </h2>
     </div>
     <div class="value-grid">
       <article class="value-card value-card--grid" data-reveal>
@@ -166,40 +184,127 @@
 
   .values-head {
     display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: 48px;
-    align-items: end;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 60px;
+    align-items: start;
   }
-  .values-head > div:first-child { grid-column: 1; }
+  .values-head-left {
+    padding-top: 22px;
+  }
+
+  /* Eyebrow más prominente — 15px con marca cyan que se dibuja */
   .values-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
     font-family: var(--font-sans);
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 700;
-    letter-spacing: 2.5px;
+    letter-spacing: 3px;
     color: var(--cyan);
-    opacity: 0.9;
-    margin-bottom: 14px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
   }
-  .values-head h2 {
+  .eyebrow-mark {
+    display: inline-block;
+    width: 0;
+    height: 2px;
+    background: var(--cyan);
+    box-shadow: 0 0 8px rgba(97, 225, 230, 0.6);
+    border-radius: 2px;
+    transition: width 900ms cubic-bezier(0.16, 1, 0.3, 1) 100ms;
+  }
+  .values-eyebrow[data-vh].revealed .eyebrow-mark {
+    width: 42px;
+  }
+
+  /* H2 en 3 frases apiladas, cada una con badge de número */
+  .values-h2 {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: 40px;
-    max-width: 620px;
+    font-size: 46px;
     line-height: 1.15;
     color: var(--cream);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    letter-spacing: -0.5px;
   }
+  .v-phrase {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 18px;
+    position: relative;
+  }
+  .v-num {
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    color: var(--cyan);
+    padding-top: 12px;
+    min-width: 32px;
+    opacity: 0.85;
+    /* Pequeña "línea de goteo" cyan al lado de cada número */
+    position: relative;
+  }
+  .v-num::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 30px;
+    bottom: -6px;
+    width: 1px;
+    background: linear-gradient(180deg, rgba(97, 225, 230, 0.55), transparent);
+    opacity: 0;
+    transition: opacity 500ms ease 300ms;
+  }
+  .v-phrase.revealed .v-num::after { opacity: 1; }
+  .v-phrase:last-child .v-num::after { display: none; }
+  .v-text em {
+    font-style: italic;
+    color: var(--cyan);
+    font-weight: 500;
+  }
+
   .values-head p {
     color: rgba(255, 248, 234, 0.85);
-    font-size: 15.5px;
-    line-height: 1.6;
+    font-size: 16px;
+    line-height: 1.65;
     max-width: 440px;
+    padding-left: 18px;
+    border-left: 2px solid rgba(97, 225, 230, 0.35);
+  }
+
+  /* Reveal escalonado del header — cada elemento con data-vh entra
+     con fade + up-translate. La sincronía se hace por transition-delay
+     asignado en JS según orden de aparición. */
+  [data-vh] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 700ms ease,
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  [data-vh].revealed {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   @media (max-width: 860px) {
     .values-head {
       grid-template-columns: 1fr;
-      gap: 20px;
+      gap: 28px;
     }
+    .values-head-left { padding-top: 0; }
+    .values-h2 { font-size: 30px; }
+    .v-num { font-size: 11px; min-width: 26px; padding-top: 8px; }
+    .v-phrase { gap: 12px; }
+    .values-eyebrow { font-size: 13px; letter-spacing: 2.4px; }
+    .eyebrow-mark { height: 1.5px; }
+    .values-eyebrow[data-vh].revealed .eyebrow-mark { width: 32px; }
+    .values-head p { font-size: 14.5px; padding-left: 14px; }
   }
 
   /* --------- GRID DE CARDS --------- */
@@ -517,16 +622,18 @@
       grid-template-columns: 1fr;
       gap: 16px;
     }
-    .values-head h2 { font-size: 30px; }
     .value-card { padding: 28px 24px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    [data-reveal] {
+    [data-reveal],
+    [data-vh] {
       opacity: 1;
       transform: none;
       transition: none;
     }
+    .eyebrow-mark { width: 42px; transition: none; }
+    .v-num::after { opacity: 1; transition: none; }
     .value-card,
     .icon-wrap,
     .value-card .icon {
@@ -548,9 +655,9 @@
 </style>
 
 <script>
-  // Reveal escalonado — se re-anima cada vez que las cards vuelven al
-  // viewport (no unobserve). Al salir se quita .revealed para que la
-  // próxima entrada dispare la animación de nuevo.
+  // Reveal escalonado de las 3 cards — se re-anima cada vez que vuelven
+  // al viewport. Al salir se quita .revealed para que la próxima entrada
+  // dispare la animación de nuevo.
   const cards = document.querySelectorAll<HTMLElement>('.values [data-reveal]');
   if (cards.length) {
     const observer = new IntersectionObserver(
@@ -563,5 +670,28 @@
       { rootMargin: '0px 0px -12% 0px', threshold: 0.15 },
     );
     cards.forEach((c) => observer.observe(c));
+  }
+
+  // Reveal escalonado del header (eyebrow → 3 frases del h2 → párrafo).
+  // Cada elemento [data-vh] recibe un transition-delay proporcional a su
+  // orden de aparición para que "caigan" en secuencia.
+  const headItems = Array.from(
+    document.querySelectorAll<HTMLElement>('.values [data-vh]'),
+  );
+  if (headItems.length) {
+    // Asigna transition-delay en base al orden en el DOM
+    headItems.forEach((el, i) => {
+      el.style.transitionDelay = `${i * 140}ms`;
+    });
+    const headObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add('revealed');
+          else e.target.classList.remove('revealed');
+        });
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.2 },
+    );
+    headItems.forEach((el) => headObserver.observe(el));
   }
 </script>

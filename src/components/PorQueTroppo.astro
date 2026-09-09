@@ -41,9 +41,12 @@ const pasos = [
 <section class="porque" id="porque-troppo">
   <div class="wrap">
     <header class="porque-head">
-      <div class="porque-eyebrow">POR QUÉ TROPPO</div>
-      <h2>Donde los demás terminan, <em>nosotros empezamos.</em></h2>
-      <p>
+      <div class="porque-eyebrow" data-vh>
+        <span class="eyebrow-mark" aria-hidden="true"></span>
+        POR QUÉ TROPPO
+      </div>
+      <h2 data-vh>Donde los demás terminan, <em>nosotros empezamos.</em></h2>
+      <p data-vh>
         Otras herramientas se detienen en simular y analizar. Troppo conecta el
         proceso completo en una sola plataforma: probar, analizar,
         <strong>optimizar con IA</strong> y <strong>monitorear en tiempo real</strong>.
@@ -238,35 +241,65 @@ const pasos = [
     text-align: center;
   }
   .porque-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
     font-family: var(--font-sans);
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 700;
-    letter-spacing: 2.5px;
+    letter-spacing: 3px;
     color: var(--cyan-ink);
-    opacity: 1;
-    margin-bottom: 14px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
   }
+  .porque-eyebrow .eyebrow-mark {
+    display: inline-block;
+    width: 0;
+    height: 2px;
+    background: var(--cyan-ink);
+    box-shadow: 0 0 8px rgba(10, 107, 118, 0.45);
+    border-radius: 2px;
+    transition: width 900ms cubic-bezier(0.16, 1, 0.3, 1) 100ms;
+  }
+  .porque-eyebrow.revealed .eyebrow-mark { width: 42px; }
   .porque-head h2 {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: 40px;
+    font-size: 44px;
     line-height: 1.15;
     color: var(--navy);
     margin: 0;
+    letter-spacing: -0.4px;
   }
   .porque-head h2 em {
     font-style: italic;
     color: var(--cyan-ink);
   }
   .porque-head p {
-    margin-top: 20px;
-    font-size: 15.5px;
-    line-height: 1.6;
-    color: rgba(21, 27, 32, 0.75);
+    margin: 22px auto 0;
+    font-size: 16px;
+    line-height: 1.65;
+    color: rgba(21, 27, 32, 0.78);
+    max-width: 580px;
+    padding-left: 18px;
+    border-left: 2px solid rgba(10, 107, 118, 0.35);
+    text-align: left;
   }
   .porque-head strong {
     color: var(--navy);
     font-weight: 700;
+  }
+  /* Reveal escalonado del header */
+  .porque [data-vh] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 700ms ease,
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .porque [data-vh].revealed {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   /* ---- FLOW (4 pasos + 3 arrows entre ellos) ---- */
@@ -821,5 +854,25 @@ const pasos = [
       { rootMargin: '0px 0px -15% 0px', threshold: 0.2 },
     );
     steps.forEach((s) => observer.observe(s));
+  }
+
+  // Reveal escalonado del header (eyebrow → h2 → párrafo). Re-animatable.
+  const porqueHeadItems = Array.from(
+    document.querySelectorAll<HTMLElement>('.porque [data-vh]'),
+  );
+  if (porqueHeadItems.length) {
+    porqueHeadItems.forEach((el, i) => {
+      el.style.transitionDelay = `${i * 140}ms`;
+    });
+    const porqueHeadObs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add('revealed');
+          else e.target.classList.remove('revealed');
+        });
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.2 },
+    );
+    porqueHeadItems.forEach((el) => porqueHeadObs.observe(el));
   }
 </script>

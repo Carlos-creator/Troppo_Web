@@ -15,9 +15,12 @@
 <section class="how" id="como-funciona">
   <div class="wrap">
     <header class="how-header">
-      <div class="how-eyebrow">EL FLUJO · DE NORTE A SUR</div>
-      <h2>Del panel al resultado, en pocos minutos.</h2>
-      <p>
+      <div class="how-eyebrow" data-vh>
+        <span class="eyebrow-mark" aria-hidden="true"></span>
+        EL FLUJO · DE NORTE A SUR
+      </div>
+      <h2 data-vh>Del panel al resultado, <em>en pocos minutos.</em></h2>
+      <p data-vh>
         Se define qué se quiere probar, la IA lo simula en un gemelo digital
         del tráfico real y entrega los resultados en minutos. El proceso
         recorre el país como una ruta, del panel al resultado.
@@ -154,27 +157,61 @@
     text-align: center;
   }
   .how-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
     font-family: var(--font-sans);
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 700;
-    letter-spacing: 2.5px;
+    letter-spacing: 3px;
     color: var(--cyan-ink);
-    opacity: 1;
-    margin-bottom: 14px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
   }
+  .how-eyebrow .eyebrow-mark {
+    display: inline-block;
+    width: 0;
+    height: 2px;
+    background: var(--cyan-ink);
+    box-shadow: 0 0 8px rgba(10, 107, 118, 0.45);
+    border-radius: 2px;
+    transition: width 900ms cubic-bezier(0.16, 1, 0.3, 1) 100ms;
+  }
+  .how-eyebrow.revealed .eyebrow-mark { width: 42px; }
   .how h2 {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: 40px;
+    font-size: 44px;
     line-height: 1.15;
     color: var(--navy);
     margin: 0;
+    letter-spacing: -0.4px;
+  }
+  .how h2 em {
+    font-style: italic;
+    color: var(--cyan-ink);
   }
   .how-header > p {
-    margin-top: 20px;
-    font-size: 15.5px;
-    line-height: 1.6;
-    color: rgba(21, 27, 32, 0.7);
+    margin: 22px auto 0;
+    font-size: 16px;
+    line-height: 1.65;
+    color: rgba(21, 27, 32, 0.75);
+    max-width: 560px;
+    padding-left: 18px;
+    border-left: 2px solid rgba(10, 107, 118, 0.35);
+    text-align: left;
+  }
+  /* Reveal escalonado del header */
+  .how [data-vh] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 700ms ease,
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .how [data-vh].revealed {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   /* ============ CONTAINER 2-COL ============ */
@@ -204,16 +241,21 @@
     border: 1px solid rgba(4, 69, 89, 0.14);
     border-radius: 16px;
     padding: 26px 28px 28px;
-    box-shadow: 0 8px 22px rgba(4, 69, 89, 0.08);
+    box-shadow:
+      0 8px 22px rgba(4, 69, 89, 0.08),
+      0 0 0 0 rgba(97, 225, 230, 0);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     max-width: 520px;
     position: relative;
+    overflow: hidden;
+    isolation: isolate;
     opacity: 0;
     transition:
       opacity 850ms ease,
       transform 950ms cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 300ms ease;
+      box-shadow 400ms ease,
+      border-color 400ms ease;
   }
   /* Los hitos 1 y 3 "vuelan" desde la izquierda con rotación negativa;
      los 2 y 4 desde la derecha con rotación positiva. Al revelarse
@@ -228,8 +270,88 @@
     opacity: 1;
     transform: translateX(0) rotate(0deg);
   }
+
+  /* ---- BRILLO 1: sweep diagonal ambiente ----
+     Franja cyan diagonal que atraviesa la card cada X segundos. Cada
+     card usa animation-delay distinto para que no brillen sincronizadas. */
+  .hito::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(
+      110deg,
+      transparent 0%,
+      rgba(97, 225, 230, 0.14) 40%,
+      rgba(97, 225, 230, 0.35) 50%,
+      rgba(97, 225, 230, 0.14) 60%,
+      transparent 100%
+    );
+    transform: skewX(-18deg);
+    pointer-events: none;
+    z-index: 1;
+    animation: hito-sweep 7s ease-in-out infinite;
+  }
+  @keyframes hito-sweep {
+    0%, 100% { transform: translateX(0) skewX(-18deg); opacity: 0; }
+    45%      { opacity: 1; }
+    55%      { opacity: 1; }
+    100%     { transform: translateX(340%) skewX(-18deg); opacity: 0; }
+  }
+  .hito-2::before { animation-delay: 1.4s; }
+  .hito-3::before { animation-delay: 2.8s; }
+  .hito-4::before { animation-delay: 4.2s; }
+
+  /* ---- BRILLO 2: halo cyan pulsante en la esquina superior ----
+     Un punto de luz cyan suave que pulsa cerca del número del hito. */
+  .hito::after {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(
+      circle at center,
+      rgba(97, 225, 230, 0.32) 0%,
+      rgba(97, 225, 230, 0.12) 35%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 0;
+    animation: hito-glow 4s ease-in-out infinite;
+  }
+  @keyframes hito-glow {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50%      { opacity: 1; transform: scale(1.1); }
+  }
+  .hito-2::after { animation-delay: 1s; }
+  .hito-3::after { animation-delay: 2s; }
+  .hito-4::after { animation-delay: 3s; }
+
+  /* Contenido por encima de los efectos */
+  .hito-header-row,
+  .hito h3,
+  .hito > p {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ---- HOVER: refuerzo del brillo ---- */
   .hito:hover {
-    box-shadow: 0 14px 32px rgba(4, 69, 89, 0.14);
+    box-shadow:
+      0 14px 32px rgba(4, 69, 89, 0.14),
+      0 0 0 3px rgba(97, 225, 230, 0.28);
+    border-color: rgba(97, 225, 230, 0.55);
+  }
+  .hito:hover::before {
+    animation-duration: 2.2s;
+  }
+  .hito:hover::after {
+    animation-duration: 1.4s;
+    opacity: 1;
   }
   .hito-header-row {
     display: flex;
@@ -244,7 +366,15 @@
     font-weight: 500;
     line-height: 1;
     text-shadow: 0 0 8px rgba(97, 225, 230, 0.3);
+    animation: hito-num-glow 3s ease-in-out infinite;
   }
+  @keyframes hito-num-glow {
+    0%, 100% { text-shadow: 0 0 8px rgba(97, 225, 230, 0.3); }
+    50%      { text-shadow: 0 0 16px rgba(97, 225, 230, 0.75), 0 0 4px rgba(97, 225, 230, 0.5); }
+  }
+  .hito-2 .hito-num { animation-delay: 0.75s; }
+  .hito-3 .hito-num { animation-delay: 1.5s; }
+  .hito-4 .hito-num { animation-delay: 2.25s; }
   .hito-dot {
     width: 6px;
     height: 6px;
@@ -460,6 +590,9 @@
     }
     .hito { opacity: 1; transform: none; }
     .city-pin.active .pin-halo { animation: none; }
+    /* Desactivar todos los brillos temáticos */
+    .hito::before, .hito::after { animation: none; display: none; }
+    .hito-num { animation: none; }
   }
 </style>
 
@@ -577,5 +710,26 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
     update();
+  }
+
+  // Reveal escalonado del header (eyebrow → h2 → párrafo) — con
+  // transition-delay por orden DOM. Re-animatable al salir/entrar.
+  const howHeadItems = Array.from(
+    document.querySelectorAll<HTMLElement>('.how [data-vh]'),
+  );
+  if (howHeadItems.length) {
+    howHeadItems.forEach((el, i) => {
+      el.style.transitionDelay = `${i * 140}ms`;
+    });
+    const howHeadObs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add('revealed');
+          else e.target.classList.remove('revealed');
+        });
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.2 },
+    );
+    howHeadItems.forEach((el) => howHeadObs.observe(el));
   }
 </script>
