@@ -6,13 +6,14 @@
 ---
 
 <section class="problem" id="problema">
-  <div class="port-band" aria-hidden="true">
+  <div class="port-band">
     <svg
       class="port-svg"
       viewBox="0 0 1600 500"
       preserveAspectRatio="xMidYMid slice"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
+      aria-hidden="true"
     >
       <defs>
         <!--
@@ -62,20 +63,27 @@
       />
     </svg>
 
-    <div class="port-overlay"></div>
+    <div class="port-overlay" aria-hidden="true"></div>
 
-    <div class="port-caption">
+    <div class="port-caption" aria-hidden="true">
       <span class="port-loc">PUERTO DE SAN ANTONIO</span>
       <span class="port-sep"></span>
       <span class="port-sub">Corredor logístico bajo presión</span>
     </div>
+
+    <!-- Cartel cinematográfico sobre las fotos: eyebrow + h2
+         principal de la sección. Reemplaza al .problem-head que estaba
+         debajo. Text-shadow + halo radial para legibilidad sobre imagen. -->
+    <div class="port-hero">
+      <span class="port-hero-eyebrow">El punto de partida</span>
+      <h2>
+        San Antonio mueve el país.
+        <em>Y el país espera en la fila.</em>
+      </h2>
+    </div>
   </div>
 
   <div class="wrap">
-    <div class="problem-head">
-      <div class="eyebrow">El punto de partida</div>
-      <h2>San Antonio mueve el país. Y el país espera en la fila.</h2>
-    </div>
     <div class="stat-grid">
       <div class="stat-card">
         <div class="num" data-count-to="7000" data-suffix="">7.000</div>
@@ -99,7 +107,7 @@
         <span class="nac-num" data-count-to="50" data-suffix="">50</span>
         <span class="nac-dash">–</span>
         <span class="nac-num" data-count-to="100" data-suffix="">100</span>
-        <em>mil millones</em>
+        <em>mil millones de pesos chilenos</em>
       </div>
       <p>
         Es lo que pierde el sector portuario chileno <strong>cada año</strong> por
@@ -133,10 +141,10 @@
   .port-band {
     position: relative;
     width: 100%;
-    height: clamp(280px, 42vw, 520px);
+    height: clamp(380px, 48vw, 600px);
     overflow: hidden;
     background: var(--navy-deep);
-    margin-bottom: 80px;
+    margin-bottom: 72px;
   }
   .port-svg {
     position: absolute;
@@ -167,10 +175,10 @@
     background:
       linear-gradient(
         180deg,
-        rgba(4, 69, 89, 0.12) 0%,
-        rgba(4, 69, 89, 0.20) 40%,
-        rgba(4, 69, 89, 0.08) 60%,
-        rgba(255, 248, 234, 0.45) 82%,
+        rgba(4, 69, 89, 0.28) 0%,
+        rgba(4, 69, 89, 0.38) 42%,
+        rgba(4, 69, 89, 0.22) 62%,
+        rgba(255, 248, 234, 0.45) 84%,
         rgba(255, 248, 234, 0.72) 100%
       );
     pointer-events: none;
@@ -221,23 +229,68 @@
     50% { opacity: 0.35; transform: scale(0.7); }
   }
 
-  /* ------- HEAD + STATS (contenido original) ------- */
-  .problem-head {
-    max-width: 640px;
+  /* ------- CARTEL SOBRE LAS FOTOS ------- */
+  /* Contenedor centrado vertical/horizontal con halo radial oscuro detrás
+     para legibilidad del texto sobre la imagen del puerto. */
+  .port-hero {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -52%);
+    z-index: 2;
+    text-align: center;
+    padding: 30px 40px;
+    max-width: 900px;
+    width: calc(100% - 48px);
   }
-  .eyebrow {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--navy);
-    opacity: 0.55;
+  .port-hero::before {
+    content: '';
+    position: absolute;
+    inset: -40px -80px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(3, 30, 40, 0.55) 0%,
+      rgba(3, 30, 40, 0.28) 45%,
+      transparent 72%
+    );
+    z-index: -1;
+    pointer-events: none;
   }
-  h2 {
+  .port-hero-eyebrow {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--cyan);
+    padding: 6px 14px;
+    border: 1px solid rgba(97, 225, 230, 0.42);
+    border-radius: 100px;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    background: rgba(4, 69, 89, 0.32);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .port-hero h2 {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: 38px;
-    margin-top: 14px;
-    line-height: 1.2;
+    font-size: clamp(28px, 4.2vw, 54px);
+    line-height: 1.14;
+    color: var(--cream);
+    margin: 0;
+    text-shadow:
+      0 2px 20px rgba(0, 0, 0, 0.55),
+      0 1px 3px rgba(0, 0, 0, 0.5);
+    letter-spacing: -0.4px;
   }
+  .port-hero h2 em {
+    font-style: italic;
+    color: var(--cyan);
+  }
+
+  /* ------- STATS (contenido original) ------- */
   .stat-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -367,13 +420,25 @@
 
   @media (max-width: 860px) {
     .port-band {
-      height: clamp(220px, 55vw, 340px);
-      margin-bottom: 56px;
+      /* Más alto en mobile porque el h2 grande necesita espacio */
+      height: clamp(320px, 78vw, 480px);
+      margin-bottom: 52px;
     }
     .port-caption {
       font-size: 9.5px;
       padding: 7px 14px;
       letter-spacing: 1.5px;
+    }
+    .port-hero {
+      padding: 22px 20px;
+      width: calc(100% - 24px);
+    }
+    .port-hero::before {
+      inset: -20px -30px;
+    }
+    .port-hero-eyebrow {
+      font-size: 10.5px;
+      margin-bottom: 14px;
     }
     .stat-grid {
       grid-template-columns: 1fr;

@@ -47,10 +47,6 @@
         height="420"
         draggable="false"
       />
-      <div class="hero-card">
-        <div class="big-num">9h → 2h</div>
-        <div>Espera estimada en horas peak con políticas optimizadas por IA.</div>
-      </div>
     </div>
   </div>
 </section>
@@ -388,36 +384,6 @@
       transform: translate(-50%, -50%) rotate(360deg);
     }
   }
-  .hero-card {
-    position: absolute;
-    /* Empujado ~20/30px fuera del container para que solo roze la esquina
-       SE del anillo exterior de la brújula (antes se solapaba en toda la
-       zona inferior del star) */
-    bottom: -30px;
-    right: -20px;
-    /* Glassmorphism reforzado — blur más alto y saturación para "vidrio real" */
-    background: rgba(255, 248, 234, 0.09);
-    border: 1px solid rgba(255, 248, 234, 0.22);
-    backdrop-filter: blur(18px) saturate(160%);
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
-    box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.22),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    padding: 18px 20px;
-    width: 220px;
-    font-size: 12.5px;
-    line-height: 1.4;
-    color: var(--cream);
-  }
-  .hero-card .big-num {
-    font-family: var(--font-serif);
-    font-size: 30px;
-    color: var(--lime);
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
   @media (max-width: 860px) {
     .hero-inner {
       grid-template-columns: 1fr;
@@ -425,31 +391,16 @@
     h1 {
       font-size: 38px;
     }
-    /* Alto suficiente para que brújula + card no se solapen */
+    /* Alto suficiente para la brújula sola en mobile */
     .hero-visual {
-      height: 400px;
+      height: 320px;
       margin-top: 20px;
-      /* Empuja el eje Y compartido hacia arriba — la brújula, el
-         lidar-sweep y el pivote del scanner-arm siguen esta var */
-      --compass-cy: 32%;
+      --compass-cy: 50%;
     }
     .compass-big,
     .lidar-sweep {
       width: 200px;
       height: 200px;
-    }
-    /* Card centrado horizontalmente y anclado al fondo */
-    .hero-card {
-      left: 50%;
-      right: auto;
-      transform: translateX(-50%);
-      bottom: 0;
-      width: calc(100% - 24px);
-      max-width: 340px;
-      padding: 18px 20px;
-    }
-    .hero-card .big-num {
-      font-size: 28px;
     }
   }
 </style>
