@@ -385,10 +385,15 @@
       grid-template-columns: 1fr;
       gap: 40px;
       max-width: 480px;
+      position: relative;
     }
     .how-cards {
       gap: 40px;
       padding: 0;
+      min-height: 0;
+      justify-content: flex-start;
+      position: relative;
+      z-index: 1;
     }
     /* En mobile la fly-in desde los costados se ve pobre — hitos usan
        slide vertical sutil. Overrides sobrescriben los transform de
@@ -406,8 +411,46 @@
     .hito.hito-4.revealed {
       transform: translateY(0) rotate(0deg);
     }
-    /* En mobile ocultamos el mapa (demasiado ancho vertical) */
-    .how-map-column { display: none; }
+    /* En mobile el mapa se convierte en telón de fondo transparente
+       detrás de las cards: la silueta de Chile se estira a lo alto del
+       container. El camión sí sigue recorriendo la ruta (queda por
+       encima de las cards, moviéndose entre los hitos). Ruta y pins
+       se ocultan visualmente pero el SVG se mantiene con dimensiones
+       para que el JS pueda posicionar al camión sobre el path. */
+    .how-map-column {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .chile-silhouette {
+      width: 320px;
+      height: 100%;
+      opacity: 0.92;
+      /* Gradiente más saturado en mobile para que Chile sea el protagonista */
+      background: linear-gradient(
+        180deg,
+        rgba(97, 225, 230, 0.72) 0%,
+        rgba(97, 225, 230, 0.55) 45%,
+        rgba(4, 69, 89, 0.78) 100%
+      );
+    }
+    .chile-route { display: block; }
+    .chile-route .route-base,
+    .chile-route .route-progress,
+    .chile-route .city-pin { opacity: 0; }
+    /* Camión visible por encima de las cards mientras baja Chile */
+    .chile-truck { z-index: 3; }
+    .chile-truck.active { opacity: 0.95; }
+    /* Cards más translúcidas en mobile para que se vea Chile detrás.
+       Baja el alpha del fondo y el blur mantiene la lectura del texto. */
+    .hito {
+      background: rgba(255, 255, 255, 0.42);
+      border-color: rgba(4, 69, 89, 0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
     .how h2 { font-size: 30px; }
   }
 

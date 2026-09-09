@@ -17,9 +17,9 @@ const flujoPrincipal = [
 ];
 
 const procesoParalelo = [
-  { titulo: 'Visualizar tráfico en tiempo real', icon: 'monitor' },
-  { titulo: 'Monitorear semáforos',              icon: 'traffic' },
-  { titulo: 'Intervención del operador',         icon: 'operator' },
+  { titulo: 'Visualizar tráfico en tiempo real', icon: 'monitor',  linkedStep: '02' },
+  { titulo: 'Monitorear semáforos',              icon: 'traffic',  linkedStep: '03' },
+  { titulo: 'Intervención del operador',         icon: 'operator', linkedStep: '04' },
 ];
 ---
 
@@ -203,6 +203,13 @@ const procesoParalelo = [
                   </svg>
                 </span>
                 <span class="step-label">{s.titulo}</span>
+                <span class="step-link" aria-hidden="true">
+                  <svg viewBox="0 0 14 10" width="14" height="10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M13 5 L1 5" />
+                    <path d="M5 1 L1 5 L5 9" />
+                  </svg>
+                  <span>Paso {s.linkedStep}</span>
+                </span>
               </li>
             ))
           }
@@ -425,6 +432,10 @@ const procesoParalelo = [
     filter: drop-shadow(0 0 4px rgba(255, 248, 234, 0.85));
   }
 
+  /* Chip "← Paso NN" en items paralelos — invisible en desktop, sólo aparece
+     en mobile donde los conectores SVG están ocultos. */
+  .step-link { display: none; }
+
   /* ---- MOBILE ---- */
   @media (max-width: 860px) {
     .flujop-diagram {
@@ -441,6 +452,32 @@ const procesoParalelo = [
     }
     .flujop h2 { font-size: 28px; }
     .step { font-size: 13px; }
+    /* Reformateamos steps del panel paralelo para hacer espacio al chip
+       "Paso NN" a la derecha: icon | label | chip. */
+    .panel-paralelo .step {
+      grid-template-columns: 32px 1fr auto;
+    }
+    .step-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 9px;
+      background: rgba(4, 69, 89, 0.85);
+      color: var(--cyan);
+      border: 1px solid rgba(97, 225, 230, 0.55);
+      border-radius: 100px;
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .step-link svg {
+      width: 12px;
+      height: 9px;
+      flex-shrink: 0;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

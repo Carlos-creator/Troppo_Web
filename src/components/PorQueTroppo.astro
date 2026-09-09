@@ -420,19 +420,28 @@ const pasos = [
       gap: 16px;
       max-width: 480px;
     }
+    /* Ya no rotamos el contenedor de la flecha entero: sólo el SVG.
+       Así la etiqueta puede quedar centrada arriba sin salirse ni
+       montarse sobre la card siguiente. */
     .pq-arrow {
-      transform: rotate(90deg);
+      transform: none;
+      flex-direction: column;
+      gap: 6px;
       padding: 4px 0;
-      justify-content: center;
+    }
+    .pq-arrow svg {
+      transform: rotate(90deg);
     }
     .pq-arrow-label {
-      transform: rotate(-90deg) translateX(0);
-      top: 50%;
-      left: calc(50% + 96px);
+      position: static;
+      transform: none;
+      top: auto;
+      left: auto;
       white-space: normal;
-      max-width: 160px;
-      font-size: 9px;
+      max-width: 260px;
+      font-size: 9.5px;
       letter-spacing: 1px;
+      text-align: center;
     }
     .pq-arrow-label::before { display: none; }
     .pq-loop { display: none; }
