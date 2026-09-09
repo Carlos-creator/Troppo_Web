@@ -62,10 +62,15 @@ html {
 body {
   font-family: var(--font-sans);
   color: var(--ink);
-  background: var(--cream);
+  /* Fondo transparente para que se vea el SiteBiome (z-index: -1) */
+  background: transparent;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+/* Fallback: si SiteBiome no cargó, el html mantiene el cream base */
+html {
+  background: var(--cream);
 }
 
 img,

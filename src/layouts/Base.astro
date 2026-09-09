@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import CursorGlow from '../components/CursorGlow.astro';
+import SiteBiome from '../components/SiteBiome.astro';
 
 interface Props {
   title?: string;
@@ -40,6 +41,7 @@ const {
     <meta property="og:type" content="website" />
   </head>
   <body>
+    <SiteBiome />
     <CursorGlow />
     <slot />
   </body>

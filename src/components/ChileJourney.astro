@@ -1,0 +1,580 @@
+---
+// Chile Journey — recorrido visual del país que va cambiando de bioma
+// a medida que el usuario scrollea.
+//
+// 4 zonas apiladas verticalmente (100vh cada una). Fondo con posición
+// sticky que se mantiene fijo mientras se scrollea, con imágenes de
+// cada zona rotando en crossfade + overlay climático (sol, gaviotas,
+// lluvia, nieve) según la zona activa.
+//
+// Filtro cyan Troppo aplicado sobre las imágenes (mismo que en Problem).
+---
+
+<section class="cj" id="chile-journey">
+  <div class="cj-sticky">
+    <!-- Dos capas de background para crossfade entre imágenes -->
+    <div class="cj-bg cj-bg-a" data-layer="a"></div>
+    <div class="cj-bg cj-bg-b" data-layer="b"></div>
+
+    <!-- Tinte que baja el brillo para legibilidad del texto -->
+    <div class="cj-tint"></div>
+
+    <!-- Overlays climáticos — sólo el activo tiene .visible -->
+    <div class="cj-weather cj-w-sun" data-w="sun">
+      <div class="cj-sun-orb"></div>
+    </div>
+
+    <div class="cj-weather cj-w-gulls" data-w="gulls">
+      <svg class="gull g1" viewBox="0 0 24 12" fill="none" stroke="rgba(255,248,234,0.85)" stroke-width="1.6" stroke-linecap="round">
+        <path d="M2 8 Q 7 2 12 8 Q 17 2 22 8" />
+      </svg>
+      <svg class="gull g2" viewBox="0 0 24 12" fill="none" stroke="rgba(255,248,234,0.75)" stroke-width="1.4" stroke-linecap="round">
+        <path d="M2 8 Q 7 2 12 8 Q 17 2 22 8" />
+      </svg>
+      <svg class="gull g3" viewBox="0 0 24 12" fill="none" stroke="rgba(255,248,234,0.8)" stroke-width="1.5" stroke-linecap="round">
+        <path d="M2 8 Q 7 2 12 8 Q 17 2 22 8" />
+      </svg>
+    </div>
+
+    <div class="cj-weather cj-w-rain" data-w="rain"></div>
+
+    <div class="cj-weather cj-w-snow" data-w="snow"></div>
+
+    <!-- HUD arriba con nombre de zona -->
+    <div class="cj-hud">
+      <span class="cj-hud-dot"></span>
+      <span class="cj-hud-label" data-hud-label>DE ARICA A PUNTA ARENAS</span>
+    </div>
+
+    <!-- Progress bar horizontal — km ficticios de recorrido -->
+    <div class="cj-progress">
+      <div class="cj-progress-track"></div>
+      <div class="cj-progress-fill" data-progress-fill></div>
+    </div>
+  </div>
+
+  <!-- Zonas apiladas (cada una 100vh) — trigger para el scroll -->
+  <div class="cj-zones">
+    <article
+      class="cj-zone"
+      data-zone="norte"
+      data-images="astronomia,desierto,fauna,morro_de_arica"
+      data-dir="norte"
+      data-weather="sun"
+      data-label="NORTE GRANDE"
+    >
+      <div class="cj-panel">
+        <div class="cj-eyebrow">NORTE GRANDE</div>
+        <h3>Del desierto de Atacama.</h3>
+        <p>Cielos claros que no duermen y rutas que atraviesan el altiplano.</p>
+      </div>
+    </article>
+
+    <article
+      class="cj-zone"
+      data-zone="centro"
+      data-images="Playa,Puerto,PuertoSA,Valparaiso,paisaje_centro,playa2"
+      data-dir="centro"
+      data-weather="gulls"
+      data-label="ZONA CENTRAL"
+    >
+      <div class="cj-panel">
+        <div class="cj-eyebrow">ZONA CENTRAL</div>
+        <h3>Puertos, valles y ciudades.</h3>
+        <p>Valparaíso, San Antonio, Santiago. El corazón logístico del país.</p>
+      </div>
+    </article>
+
+    <article
+      class="cj-zone"
+      data-zone="sur-templado"
+      data-images="faro_sur,paisaje_cabana"
+      data-dir="sur"
+      data-weather="rain"
+      data-label="SUR TEMPLADO"
+    >
+      <div class="cj-panel">
+        <div class="cj-eyebrow">SUR TEMPLADO</div>
+        <h3>Bajo la lluvia austral.</h3>
+        <p>Bosques nativos, ríos y faros. La lluvia no se detiene.</p>
+      </div>
+    </article>
+
+    <article
+      class="cj-zone"
+      data-zone="sur-extremo"
+      data-images="Volcan,Antartica"
+      data-dir="sur"
+      data-weather="snow"
+      data-label="FIN DEL MUNDO"
+    >
+      <div class="cj-panel">
+        <div class="cj-eyebrow">FIN DEL MUNDO</div>
+        <h3>Hasta la nieve del sur extremo.</h3>
+        <p>Glaciares eternos. Donde termina el continente y sigue Troppo.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<style>
+  /* ============ CONTENEDOR ============ */
+  .cj {
+    position: relative;
+    background: var(--navy-deep);
+    color: var(--cream);
+    /* Total height = 400vh (4 zonas de 100vh). El sticky "atrapa" el bg
+       durante todo el scroll de la sección. */
+  }
+
+  /* ============ STICKY BG ============ */
+  .cj-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .cj-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 900ms ease;
+    will-change: opacity;
+    /* Filtro cyan Troppo — mismo que Problem */
+    filter:
+      grayscale(1)
+      contrast(1.12)
+      sepia(1)
+      hue-rotate(155deg)
+      saturate(1.9)
+      brightness(0.9);
+  }
+  .cj-bg.active { opacity: 1; }
+
+  .cj-tint {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(4, 69, 89, 0.25) 0%,
+      rgba(4, 69, 89, 0.4) 50%,
+      rgba(3, 53, 68, 0.65) 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ============ OVERLAYS CLIMÁTICOS ============ */
+  .cj-weather {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 800ms ease;
+    z-index: 3;
+  }
+  .cj-weather.visible { opacity: 1; }
+
+  /* --- Sol (Norte) — orbe pulsante --- */
+  .cj-w-sun {}
+  .cj-sun-orb {
+    position: absolute;
+    top: 12%;
+    right: 18%;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 220, 130, 0.55) 0%,
+      rgba(255, 200, 100, 0.25) 30%,
+      transparent 70%
+    );
+    filter: blur(4px);
+    animation: cj-sun-pulse 5s ease-in-out infinite;
+  }
+  @keyframes cj-sun-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.75; }
+    50% { transform: scale(1.12); opacity: 1; }
+  }
+
+  /* --- Gaviotas (Centro) — 3 SVG en V que cruzan el cielo --- */
+  .cj-w-gulls .gull {
+    position: absolute;
+    width: 34px;
+    height: auto;
+    will-change: transform;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.15));
+  }
+  .cj-w-gulls .g1 {
+    top: 18%;
+    animation: cj-gull-fly-a 14s linear infinite;
+  }
+  .cj-w-gulls .g2 {
+    top: 30%;
+    width: 26px;
+    animation: cj-gull-fly-b 18s linear infinite;
+    animation-delay: -3s;
+  }
+  .cj-w-gulls .g3 {
+    top: 22%;
+    width: 30px;
+    animation: cj-gull-fly-a 16s linear infinite;
+    animation-delay: -7s;
+  }
+  .cj-w-gulls .gull path {
+    animation: cj-gull-flap 0.7s ease-in-out infinite;
+  }
+  @keyframes cj-gull-fly-a {
+    from { transform: translateX(-6vw) translateY(0); }
+    to   { transform: translateX(106vw) translateY(-30px); }
+  }
+  @keyframes cj-gull-fly-b {
+    from { transform: translateX(106vw) translateY(0); }
+    to   { transform: translateX(-6vw) translateY(20px); }
+  }
+  @keyframes cj-gull-flap {
+    0%, 100% { d: path("M2 8 Q 7 2 12 8 Q 17 2 22 8"); }
+    50% { d: path("M2 6 Q 7 8 12 6 Q 17 8 22 6"); }
+  }
+
+  /* --- Lluvia (Sur templado) — líneas cayendo con leve inclinación --- */
+  .cj-w-rain {
+    background-image:
+      linear-gradient(
+        transparent 0%,
+        rgba(200, 230, 240, 0.55) 20%,
+        rgba(200, 230, 240, 0.55) 80%,
+        transparent 100%
+      ),
+      linear-gradient(
+        transparent 0%,
+        rgba(220, 240, 245, 0.45) 30%,
+        rgba(220, 240, 245, 0.45) 70%,
+        transparent 100%
+      );
+    background-size:
+      2px 90px,
+      2px 60px;
+    background-position:
+      0 0,
+      40px 0;
+    background-repeat: repeat;
+    animation: cj-rain-fall 0.65s linear infinite;
+    transform: skewX(-6deg);
+  }
+  @keyframes cj-rain-fall {
+    from { background-position: 0 -90px, 40px -60px; }
+    to   { background-position: 0 90px, 40px 60px; }
+  }
+
+  /* --- Nieve (Sur extremo) — puntos cayendo con leve balanceo --- */
+  .cj-w-snow {
+    background-image:
+      radial-gradient(circle 1.8px at 50% 50%, rgba(255, 255, 255, 0.85), transparent 65%),
+      radial-gradient(circle 1.2px at 50% 50%, rgba(255, 255, 255, 0.75), transparent 65%),
+      radial-gradient(circle 2.4px at 50% 50%, rgba(255, 255, 255, 0.65), transparent 65%);
+    background-size:
+      70px 70px,
+      50px 50px,
+      110px 110px;
+    background-position:
+      0 0,
+      25px 25px,
+      70px 40px;
+    background-repeat: repeat;
+    animation: cj-snow-fall 10s linear infinite;
+  }
+  @keyframes cj-snow-fall {
+    from { background-position: 0 -70px, 25px -25px, 70px -110px; }
+    to   { background-position: 0 70px, 25px 75px, 70px 110px; }
+  }
+
+  /* ============ HUD SUPERIOR ============ */
+  .cj-hud {
+    position: absolute;
+    top: 92px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 20px;
+    background: rgba(21, 27, 32, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 100px;
+    border: 1px solid rgba(97, 225, 230, 0.35);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.2px;
+    color: var(--cyan);
+    z-index: 5;
+    pointer-events: none;
+  }
+  .cj-hud-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+    animation: cj-hud-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes cj-hud-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.35; transform: scale(0.7); }
+  }
+  .cj-hud-label {
+    transition: opacity 300ms ease;
+  }
+  .cj-hud-label.swapping { opacity: 0; }
+
+  /* ============ PROGRESS BAR ============ */
+  .cj-progress {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(80%, 720px);
+    height: 3px;
+    z-index: 5;
+  }
+  .cj-progress-track {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 248, 234, 0.14);
+    border-radius: 100px;
+  }
+  .cj-progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0%;
+    background: var(--cyan);
+    border-radius: 100px;
+    box-shadow: 0 0 10px rgba(97, 225, 230, 0.7);
+    transition: width 200ms ease-out;
+  }
+
+  /* ============ ZONAS SCROLLABLES ============ */
+  .cj-zones {
+    position: relative;
+    z-index: 4;
+    /* Los zones se apilan y superponen sobre el sticky bg */
+    margin-top: -100vh;
+  }
+  .cj-zone {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 32px;
+  }
+  .cj-panel {
+    max-width: 620px;
+    padding: 40px 44px;
+    background: rgba(21, 27, 32, 0.55);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgba(97, 225, 230, 0.28);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    color: var(--cream);
+    text-align: center;
+  }
+  .cj-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--cyan);
+    margin-bottom: 16px;
+  }
+  .cj-panel h3 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 34px;
+    line-height: 1.18;
+    color: var(--cream);
+    margin: 0 0 14px;
+  }
+  .cj-panel p {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: rgba(255, 248, 234, 0.86);
+    margin: 0;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 860px) {
+    .cj-hud { top: 74px; font-size: 10px; padding: 7px 14px; letter-spacing: 1.6px; }
+    .cj-progress { bottom: 30px; width: 78%; }
+    .cj-panel { padding: 28px 26px; }
+    .cj-panel h3 { font-size: 26px; }
+    .cj-panel p { font-size: 14px; }
+    .cj-sun-orb { width: 160px; height: 160px; right: 10%; top: 14%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cj-bg,
+    .cj-weather,
+    .cj-hud-label {
+      transition: none;
+    }
+    .cj-sun-orb,
+    .cj-w-gulls .gull,
+    .cj-w-gulls .gull path,
+    .cj-w-rain,
+    .cj-w-snow,
+    .cj-hud-dot {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // Chile Journey — controlador de escenas
+  const section = document.querySelector<HTMLElement>('.cj');
+  const sticky = section?.querySelector<HTMLElement>('.cj-sticky');
+  const bgA = section?.querySelector<HTMLElement>('.cj-bg-a');
+  const bgB = section?.querySelector<HTMLElement>('.cj-bg-b');
+  const hudLabel = section?.querySelector<HTMLElement>('[data-hud-label]');
+  const progressFill = section?.querySelector<HTMLElement>('[data-progress-fill]');
+  const zones = Array.from(section?.querySelectorAll<HTMLElement>('.cj-zone') ?? []);
+  const weathers = Array.from(section?.querySelectorAll<HTMLElement>('.cj-weather') ?? []);
+
+  if (section && sticky && bgA && bgB && zones.length && weathers.length) {
+    interface Zone {
+      el: HTMLElement;
+      id: string;
+      images: string[];       // URLs de imágenes
+      weather: string;         // sun | gulls | rain | snow
+      label: string;
+      dir: string;             // subcarpeta bajo /images/chile/
+    }
+
+    const parsedZones: Zone[] = zones.map((el) => ({
+      el,
+      id: el.dataset.zone ?? '',
+      images: (el.dataset.images ?? '').split(',').filter(Boolean),
+      weather: el.dataset.weather ?? 'sun',
+      label: el.dataset.label ?? '',
+      dir: el.dataset.dir ?? '',
+    }));
+
+    // Precargar todas las imágenes para que los crossfade sean instantáneos
+    parsedZones.forEach((z) => {
+      z.images.forEach((name) => {
+        const img = new Image();
+        img.src = `/images/chile/${z.dir}/${name}.jpg`;
+      });
+    });
+
+    let currentZoneIdx = -1;
+    let currentImageIdx = 0;
+    let currentBgLayer: 'a' | 'b' = 'a';
+    let rotationTimer = 0;
+
+    const buildUrl = (zone: Zone, imgName: string) => `url("/images/chile/${zone.dir}/${imgName}.jpg")`;
+
+    const setImage = (zone: Zone, imgIdx: number) => {
+      const url = buildUrl(zone, zone.images[imgIdx]);
+      // Alternamos entre las dos capas para crossfade
+      const nextLayer = currentBgLayer === 'a' ? 'b' : 'a';
+      const nextEl = nextLayer === 'a' ? bgA : bgB;
+      const prevEl = nextLayer === 'a' ? bgB : bgA;
+
+      nextEl.style.backgroundImage = url;
+      // Forzar reflow para asegurar que la transición se dispare
+      void nextEl.offsetWidth;
+      nextEl.classList.add('active');
+      prevEl.classList.remove('active');
+
+      currentBgLayer = nextLayer;
+    };
+
+    const setWeather = (weatherName: string) => {
+      weathers.forEach((w) => {
+        if (w.dataset.w === weatherName) w.classList.add('visible');
+        else w.classList.remove('visible');
+      });
+    };
+
+    const setHudLabel = (label: string) => {
+      if (!hudLabel) return;
+      hudLabel.classList.add('swapping');
+      window.setTimeout(() => {
+        hudLabel.textContent = label;
+        hudLabel.classList.remove('swapping');
+      }, 300);
+    };
+
+    const activateZone = (idx: number) => {
+      if (idx === currentZoneIdx) return;
+      const zone = parsedZones[idx];
+      if (!zone) return;
+      currentZoneIdx = idx;
+      currentImageIdx = 0;
+      setImage(zone, currentImageIdx);
+      setWeather(zone.weather);
+      setHudLabel(zone.label);
+
+      // Reset rotation dentro de la zona — cambio de imagen cada 5.5s
+      window.clearInterval(rotationTimer);
+      if (zone.images.length > 1) {
+        rotationTimer = window.setInterval(() => {
+          currentImageIdx = (currentImageIdx + 1) % zone.images.length;
+          setImage(zone, currentImageIdx);
+        }, 5500);
+      }
+    };
+
+    // IntersectionObserver: detecta qué zona está en el centro del viewport
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = parsedZones.findIndex((z) => z.el === entry.target);
+            if (idx >= 0) activateZone(idx);
+          }
+        });
+      },
+      { rootMargin: '-40% 0px -40% 0px', threshold: 0 },
+    );
+    parsedZones.forEach((z) => io.observe(z.el));
+
+    // Progress bar — actualiza según scroll dentro de la sección
+    const updateProgress = () => {
+      if (!progressFill) return;
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const raw = -rect.top / (rect.height - vh);
+      const progress = Math.max(0, Math.min(1, raw));
+      progressFill.style.width = `${progress * 100}%`;
+    };
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // Pausar rotación cuando la pestaña no es visible (ahorra CPU)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        window.clearInterval(rotationTimer);
+      } else if (currentZoneIdx >= 0) {
+        const zone = parsedZones[currentZoneIdx];
+        if (zone && zone.images.length > 1) {
+          rotationTimer = window.setInterval(() => {
+            currentImageIdx = (currentImageIdx + 1) % zone.images.length;
+            setImage(zone, currentImageIdx);
+          }, 5500);
+        }
+      }
+    });
+  }
+</script>

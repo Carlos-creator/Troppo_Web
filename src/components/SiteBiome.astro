@@ -1,0 +1,552 @@
+---
+// SiteBiome — capa global de fondo con imágenes ilustradas de Chile que
+// van cambiando de zona a medida que el usuario avanza en el scroll.
+//
+// ZONAS (activadas por trigger de sección, no por porcentaje de scroll):
+//   1. Norte     → desde el top de la página
+//   2. Centro    → desde #nosotros (Values) hasta antes de #pitch (Video)
+//   3. Sur templado (lluvia) → desde #pitch (Video) hasta antes de #equipo (Team)
+//   4. Sur extremo (nieve)   → desde #equipo (Team) hasta el final
+//
+// Se monta una sola vez en Base.astro. Filtro cyan Troppo aplicado a
+// todas las imágenes.
+
+// Genera N gotas de lluvia con posiciones y velocidades pseudo-random
+const RAIN_DROPS = Array.from({ length: 45 }, (_, i) => {
+  const seed = (i * 137) % 100;
+  return {
+    left: (seed * 1.13) % 100,
+    delay: (seed * 0.017) % 1.6,
+    duration: 0.65 + ((seed * 0.007) % 0.55),
+    height: 10 + ((seed * 0.13) % 14),
+  };
+});
+
+// Genera N copos de nieve
+const SNOW_FLAKES = Array.from({ length: 55 }, (_, i) => {
+  const seed = (i * 163) % 100;
+  return {
+    left: (seed * 1.03) % 100,
+    delay: (seed * 0.09) % 7,
+    duration: 7 + ((seed * 0.11) % 8),
+    size: 3 + ((seed * 0.06) % 5),
+    sway: 15 + ((seed * 0.3) % 30),
+    swayDir: i % 2 === 0 ? 1 : -1,
+    blur: (seed % 3) * 0.4,
+  };
+});
+
+// Gaviotas en cyan oscuro (navy) para contrastar con secciones cream
+const GULLS = [
+  { top: 14, size: 40, dur: 15, delay: 0,   dir: 'a', opacity: 0.9 },
+  { top: 22, size: 30, dur: 19, delay: -4,  dir: 'b', opacity: 0.8 },
+  { top: 19, size: 34, dur: 17, delay: -8,  dir: 'a', opacity: 0.85 },
+  { top: 28, size: 26, dur: 21, delay: -12, dir: 'b', opacity: 0.75 },
+  { top: 16, size: 36, dur: 16, delay: -6,  dir: 'a', opacity: 0.88 },
+  { top: 24, size: 28, dur: 20, delay: -14, dir: 'b', opacity: 0.78 },
+];
+---
+
+<!-- Capa TRASERA — bg image + tint (z-index: -1, detrás de todo) -->
+<div class="sb-back" aria-hidden="true">
+  <div class="sb-bg sb-bg-a" data-layer="a"></div>
+  <div class="sb-bg sb-bg-b" data-layer="b"></div>
+  <div class="sb-tint"></div>
+</div>
+
+<!-- Capa FRONTAL — overlays climáticos SOBRE las secciones para que
+     gaviotas, lluvia y nieve siempre se vean. pointer-events:none. -->
+<div class="sb-front" aria-hidden="true">
+
+  <!-- Sol (Norte) — recorre un arco desde arriba-izquierda hasta
+       esquina inferior-derecha simulando el ciclo del día -->
+  <div class="sb-weather sb-w-sun" data-w="sun">
+    <div class="sb-sun-orb">
+      <div class="sb-sun-rays"></div>
+      <div class="sb-sun-core"></div>
+    </div>
+  </div>
+
+  <!-- Gaviotas (Centro) — cyan oscuro para contrastar sobre cream -->
+  <div class="sb-weather sb-w-gulls" data-w="gulls">
+    {GULLS.map((g) => (
+      <svg
+        class={`gull gull-${g.dir}`}
+        viewBox="0 0 24 12"
+        fill="none"
+        stroke={`rgba(4, 69, 89, ${g.opacity})`}
+        stroke-width="1.8"
+        stroke-linecap="round"
+        style={`top: ${g.top}%; width: ${g.size}px; animation-duration: ${g.dur}s; animation-delay: ${g.delay}s;`}
+      >
+        <path d="M2 8 Q 7 2 12 8 Q 17 2 22 8" />
+      </svg>
+    ))}
+  </div>
+
+  <!-- Lluvia (Sur templado) — gotas individuales, no líneas continuas -->
+  <div class="sb-weather sb-w-rain" data-w="rain">
+    {RAIN_DROPS.map((d) => (
+      <span
+        class="rain-drop"
+        style={`left: ${d.left}%; animation-delay: -${d.delay}s; animation-duration: ${d.duration}s; height: ${d.height}px;`}
+      ></span>
+    ))}
+  </div>
+
+  <!-- Nieve (Sur extremo) — copos circulares con leve balanceo -->
+  <div class="sb-weather sb-w-snow" data-w="snow">
+    {SNOW_FLAKES.map((f) => (
+      <span
+        class="snow-flake"
+        style={`left: ${f.left}%; animation-delay: -${f.delay}s; animation-duration: ${f.duration}s; width: ${f.size}px; height: ${f.size}px; --sway: ${f.sway * f.swayDir}px; filter: blur(${f.blur}px);`}
+      ></span>
+    ))}
+  </div>
+
+</div>
+
+<!-- HUD de zona actual — pill flotante bottom-left -->
+<div class="sb-hud" aria-hidden="true">
+  <span class="sb-hud-dot"></span>
+  <span class="sb-hud-label" data-hud-label>NORTE GRANDE</span>
+</div>
+
+<script>
+  interface BiomeZone {
+    id: string;
+    dir: string;
+    label: string;
+    weather: 'sun' | 'gulls' | 'rain' | 'snow';
+    images: string[];
+  }
+
+  const ZONES: BiomeZone[] = [
+    {
+      id: 'norte',
+      dir: 'norte',
+      label: 'NORTE GRANDE',
+      weather: 'sun',
+      images: ['astronomia', 'desierto', 'fauna', 'morro_de_arica'],
+    },
+    {
+      id: 'centro',
+      dir: 'centro',
+      label: 'ZONA CENTRAL',
+      weather: 'gulls',
+      images: ['Playa', 'Puerto', 'PuertoSA', 'Valparaiso', 'paisaje_centro', 'playa2'],
+    },
+    {
+      id: 'sur-templado',
+      dir: 'sur',
+      label: 'SUR TEMPLADO',
+      weather: 'rain',
+      images: ['faro_sur', 'paisaje_cabana'],
+    },
+    {
+      id: 'sur-extremo',
+      dir: 'sur',
+      label: 'FIN DEL MUNDO',
+      weather: 'snow',
+      images: ['Volcan', 'Antartica'],
+    },
+  ];
+
+  // Triggers de zona basados en IDs de sección concretos
+  const TRIGGERS = {
+    centroStart: 'nosotros',      // Values → empieza Centro
+    surTempladoStart: 'pitch',    // Video → empieza lluvia
+    surExtremoStart: 'equipo',    // Team → empieza nieve
+  };
+
+  const sbBack = document.querySelector<HTMLElement>('.sb-back');
+  const sbFront = document.querySelector<HTMLElement>('.sb-front');
+  const bgA = sbBack?.querySelector<HTMLElement>('.sb-bg-a');
+  const bgB = sbBack?.querySelector<HTMLElement>('.sb-bg-b');
+  const weathers = Array.from(sbFront?.querySelectorAll<HTMLElement>('.sb-weather') ?? []);
+  const hudLabel = document.querySelector<HTMLElement>('[data-hud-label]');
+
+  if (sbBack && sbFront && bgA && bgB && weathers.length) {
+    // Precargar todas las imágenes
+    ZONES.forEach((z) => {
+      z.images.forEach((name) => {
+        const img = new Image();
+        img.src = `/images/chile/${z.dir}/${name}.jpg`;
+      });
+    });
+
+    let currentZoneIdx = -1;
+    let currentImageIdx = 0;
+    let currentBgLayer: 'a' | 'b' = 'a';
+    let rotationTimer = 0;
+
+    const buildUrl = (zone: BiomeZone, imgName: string) =>
+      `url("/images/chile/${zone.dir}/${imgName}.jpg")`;
+
+    const setImage = (zone: BiomeZone, imgIdx: number) => {
+      const url = buildUrl(zone, zone.images[imgIdx]);
+      const nextLayer = currentBgLayer === 'a' ? 'b' : 'a';
+      const nextEl = nextLayer === 'a' ? bgA : bgB;
+      const prevEl = nextLayer === 'a' ? bgB : bgA;
+      nextEl.style.backgroundImage = url;
+      void nextEl.offsetWidth;
+      nextEl.classList.add('active');
+      prevEl.classList.remove('active');
+      currentBgLayer = nextLayer;
+    };
+
+    const setWeather = (weatherName: string) => {
+      weathers.forEach((w) => {
+        if (w.dataset.w === weatherName) w.classList.add('visible');
+        else w.classList.remove('visible');
+      });
+    };
+
+    const setHudLabel = (label: string) => {
+      if (!hudLabel) return;
+      hudLabel.classList.add('swapping');
+      window.setTimeout(() => {
+        hudLabel.textContent = label;
+        hudLabel.classList.remove('swapping');
+      }, 250);
+    };
+
+    const activateZone = (idx: number) => {
+      if (idx === currentZoneIdx || idx < 0 || idx >= ZONES.length) return;
+      const zone = ZONES[idx];
+      currentZoneIdx = idx;
+      currentImageIdx = 0;
+      setImage(zone, currentImageIdx);
+      setWeather(zone.weather);
+      setHudLabel(zone.label);
+      window.clearInterval(rotationTimer);
+      if (zone.images.length > 1) {
+        rotationTimer = window.setInterval(() => {
+          currentImageIdx = (currentImageIdx + 1) % zone.images.length;
+          setImage(zone, currentImageIdx);
+        }, 6000);
+      }
+    };
+
+    // Detección de zona basada en la posición Y de las secciones trigger
+    const updateFromScroll = () => {
+      const triggerLine = window.innerHeight * 0.5; // mitad del viewport
+      const centroY = document.getElementById(TRIGGERS.centroStart)?.getBoundingClientRect().top ?? Infinity;
+      const surTempladoY = document.getElementById(TRIGGERS.surTempladoStart)?.getBoundingClientRect().top ?? Infinity;
+      const surExtremoY = document.getElementById(TRIGGERS.surExtremoStart)?.getBoundingClientRect().top ?? Infinity;
+
+      let idx = 0; // Norte por defecto
+      if (surExtremoY < triggerLine) idx = 3;
+      else if (surTempladoY < triggerLine) idx = 2;
+      else if (centroY < triggerLine) idx = 1;
+
+      activateZone(idx);
+    };
+
+    updateFromScroll();
+
+    let ticking = false;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          updateFromScroll();
+          ticking = false;
+        });
+      },
+      { passive: true },
+    );
+    window.addEventListener('resize', updateFromScroll, { passive: true });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        window.clearInterval(rotationTimer);
+      } else if (currentZoneIdx >= 0) {
+        const zone = ZONES[currentZoneIdx];
+        if (zone && zone.images.length > 1) {
+          rotationTimer = window.setInterval(() => {
+            currentImageIdx = (currentImageIdx + 1) % zone.images.length;
+            setImage(zone, currentImageIdx);
+          }, 6000);
+        }
+      }
+    });
+  }
+</script>
+
+<style>
+  /* ============ CAPA TRASERA — bg + tint ============ */
+  .sb-back {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .sb-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1400ms ease;
+    will-change: opacity;
+    filter:
+      grayscale(1)
+      contrast(1.12)
+      sepia(1)
+      hue-rotate(155deg)
+      saturate(1.9)
+      brightness(0.85);
+  }
+  .sb-bg.active { opacity: 1; }
+
+  .sb-tint {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(4, 69, 89, 0.14) 0%,
+      rgba(4, 69, 89, 0.24) 50%,
+      rgba(3, 53, 68, 0.32) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* ============ CAPA FRONTAL — weather ============ */
+  .sb-front {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .sb-weather {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 900ms ease;
+  }
+  .sb-weather.visible { opacity: 1; }
+
+  /* --- Sol (Norte) — arco de día ---
+     El orbe recorre un arco desde arriba-izquierda hasta la esquina
+     inferior-derecha, simulando el ciclo del día. Se pone al final
+     "guardándose" en el corner. Loop lento (55s) para que se vea como
+     un ciclo natural mientras el usuario navega Norte. */
+  .sb-w-sun {
+    /* El contenedor no tiene overflow para que el sol pueda "asomarse"
+       fuera del viewport en el inicio y el final del arco */
+  }
+  .sb-sun-orb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 220px;
+    /* posición inicial (fuera de pantalla izq-superior) */
+    transform: translate(-14vw, 30vh) scale(0.8);
+    animation: sb-sun-arc 55s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+  /* Núcleo del sol — el "disco" brillante */
+  .sb-sun-core {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 232, 160, 0.7) 0%,
+      rgba(255, 210, 120, 0.45) 25%,
+      rgba(255, 190, 90, 0.18) 55%,
+      transparent 75%
+    );
+    filter: blur(3px);
+  }
+  /* Rayos del sol — conic-gradient con 12 rayos ALREDEDOR de 360°
+     (cada 30°). El mask radial hace que los rayos empiecen fuertes
+     en el centro y se atenúen hacia afuera para que no se vean tan
+     sobresalientes de la esfera del sol. */
+  .sb-sun-rays {
+    position: absolute;
+    inset: -14%;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      rgba(255, 220, 140, 0.16) 0deg 5deg,
+      transparent 5deg 30deg,
+      rgba(255, 220, 140, 0.14) 30deg 35deg,
+      transparent 35deg 60deg,
+      rgba(255, 220, 140, 0.16) 60deg 65deg,
+      transparent 65deg 90deg,
+      rgba(255, 220, 140, 0.14) 90deg 95deg,
+      transparent 95deg 120deg,
+      rgba(255, 220, 140, 0.16) 120deg 125deg,
+      transparent 125deg 150deg,
+      rgba(255, 220, 140, 0.14) 150deg 155deg,
+      transparent 155deg 180deg,
+      rgba(255, 220, 140, 0.16) 180deg 185deg,
+      transparent 185deg 210deg,
+      rgba(255, 220, 140, 0.14) 210deg 215deg,
+      transparent 215deg 240deg,
+      rgba(255, 220, 140, 0.16) 240deg 245deg,
+      transparent 245deg 270deg,
+      rgba(255, 220, 140, 0.14) 270deg 275deg,
+      transparent 275deg 300deg,
+      rgba(255, 220, 140, 0.16) 300deg 305deg,
+      transparent 305deg 330deg,
+      rgba(255, 220, 140, 0.14) 330deg 335deg,
+      transparent 335deg 360deg
+    );
+    background-repeat: no-repeat;
+    filter: blur(1.5px);
+    /* Mask radial: los rayos son fuertes cerca del núcleo y se
+       desvanecen suavemente antes de llegar al borde del contenedor */
+    -webkit-mask: radial-gradient(circle, black 25%, transparent 62%);
+    mask: radial-gradient(circle, black 25%, transparent 62%);
+    animation: sb-sun-spin 24s linear infinite;
+  }
+  @keyframes sb-sun-spin {
+    to { transform: rotate(360deg); }
+  }
+  /* Arco: parte de arriba-izquierda, sube hacia el zenit, y desciende
+     "guardándose" en la esquina inferior-derecha. Fade in/out en los
+     extremos para que el loop no se note. */
+  @keyframes sb-sun-arc {
+    0%   { transform: translate(-14vw, 30vh) scale(0.8);  opacity: 0; }
+    6%   { transform: translate(-6vw, 22vh)  scale(0.9);  opacity: 0.55; }
+    22%  { transform: translate(15vw, 8vh)   scale(1);    opacity: 0.95; }
+    45%  { transform: translate(45vw, 2vh)   scale(1.15); opacity: 1; }
+    68%  { transform: translate(72vw, 12vh)  scale(1.05); opacity: 0.98; }
+    88%  { transform: translate(88vw, 42vh)  scale(0.95); opacity: 0.85; }
+    96%  { transform: translate(94vw, 62vh)  scale(0.85); opacity: 0.55; }
+    100% { transform: translate(100vw, 80vh) scale(0.75); opacity: 0; }
+  }
+
+  /* --- Gaviotas (Centro) — cyan oscuro, 6 aves --- */
+  .sb-w-gulls .gull {
+    position: absolute;
+    height: auto;
+    will-change: transform;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.15));
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  .sb-w-gulls .gull-a {
+    animation-name: sb-gull-fly-a;
+  }
+  .sb-w-gulls .gull-b {
+    animation-name: sb-gull-fly-b;
+  }
+  @keyframes sb-gull-fly-a {
+    from { transform: translateX(-8vw) translateY(0); }
+    to   { transform: translateX(108vw) translateY(-30px); }
+  }
+  @keyframes sb-gull-fly-b {
+    from { transform: translateX(108vw) translateY(0); }
+    to   { transform: translateX(-8vw) translateY(25px); }
+  }
+
+  /* --- Lluvia (Sur templado) — gotas reales cayendo --- */
+  .rain-drop {
+    position: absolute;
+    top: -25px;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      rgba(180, 220, 235, 0) 0%,
+      rgba(180, 220, 235, 0.85) 50%,
+      rgba(200, 230, 240, 0.95) 100%
+    );
+    border-radius: 0 0 2px 2px;
+    animation-name: rain-drop-fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    transform: rotate(8deg);
+    will-change: transform;
+    box-shadow: 0 0 2px rgba(180, 220, 235, 0.4);
+  }
+  @keyframes rain-drop-fall {
+    from { transform: rotate(8deg) translateY(0); }
+    to   { transform: rotate(8deg) translateY(calc(100vh + 40px)); }
+  }
+
+  /* --- Nieve (Sur extremo) — copos con leve balanceo --- */
+  .snow-flake {
+    position: absolute;
+    top: -15px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    animation-name: snow-flake-fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+  }
+  @keyframes snow-flake-fall {
+    0%   { transform: translateY(0) translateX(0); opacity: 0.85; }
+    25%  { transform: translateY(25vh) translateX(var(--sway)); }
+    50%  { transform: translateY(50vh) translateX(0); opacity: 1; }
+    75%  { transform: translateY(75vh) translateX(var(--sway)); }
+    100% { transform: translateY(calc(100vh + 20px)) translateX(0); opacity: 0.7; }
+  }
+
+  /* ============ HUD DE ZONA ============ */
+  .sb-hud {
+    position: fixed;
+    left: 20px;
+    bottom: 46px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: rgba(21, 27, 32, 0.65);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 100px;
+    border: 1px solid rgba(97, 225, 230, 0.32);
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    color: var(--cyan);
+    z-index: 90;
+    pointer-events: none;
+  }
+  .sb-hud-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 6px var(--cyan);
+    animation: sb-hud-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes sb-hud-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.35; transform: scale(0.7); }
+  }
+  .sb-hud-label { transition: opacity 250ms ease; }
+  .sb-hud-label.swapping { opacity: 0; }
+
+  @media (max-width: 860px) {
+    .sb-hud { left: 12px; bottom: 40px; font-size: 9.5px; padding: 6px 12px; }
+    .sb-sun-orb { width: 160px; height: 160px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sb-bg, .sb-weather, .sb-hud-label { transition: none; }
+    .sb-sun-orb, .sb-sun-rays, .sb-w-gulls .gull, .rain-drop, .snow-flake, .sb-hud-dot {
+      animation: none;
+    }
+    /* Con reduced-motion el sol queda estático en el zenit (posición
+       intermedia del arco) para que igual se vea */
+    .sb-sun-orb {
+      transform: translate(45vw, 5vh) scale(1);
+      opacity: 1;
+    }
+  }
+</style>
