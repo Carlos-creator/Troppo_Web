@@ -116,12 +116,11 @@ const GULLS = [
 
 </div>
 
-<!-- Indicador ambiental de zona — chip flotante bottom-left con emoji
-     climático. Se cambió del label textual ('NORTE GRANDE', 'SUR TEMPLADO',
-     etc.) a un emoji para que se sienta ambiental y no como categoría
-     regional forzada. -->
+<!-- Indicador ambiental de zona — chip flotante bottom-left con icono
+     climático (PNG desde /public/images/clima). Se cambió del label
+     textual regional a icono para que se sienta ambiental. -->
 <div class="sb-hud" aria-hidden="true">
-  <span class="sb-hud-label" data-hud-label>☀️</span>
+  <img class="sb-hud-label" data-hud-label src="/images/clima/sol.png" alt="" />
 </div>
 
 <script>
@@ -137,28 +136,28 @@ const GULLS = [
     {
       id: 'norte',
       dir: 'norte',
-      label: '☀️',
+      label: '/images/clima/sol.png',
       weather: 'sun',
       images: ['astronomia', 'desierto', 'fauna', 'morro_de_arica'],
     },
     {
       id: 'centro',
       dir: 'centro',
-      label: '🌊',
+      label: '/images/clima/nublado_sol.png',
       weather: 'gulls',
       images: ['Playa', 'Puerto', 'PuertoSA', 'Valparaiso', 'paisaje_centro', 'playa2'],
     },
     {
       id: 'sur-templado',
       dir: 'sur',
-      label: '🌧️',
+      label: '/images/clima/lluvia.png',
       weather: 'rain',
       images: ['faro_sur', 'paisaje_cabana'],
     },
     {
       id: 'sur-extremo',
       dir: 'sur',
-      label: '❄️',
+      label: '/images/clima/nieve.png',
       weather: 'snow',
       images: ['Volcan', 'Antartica'],
     },
@@ -220,7 +219,8 @@ const GULLS = [
       if (!hudLabel) return;
       hudLabel.classList.add('swapping');
       window.setTimeout(() => {
-        hudLabel.textContent = label;
+        // El label ahora es la ruta a un PNG en /images/clima
+        (hudLabel as HTMLImageElement).src = label;
         hudLabel.classList.remove('swapping');
       }, 250);
     };
@@ -527,7 +527,7 @@ const GULLS = [
     100% { transform: translateY(calc(100vh + 20px)) translateX(0); opacity: 0.7; }
   }
 
-  /* ============ INDICADOR AMBIENTAL (emoji) ============ */
+  /* ============ INDICADOR AMBIENTAL (icono clima PNG) ============ */
   .sb-hud {
     position: fixed;
     left: 20px;
@@ -535,35 +535,36 @@ const GULLS = [
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
+    width: 46px;
+    height: 46px;
     background: rgba(21, 27, 32, 0.55);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 50%;
     border: 1px solid rgba(97, 225, 230, 0.28);
-    font-size: 18px;
-    line-height: 1;
     z-index: 90;
     pointer-events: none;
   }
-  .sb-hud-label {
-    display: inline-block;
+  img.sb-hud-label {
+    display: block;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
     transition: opacity 250ms ease, transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .sb-hud-label.swapping {
+  img.sb-hud-label.swapping {
     opacity: 0;
-    transform: scale(0.7);
+    transform: scale(0.6);
   }
 
   @media (max-width: 860px) {
     .sb-hud {
       left: 12px;
       bottom: 40px;
-      width: 32px;
-      height: 32px;
-      font-size: 15px;
+      width: 38px;
+      height: 38px;
     }
+    img.sb-hud-label { width: 24px; height: 24px; }
     .sb-sun-orb { width: 160px; height: 160px; }
   }
 
