@@ -54,10 +54,22 @@ const pasos = [
     </header>
 
     <div class="porque-flow" role="list">
+      {/* Etiquetas de grupo — sólo visibles en desktop. En mobile se
+          usan los badges per-card + el label absoluto sobre la flecha. */}
+      <div class="pq-group-label pq-group-regular" aria-hidden="true">
+        <span class="pq-group-line"></span>
+        <span class="pq-group-chip">Otras herramientas se detienen aquí</span>
+        <span class="pq-group-line"></span>
+      </div>
+      <div class="pq-group-label pq-group-troppo" aria-hidden="true">
+        <span class="pq-group-line"></span>
+        <span class="pq-group-chip">Sólo Troppo</span>
+        <span class="pq-group-line"></span>
+      </div>
       {
         pasos.map((p, i) => (
           <>
-            <article class={`pq-step pq-step--${p.icon} ${p.troppoOnly ? 'is-troppo' : ''}`} data-reveal role="listitem">
+            <article class={`pq-step pq-step--${p.icon} ${p.troppoOnly ? 'is-troppo' : ''}`} data-reveal data-c={i} role="listitem">
               {/* Overlay animado temático que cubre toda la card a baja opacidad */}
               <svg
                 class={`pq-card-fx pq-card-fx--${p.icon}`}
@@ -184,7 +196,7 @@ const pasos = [
             </article>
 
             {i < pasos.length - 1 && (
-              <div class={`pq-arrow ${i === 1 ? 'is-limit' : ''}`} aria-hidden="true">
+              <div class={`pq-arrow ${i === 1 ? 'is-limit' : ''}`} data-a={i} aria-hidden="true">
                 <svg viewBox="0 0 32 12" width="28" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M2 6 L26 6" />
                   <path d="M20 2 L26 6 L20 10" />
@@ -310,6 +322,65 @@ const pasos = [
     align-items: stretch;
     max-width: 1100px;
     margin: 0 auto;
+  }
+
+  /* --- Etiquetas de grupo (DESKTOP) ---
+     'Otras herramientas se detienen aquí' arriba de pasos 01–02.
+     'Sólo Troppo' arriba de pasos 03–04.
+     En mobile quedan ocultas — se usan los badges per-card + label
+     de la flecha límite (comportamiento previo). */
+  .pq-group-label { display: none; }
+  @media (min-width: 961px) {
+    .porque-flow {
+      grid-template-rows: auto 1fr;
+      row-gap: 26px;
+    }
+    .pq-group-label {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 8px;
+      grid-row: 1;
+    }
+    .pq-group-regular {
+      grid-column: 1 / 4;
+      color: rgba(220, 90, 80, 0.85);
+    }
+    .pq-group-troppo {
+      grid-column: 5 / 8;
+      color: var(--cyan-ink);
+    }
+    .pq-group-line {
+      flex: 1;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.4;
+    }
+    .pq-group-chip {
+      padding: 6px 14px;
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      border: 1px solid currentColor;
+      border-radius: 100px;
+      background: rgba(255, 255, 255, 0.92);
+      white-space: nowrap;
+    }
+    /* Colocación explícita de cards y arrows en row 2 */
+    .porque-flow [data-c="0"] { grid-column: 1; grid-row: 2; }
+    .porque-flow [data-a="0"] { grid-column: 2; grid-row: 2; }
+    .porque-flow [data-c="1"] { grid-column: 3; grid-row: 2; }
+    .porque-flow [data-a="1"] { grid-column: 4; grid-row: 2; }
+    .porque-flow [data-c="2"] { grid-column: 5; grid-row: 2; }
+    .porque-flow [data-a="2"] { grid-column: 6; grid-row: 2; }
+    .porque-flow [data-c="3"] { grid-column: 7; grid-row: 2; }
+    /* En desktop escondemos los indicadores per-card — la información
+       vive en las etiquetas de grupo arriba. */
+    .porque-flow .pq-badge { display: none; }
+    .porque-flow .pq-arrow-label { display: none; }
+    .pq-step-head { min-height: 0; }
   }
 
   /* Card de paso */
