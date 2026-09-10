@@ -328,11 +328,13 @@ const GULLS = [
     pointer-events: none;
   }
 
-  /* ============ CAPA FRONTAL — weather ============ */
+  /* ============ CAPA FRONTAL — weather ============
+     El contenedor NO usa z-index para no crear stacking context: así
+     cada tipo de clima puede decidir individualmente si va por delante
+     o por detrás de las secciones. */
   .sb-front {
     position: fixed;
     inset: 0;
-    z-index: 5;
     pointer-events: none;
     overflow: hidden;
   }
@@ -344,6 +346,16 @@ const GULLS = [
     transition: opacity 900ms ease;
   }
   .sb-weather.visible { opacity: 1; }
+
+  /* Sol, gaviotas y nieve permanecen POR DELANTE de las secciones */
+  .sb-w-sun,
+  .sb-w-gulls,
+  .sb-w-snow { z-index: 5; }
+
+  /* La lluvia se manda POR DETRÁS de las secciones — se ve tenue a
+     través de los fondos semi-transparentes y ya no compite visualmente
+     con el texto. */
+  .sb-w-rain { z-index: -1; }
 
   /* --- Sol (Norte) — arco de día ---
      El orbe recorre un arco desde arriba-izquierda hasta la esquina
