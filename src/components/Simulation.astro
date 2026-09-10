@@ -145,7 +145,7 @@
         </div>
       </div>
 
-      <!-- Panel lateral -->
+      <!-- Panel lateral (métricas) -->
       <aside class="sim-side">
         <div class="side-counter">
           <span data-side="index">1</span>
@@ -173,13 +173,18 @@
             <span class="metric-value" data-metric="reduction">—</span>
           </div>
         </div>
-        <div class="side-dots" role="tablist" aria-label="Elegir escenario">
-          <button type="button" class="dot" aria-label="Escenario 1"></button>
-          <button type="button" class="dot" aria-label="Escenario 2"></button>
-          <button type="button" class="dot" aria-label="Escenario 3"></button>
-          <button type="button" class="dot" aria-label="Escenario 4"></button>
-        </div>
       </aside>
+
+      <!-- Selector de escenario (dots).
+           Está fuera del panel lateral para que en mobile pueda
+           colocarse justo debajo del viewport y no obligue a scrollear
+           por todo el metric panel para cambiar de escenario. -->
+      <div class="side-dots" role="tablist" aria-label="Elegir escenario">
+        <button type="button" class="dot" aria-label="Escenario 1"></button>
+        <button type="button" class="dot" aria-label="Escenario 2"></button>
+        <button type="button" class="dot" aria-label="Escenario 3"></button>
+        <button type="button" class="dot" aria-label="Escenario 4"></button>
+      </div>
     </div>
   </div>
 </section>
@@ -217,9 +222,16 @@
   .sim-shell {
     display: grid;
     grid-template-columns: 1fr 320px;
+    grid-template-areas:
+      "view side"
+      "dots side";
+    grid-template-rows: 1fr auto;
     gap: 24px;
     align-items: stretch;
   }
+  .sim-viewport { grid-area: view; }
+  .sim-side { grid-area: side; }
+  .side-dots { grid-area: dots; }
   .sim-viewport {
     position: relative;
     background: var(--navy);
@@ -413,8 +425,11 @@
     display: flex;
     gap: 14px;
     justify-content: center;
-    margin-top: auto;
-    padding-top: 8px;
+    align-items: center;
+    padding: 14px 8px;
+    background: rgba(255, 248, 234, 0.04);
+    border: 1px solid rgba(255, 248, 234, 0.10);
+    border-radius: 100px;
   }
   .dot {
     width: 34px;
@@ -424,7 +439,7 @@
     border: none;
     cursor: pointer;
     padding: 0;
-    transition: background 180ms ease, box-shadow 180ms ease;
+    transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
   }
   .dot:hover { background: rgba(255, 248, 234, 0.4); }
   .dot.is-active,
@@ -434,9 +449,42 @@
   }
 
   @media (max-width: 860px) {
-    .sim-shell { grid-template-columns: 1fr; }
+    .sim-shell {
+      grid-template-columns: 1fr;
+      /* Dots quedan JUSTO debajo del viewport, antes del panel de
+         métricas — así no hay que scrollear para cambiar escenario. */
+      grid-template-areas:
+        "view"
+        "dots"
+        "side";
+      grid-template-rows: auto auto 1fr;
+    }
     .sim-viewport { aspect-ratio: 4 / 3; }
     h2 { font-size: 30px; }
+
+    /* Dots más grandes y con más aire en mobile — se acceden con tap
+       cómodo (min ~48px de área táctil por dot). */
+    .side-dots {
+      gap: 12px;
+      padding: 14px 12px;
+    }
+    .dot {
+      width: 54px;
+      height: 10px;
+      border-radius: 5px;
+      /* Aumentar el hit-area con box-shadow invisible no aporta a11y —
+         mejor un pseudo-elemento que extiende el touch target. */
+      position: relative;
+    }
+    .dot::before {
+      content: '';
+      position: absolute;
+      inset: -18px -6px;
+    }
+    .dot.is-active,
+    .dot[aria-current="true"] {
+      transform: scale(1.05);
+    }
   }
 </style>
 
