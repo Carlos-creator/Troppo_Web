@@ -52,6 +52,20 @@
         </a>
       </div>
     </div>
+    <div class="foot-usm" aria-label="Marco institucional">
+      <span class="foot-usm-label">Proyecto presentado en</span>
+      <img
+        src="/images/logo/usm/feria-software.webp"
+        alt="34.ª Feria de Software USM"
+        class="foot-usm-logo foot-usm-feria"
+      />
+      <span class="foot-usm-sep" aria-hidden="true"></span>
+      <img
+        src="/images/logo/usm/logo-usm_blanco.svg"
+        alt="Universidad Técnica Federico Santa María"
+        class="foot-usm-logo foot-usm-usm"
+      />
+    </div>
     <div class="foot-copy">
       © 2026 Feria USM · Proyecto Troppo
       <span class="foot-credit">
@@ -111,11 +125,46 @@
     transform: translateY(-1px);
   }
   .foot-links svg { flex-shrink: 0; }
+
+  /* Bloque institucional USM entre los links y el copyright.
+     Muestra 'Proyecto presentado en' + logo Feria + logo USM. */
+  .foot-usm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    padding: 22px 0 6px;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(255, 248, 234, 0.08);
+  }
+  .foot-usm-label {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: rgba(255, 248, 234, 0.55);
+  }
+  .foot-usm-logo {
+    display: block;
+    width: auto;
+    object-fit: contain;
+    opacity: 0.9;
+    transition: opacity 260ms ease;
+  }
+  .foot-usm-logo:hover { opacity: 1; }
+  .foot-usm-feria { height: 54px; }
+  .foot-usm-usm   { height: 26px; }
+  .foot-usm-sep {
+    width: 1px;
+    height: 28px;
+    background: rgba(255, 248, 234, 0.16);
+  }
+
   .foot-copy {
     font-size: 12.5px;
     text-align: center;
-    padding-top: 18px;
-    border-top: 1px solid rgba(255, 248, 234, 0.08);
+    padding-top: 14px;
     color: rgba(255, 248, 234, 0.5);
   }
   .foot-credit {
@@ -139,5 +188,10 @@
     }
     .foot-links { justify-content: center; flex-wrap: wrap; }
     .foot-inner { gap: 20px; }
+    .foot-usm { gap: 16px; padding: 18px 0 4px; }
+    .foot-usm-label { font-size: 10px; letter-spacing: 1.2px; }
+    .foot-usm-feria { height: 44px; }
+    .foot-usm-usm   { height: 22px; }
+    .foot-usm-sep { display: none; }
   }
 </style>

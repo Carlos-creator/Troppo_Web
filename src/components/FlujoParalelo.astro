@@ -317,12 +317,18 @@ const procesoParalelo = [
       transform 1000ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   .panel-principal {
-    background: var(--navy);
+    /* Navy con un toque de transparencia sutil para dejar respirar el
+       fondo biome. Un blur de fondo mantiene la legibilidad. */
+    background: rgba(4, 69, 89, 0.88);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     color: var(--cream);
     transform: translateX(-140px) rotate(-4deg);
   }
   .panel-paralelo {
-    background: var(--lime);
+    background: rgba(97, 225, 230, 0.86);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     color: var(--navy-deep);
     transform: translateX(140px) rotate(4deg);
   }
@@ -405,8 +411,8 @@ const procesoParalelo = [
   /* ============ CONECTORES CON EFECTO TECH ============
      Cada conexión tiene 4 elementos:
      - conn-base: línea dashed navy tenue (canal estático)
-     - conn-flow: dashes cyan que fluyen (marching ants continuo)
-     - conn-endpoint: círculo cyan pulsante en el destino (receptor)
+     - conn-flow: dashes lime que fluyen (marching ants continuo)
+     - conn-endpoint: círculo lime pulsante en el destino (receptor)
      - conn-packet: dot que viaja desde origen a destino (paquete de datos)
   */
   .connectors {
@@ -434,15 +440,15 @@ const procesoParalelo = [
     stroke-linecap: round;
     stroke-dasharray: 4 4;
   }
-  /* Flujo cyan — dashes que se mueven continuamente = marching ants */
+  /* Flujo lime — dashes que se mueven continuamente = marching ants */
   .conn-flow {
     fill: none;
-    stroke: rgba(97, 225, 230, 0.9);
+    stroke: rgba(209, 235, 120, 0.95);
     stroke-width: 1.8;
     stroke-linecap: round;
     stroke-dasharray: 6 10;
     stroke-dashoffset: 0;
-    filter: drop-shadow(0 0 3px rgba(97, 225, 230, 0.55));
+    filter: drop-shadow(0 0 3px rgba(209, 235, 120, 0.6));
     animation: conn-marching 1.4s linear infinite;
   }
   @keyframes conn-marching {
@@ -452,8 +458,8 @@ const procesoParalelo = [
 
   /* Endpoint pulsante en el destino */
   .conn-endpoint {
-    fill: var(--cyan);
-    filter: drop-shadow(0 0 6px rgba(97, 225, 230, 0.75));
+    fill: var(--lime);
+    filter: drop-shadow(0 0 6px rgba(209, 235, 120, 0.75));
     animation: conn-endpoint-pulse 1.8s ease-in-out infinite;
     transform-origin: center;
     transform-box: fill-box;
@@ -465,8 +471,10 @@ const procesoParalelo = [
 
   /* Packet — dot cream que viaja del origen al destino con animateMotion */
   .conn-packet {
-    fill: var(--cream);
-    filter: drop-shadow(0 0 4px rgba(255, 248, 234, 0.85));
+    fill: var(--navy-deep);
+    /* Halo cream sutil detrás del punto oscuro para que "pop" al viajar
+       sobre la línea lime — mantiene contraste sin cambiar el color base. */
+    filter: drop-shadow(0 0 3px rgba(255, 248, 234, 0.55));
   }
 
   /* Chip "← Paso NN" en items paralelos — invisible en desktop, sólo aparece
@@ -500,8 +508,8 @@ const procesoParalelo = [
       gap: 5px;
       padding: 4px 9px;
       background: rgba(4, 69, 89, 0.85);
-      color: var(--cyan);
-      border: 1px solid rgba(97, 225, 230, 0.55);
+      color: var(--lime);
+      border: 1px solid rgba(209, 235, 120, 0.55);
       border-radius: 100px;
       font-family: var(--font-sans);
       font-size: 10.5px;
