@@ -873,6 +873,37 @@
     .rd-h { font-size: 15px; }
     .rd-kpi b { font-size: 16px; }
   }
+
+  /* Ajuste extra para pantallas angostas (~<480px): la UI dentro del
+     laptop se comprime todavía más para que las 3 KPIs y las filas
+     quepan sin cortarse por la derecha. */
+  @media (max-width: 480px) {
+    .rd-app {
+      grid-template-columns: 32px 1fr;
+    }
+    .rd-rail {
+      padding: 10px 0;
+      gap: 7px;
+    }
+    .rd-mark { width: 16px; height: 16px; margin-bottom: 5px; }
+    .rd-rail i { width: 14px; height: 3px; }
+    .rd-main { padding: 10px 10px; gap: 10px; }
+    .rd-top { gap: 8px; }
+    .rd-h { font-size: 13px; }
+    .rd-subtle { font-size: 8.5px; }
+    .rd-live { font-size: 8px; padding: 3px 6px; letter-spacing: 1px; }
+    .rd-live-dot { width: 4px; height: 4px; }
+    .rd-kpis { gap: 6px; }
+    .rd-kpi { padding: 7px 8px; }
+    .rd-kpi b { font-size: 13.5px; }
+    .rd-kpi b small { font-size: 9.5px; }
+    .rd-kpi span { font-size: 8px; }
+    .rd-row { padding: 7px 9px; }
+    .rd-row-head { font-size: 8px; }
+    .rd-tag { padding: 1px 4px; }
+    .rd-row-title { font-size: 10.5px; margin-top: 4px; }
+    .rd-row-svcs { font-size: 9px; }
+  }
 </style>
 
 <script>
