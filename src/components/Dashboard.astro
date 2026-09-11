@@ -312,18 +312,30 @@
     display: block;
     filter: drop-shadow(0 0 20px rgba(97, 225, 230, 0.15));
   }
-  /* Ejecuta el splash una vez cuando la stage entra al viewport */
+  /* Splash del LAPTOP: fade-in + hold + fade-out. Como el lid está
+     cerrado hasta t≈1700ms no hay problema de flash del contenido. */
   .rd-stage:not(.pre):not(.exiting) .rd-boot {
     animation: rd-boot-splash 2400ms ease-in-out 500ms forwards;
-  }
-  /* El del phone arranca un poco más tarde para acompañar su reveal */
-  .rd-stage:not(.pre):not(.exiting) .rd-boot-phone {
-    animation-delay: 900ms;
   }
   @keyframes rd-boot-splash {
     0%   { opacity: 0; }
     12%  { opacity: 1; }
     72%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* Splash del PHONE: arranca YA visible (opacity: 1) para que cuando
+     el .rd-phone empieza su fade-in (t=700ms) el splash aparezca junto
+     con el device, evitando el flash del 'Panel operador' que se veía
+     antes de que el splash apareciera. Solo animamos el fade-OUT. */
+  .rd-boot-phone {
+    opacity: 1;
+  }
+  .rd-stage:not(.pre):not(.exiting) .rd-boot-phone {
+    animation: rd-boot-phone-out 700ms ease 1900ms forwards;
+  }
+  @keyframes rd-boot-phone-out {
+    0%   { opacity: 1; }
     100% { opacity: 0; }
   }
   .rd-hinge {
