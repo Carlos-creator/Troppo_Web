@@ -26,6 +26,12 @@
         <div class="rd-lid">
           <span class="rd-cam"></span>
           <div class="rd-display">
+            <!-- Boot splash: logo Troppo beige sobre cyan oscuro que
+                 aparece al "encender" el laptop y se desvanece para
+                 revelar la app. -->
+            <div class="rd-boot" aria-hidden="true">
+              <img src="/images/logo/logo_troppo_beige_grande.png" alt="" />
+            </div>
             <div class="rd-app">
               <!-- Rail izquierdo con íconos -->
               <aside class="rd-rail">
@@ -109,6 +115,11 @@
       <!-- ================= PHONE ================= -->
       <div class="rd-phone" aria-hidden="true">
         <div class="rd-phone-screen">
+          <!-- Boot splash: mismo logo Troppo beige sobre cyan oscuro
+               al "encender" el celular. -->
+          <div class="rd-boot rd-boot-phone" aria-hidden="true">
+            <img src="/images/logo/logo_troppo_beige_grande.png" alt="" />
+          </div>
           <span class="rd-island"></span>
 
           <div class="rd-notif">
@@ -276,6 +287,44 @@
     background: linear-gradient(115deg, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
     pointer-events: none;
     z-index: 6;
+  }
+
+  /* ============ BOOT SPLASH (laptop + phone) ============
+     Logo Troppo beige sobre cyan bien oscuro. Aparece cuando "se
+     enciende" el dispositivo y se desvanece para revelar la app. */
+  .rd-boot {
+    position: absolute;
+    inset: 0;
+    background: #022a37;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .rd-boot img {
+    max-width: 62%;
+    max-height: 62%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 0 20px rgba(97, 225, 230, 0.15));
+  }
+  /* Ejecuta el splash una vez cuando la stage entra al viewport */
+  .rd-stage:not(.pre):not(.exiting) .rd-boot {
+    animation: rd-boot-splash 2400ms ease-in-out 500ms forwards;
+  }
+  /* El del phone arranca un poco más tarde para acompañar su reveal */
+  .rd-stage:not(.pre):not(.exiting) .rd-boot-phone {
+    animation-delay: 900ms;
+  }
+  @keyframes rd-boot-splash {
+    0%   { opacity: 0; }
+    12%  { opacity: 1; }
+    72%  { opacity: 1; }
+    100% { opacity: 0; }
   }
   .rd-hinge {
     height: 8px;
@@ -857,6 +906,8 @@
       transform: none;
       opacity: 1;
     }
+    /* Sin splash animado — se oculta directo */
+    .rd-boot { display: none; }
   }
 
   @media (max-width: 860px) {

@@ -197,12 +197,13 @@
     line-height: 1.65;
     color: rgba(21, 27, 32, 0.75);
     max-width: 560px;
-    /* Mismo tratamiento que las cards de Misión / Visión:
-       gradient cyan sutil → blanco, border cyan, rounded, box-shadow. */
+    /* Gradient cyan sutil → blanco + barra cyan-ink (oscuro) gruesa
+       ARRIBA como acento distintivo del bloque. */
     padding: 22px 26px;
     background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), #fff);
     border: 1px solid rgba(97, 225, 230, 0.28);
-    border-radius: 20px;
+    border-top: 4px solid var(--cyan-ink);
+    border-radius: 4px 4px 20px 20px;
     box-shadow: 0 10px 28px rgba(4, 69, 89, 0.06);
     text-align: left;
   }
