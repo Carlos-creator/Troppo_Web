@@ -21,8 +21,8 @@
       </div>
       <h2 data-vh>Del panel al resultado, <em>en pocos minutos.</em></h2>
       <p data-vh>
-        Se define qué se quiere probar, la IA lo simula en un gemelo digital
-        del tráfico real y entrega los resultados en minutos. El proceso
+        Definimos qué queremos probar, la IA lo simula en un gemelo digital
+        del tráfico real y nos entrega los resultados en minutos. El proceso
         recorre el país como una ruta, del panel al resultado.
       </p>
     </header>
@@ -35,11 +35,11 @@
             <span class="hito-num">01</span>
             <span class="hito-dot"></span>
           </div>
-          <h3>Se define el escenario</h3>
+          <h3>Definimos el escenario</h3>
           <p>
-            Desde el panel se elige qué probar: cambios en semaforización,
+            Desde el panel elegimos qué probar: cambios en semaforización,
             aumento de flujo, un accidente que bloquea una calle. Cualquier
-            variante que se necesite evaluar.
+            variante que necesitemos evaluar.
           </p>
         </article>
 
@@ -48,10 +48,10 @@
             <span class="hito-num">02</span>
             <span class="hito-dot"></span>
           </div>
-          <h3>Troppo arranca la simulación</h3>
+          <h3>Arrancamos la simulación</h3>
           <p>
-            El sistema arma el gemelo digital con esas condiciones y activa la
-            IA que coordina el tráfico en tiempo real, aprendiendo de cada
+            Armamos el gemelo digital con esas condiciones y activamos la IA
+            que coordina el tráfico en tiempo real, aprendiendo de cada
             segundo simulado.
           </p>
         </article>
@@ -197,8 +197,13 @@
     line-height: 1.65;
     color: rgba(21, 27, 32, 0.75);
     max-width: 560px;
-    padding-left: 18px;
-    border-left: 2px solid rgba(10, 107, 118, 0.35);
+    /* Mismo tratamiento que las cards de Misión / Visión:
+       gradient cyan sutil → blanco, border cyan, rounded, box-shadow. */
+    padding: 22px 26px;
+    background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), #fff);
+    border: 1px solid rgba(97, 225, 230, 0.28);
+    border-radius: 20px;
+    box-shadow: 0 10px 28px rgba(4, 69, 89, 0.06);
     text-align: left;
   }
   /* Reveal escalonado del header */
@@ -237,12 +242,14 @@
     min-height: 1400px;
   }
   .hito {
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid rgba(4, 69, 89, 0.14);
+    /* Gradient cyan sutil → blanco (mismo lenguaje que las cards
+       de Misión / Visión y el resto de bloques descriptivos). */
+    background: linear-gradient(180deg, rgba(97, 225, 230, 0.06), #fff);
+    border: 1px solid rgba(97, 225, 230, 0.28);
     border-radius: 16px;
     padding: 26px 28px 28px;
     box-shadow:
-      0 8px 22px rgba(4, 69, 89, 0.08),
+      0 10px 28px rgba(4, 69, 89, 0.06),
       0 0 0 0 rgba(97, 225, 230, 0);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
@@ -576,8 +583,10 @@
     /* Cards más translúcidas en mobile para que se vea Chile detrás.
        Baja el alpha del fondo y el blur mantiene la lectura del texto. */
     .hito {
-      background: rgba(255, 255, 255, 0.42);
-      border-color: rgba(4, 69, 89, 0.18);
+      /* Mobile: mantener el mismo gradient pero con más transparencia
+         para dejar respirar al mapa de Chile detrás. */
+      background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), rgba(255, 255, 255, 0.6));
+      border-color: rgba(97, 225, 230, 0.32);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }

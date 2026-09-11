@@ -298,12 +298,13 @@
     margin-top: 56px;
   }
   .stat-card {
-    /* Recuadro gris sutil como los otros bloques del bloque Problem,
-       pero manteniendo el border ARRIBA (no a la izquierda). */
-    padding: 20px 22px 22px;
-    background: rgba(4, 69, 89, 0.06);
-    border-top: 2px solid var(--navy);
-    border-radius: 0 0 10px 10px;
+    /* Mismo tratamiento que las cards de Misión / Visión:
+       gradient cyan sutil → blanco, border cyan, rounded, box-shadow. */
+    padding: 22px 24px 24px;
+    background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), #fff);
+    border: 1px solid rgba(97, 225, 230, 0.28);
+    border-radius: 20px;
+    box-shadow: 0 10px 28px rgba(4, 69, 89, 0.06);
   }
   .stat-card .num {
     font-family: var(--font-serif);
@@ -393,12 +394,13 @@
   .stat-bridge {
     margin-top: 42px;
     max-width: 760px;
-    /* Recuadro gris sutil detrás del texto para reforzar la legibilidad
-       sobre el biome. Border-left navy suave se conserva como acento. */
-    padding: 22px 26px;
-    background: rgba(4, 69, 89, 0.06);
-    border-left: 2px solid rgba(4, 69, 89, 0.14);
-    border-radius: 2px 10px 10px 2px;
+    /* Mismo tratamiento que las cards de Misión / Visión:
+       gradient cyan sutil → blanco, border cyan, rounded, box-shadow. */
+    padding: 26px 30px;
+    background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), #fff);
+    border: 1px solid rgba(97, 225, 230, 0.28);
+    border-radius: 20px;
+    box-shadow: 0 10px 28px rgba(4, 69, 89, 0.06);
   }
   .stat-bridge p {
     font-size: 15px;
