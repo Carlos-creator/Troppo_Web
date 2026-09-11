@@ -13,7 +13,7 @@ const valores = [
   {
     num: '02',
     titulo: 'Precisión',
-    desc: 'Sustento en datos reales y validación, calibrando el programa a medida de cada corredor.',
+    desc: 'Damos sustento en datos reales y validación, calibrando el programa a medida de cada corredor.',
     icon: 'target',
   },
   {
@@ -25,13 +25,13 @@ const valores = [
   {
     num: '04',
     titulo: 'Cercanía',
-    desc: 'Se diseña con quien nos contrata, no para él. Escuchamos, iteramos y validamos en conjunto.',
+    desc: 'Diseñamos con quien nos contrata, no para él. Escuchamos, iteramos y validamos en conjunto.',
     icon: 'handshake',
   },
   {
     num: '05',
     titulo: 'Sustentabilidad operacional',
-    desc: 'Al optimizar el flujo se reduce el combustible quemado en detención y la huella de la operación logística.',
+    desc: 'Al optimizar el flujo reducimos el combustible quemado en detención y la huella de la operación logística.',
     icon: 'leaf',
   },
 ];
@@ -278,10 +278,14 @@ const valores = [
     margin: 0 auto;
   }
   .valor-card {
-    background: rgba(255, 255, 255, 0.72);
-    border: 1px solid rgba(4, 69, 89, 0.14);
-    border-radius: 16px;
+    /* Gradient cyan sutil → blanco + border cyan + barra cyan-ink
+       arriba, siguiendo el mismo lenguaje del resto del sitio. */
+    background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), #fff);
+    border: 1px solid rgba(97, 225, 230, 0.28);
+    border-top: 4px solid var(--cyan-ink);
+    border-radius: 4px 4px 20px 20px;
     padding: 24px 22px 26px;
+    box-shadow: 0 10px 28px rgba(4, 69, 89, 0.06);
     transition:
       transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
       background 400ms ease,
