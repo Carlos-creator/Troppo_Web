@@ -1,0 +1,373 @@
+---
+// Sección "Vista de resultados" — comparación de dos simulaciones de
+// Troppo con las mismas condiciones: sin semáforos (referencia, izquierda)
+// y con semáforos (alternativa, derecha). Tres capturas de la vista de
+// comparación de la app (public/images/interfaz/), una por indicador, que
+// rotan solas cada INTERVAL_MS y también se pueden elegir a mano.
+
+const indicadores = [
+  {
+    id: 'congestion',
+    nombre: 'Índice de congestión',
+    img: '/images/interfaz/indice_congestion.png',
+    w: 1503,
+    h: 711,
+    texto: 'Qué tan congestionado está cada tramo: verde es fluido y rojo, congestión alta.',
+  },
+  {
+    id: 'detenido',
+    nombre: 'Tiempo detenido',
+    img: '/images/interfaz/tiempo_detenido.png',
+    w: 1502,
+    h: 710,
+    texto: 'Cuánto tiempo pasan detenidos los vehículos en cada tramo: más oscuro, más espera.',
+  },
+  {
+    id: 'los',
+    nombre: 'Nivel de servicio (LoS)',
+    img: '/images/interfaz/LoS.png',
+    w: 1503,
+    h: 711,
+    texto: 'La calidad de la circulación en cada tramo, de A (flujo libre) a F (saturado).',
+  },
+];
+---
+
+<section class="resultados sec-light" id="resultados">
+  <div class="wrap">
+    <header class="res-head">
+      <div class="sec-title">Vista de resultados</div>
+      <h2 class="sec-subtitle">Antes y después de Troppo</h2>
+      <p class="res-context">
+        Dos simulaciones con las mismas condiciones, vistas en la comparación
+        de la aplicación: a la izquierda, el escenario sin semáforos; a la
+        derecha, el escenario con semáforos.
+      </p>
+    </header>
+
+    <div class="res-viewer" data-res>
+      <!-- Captura principal (crossfade entre las tres) -->
+      <div class="res-frame">
+        {
+          indicadores.map((ind, i) => (
+            <img
+              class:list={['res-slide', { 'is-active': i === 0 }]}
+              src={ind.img}
+              width={ind.w}
+              height={ind.h}
+              alt={`${ind.nombre}: escenario sin semáforos (izquierda) y con semáforos (derecha)`}
+              loading="lazy"
+              decoding="async"
+              aria-hidden={i === 0 ? undefined : 'true'}
+            />
+          ))
+        }
+        <button class="res-arrow res-prev" type="button" aria-label="Indicador anterior" data-res-prev>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 L8 12 L15 19" /></svg>
+        </button>
+        <button class="res-arrow res-next" type="button" aria-label="Indicador siguiente" data-res-next>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 L16 12 L9 19" /></svg>
+        </button>
+      </div>
+
+      <!-- Selector de indicador = indicador de posición (con barra de tiempo) -->
+      <div class="res-tabs" role="tablist" aria-label="Indicadores de la comparación">
+        {
+          indicadores.map((ind, i) => (
+            <button
+              class:list={['res-tab', { 'is-active': i === 0 }]}
+              type="button"
+              role="tab"
+              aria-selected={i === 0 ? 'true' : 'false'}
+              data-res-tab={i}
+            >
+              <span class="res-bar" aria-hidden="true"></span>
+              <span class="res-tab-label">{ind.nombre}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <!-- Texto del indicador activo -->
+      <div class="res-texts" aria-live="polite">
+        {
+          indicadores.map((ind, i) => (
+            <p class:list={['res-text', { 'is-active': i === 0 }]} data-res-text={i}>
+              {ind.texto}
+            </p>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .resultados {
+    /* Mismo fondo beige que tenía esta posición de la página.
+       --res-interval lo fija el script (INTERVAL_MS) para la barra. */
+    --res-interval: 6000ms;
+    padding: 110px 0;
+    background: rgba(255, 248, 234, 0.72);
+    color: var(--ink);
+  }
+  .res-head {
+    max-width: 720px;
+    margin-bottom: 40px;
+  }
+  .res-head h2 {
+    margin-top: 14px;
+  }
+  .res-context {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(21, 27, 32, 0.75);
+    max-width: 600px;
+  }
+
+  /* ---- Captura principal ---- */
+  .res-frame {
+    position: relative;
+    aspect-ratio: 1503 / 711;
+    background: var(--navy-deep);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 18px 44px rgba(4, 69, 89, 0.18);
+  }
+  .res-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    /* contain: la captura se ve completa, sin recortes ni deformación */
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 600ms ease;
+  }
+  .res-slide.is-active {
+    opacity: 1;
+  }
+
+  /* Flechas sobre los costados de la captura */
+  .res-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 248, 234, 0.92);
+    border: 1px solid rgba(97, 225, 230, 0.45);
+    color: var(--navy);
+    box-shadow: 0 6px 16px rgba(4, 69, 89, 0.25);
+    transition: background 200ms ease, transform 200ms ease;
+    z-index: 2;
+  }
+  .res-arrow:hover {
+    background: #fff;
+    transform: translateY(-50%) scale(1.06);
+  }
+  .res-arrow:focus-visible {
+    outline: 3px solid var(--cyan);
+    outline-offset: 2px;
+  }
+  .res-prev { left: 14px; }
+  .res-next { right: 14px; }
+  .res-arrow svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ---- Selector de indicadores ---- */
+  .res-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 24px;
+  }
+  .res-tab {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 0 4px;
+    text-align: left;
+    color: var(--navy);
+    opacity: 0.55;
+    transition: opacity 250ms ease;
+  }
+  .res-tab:hover,
+  .res-tab.is-active {
+    opacity: 1;
+  }
+  .res-tab:focus-visible {
+    outline: 3px solid var(--cyan);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+  .res-tab-label {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  /* Barra: pista + relleno que avanza durante el intervalo automático */
+  .res-bar {
+    position: relative;
+    display: block;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(4, 69, 89, 0.15);
+    overflow: hidden;
+  }
+  .res-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--cyan-ink);
+    transform-origin: left center;
+    transform: scaleX(0);
+  }
+  .res-tab.is-active .res-bar::after {
+    transform: scaleX(1);
+  }
+  .res-viewer.is-running .res-tab.is-active .res-bar::after {
+    animation: res-fill var(--res-interval) linear forwards;
+  }
+  @keyframes res-fill {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  /* ---- Texto del indicador ---- */
+  .res-texts {
+    display: grid;
+    margin-top: 18px;
+  }
+  .res-text {
+    /* Los tres textos ocupan la misma celda: la altura no "salta" */
+    grid-area: 1 / 1;
+    max-width: 760px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(21, 27, 32, 0.78);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 400ms ease, visibility 0s linear 400ms;
+  }
+  .res-text.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 400ms ease;
+  }
+
+  @media (max-width: 860px) {
+    .res-head { margin-bottom: 28px; }
+    .res-frame { border-radius: 14px; }
+    .res-arrow { width: 34px; height: 34px; }
+    .res-arrow svg { width: 16px; height: 16px; }
+    .res-prev { left: 8px; }
+    .res-next { right: 8px; }
+    .res-tabs { gap: 10px; margin-top: 18px; }
+    .res-tab-label { font-size: 12.5px; }
+    .res-text { font-size: 14.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .res-slide,
+    .res-text,
+    .res-text.is-active { transition: none; }
+  }
+</style>
+
+<script>
+  // Carrusel de indicadores: avance automático cada INTERVAL_MS y
+  // navegación manual (flechas, pestañas y teclado). Todo cambio pasa por
+  // show(), que actualiza imagen, texto y pestaña juntos y reinicia el
+  // temporizador desde cero, así lo manual y lo automático nunca se pisan.
+  // Sólo corre mientras la sección está en pantalla y la pestaña visible.
+  const root = document.querySelector<HTMLElement>('[data-res]');
+  if (root) {
+    const section = root.closest<HTMLElement>('.resultados')!;
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('.res-slide'));
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-res-tab]'));
+    const texts = Array.from(root.querySelectorAll<HTMLElement>('[data-res-text]'));
+    const n = slides.length;
+    // Intervalo del avance automático (~5 s pedidos; 6 s porque cada
+    // captura tiene bastante detalle). El CSS lo usa para la barra.
+    const INTERVAL_MS = 6000;
+    section.style.setProperty('--res-interval', `${INTERVAL_MS}ms`);
+
+    let index = 0;
+    let timer = 0;
+    let onScreen = false;
+
+    const stop = () => {
+      window.clearTimeout(timer);
+      root.classList.remove('is-running');
+    };
+
+    const start = () => {
+      stop();
+      if (!onScreen || document.hidden) return;
+      // Reinicia la animación de la barra (reflow entre quitar y poner)
+      void root.offsetWidth;
+      root.classList.add('is-running');
+      timer = window.setTimeout(() => show(index + 1), INTERVAL_MS);
+    };
+
+    const show = (i: number) => {
+      index = ((i % n) + n) % n;
+      slides.forEach((el, k) => {
+        el.classList.toggle('is-active', k === index);
+        if (k === index) el.removeAttribute('aria-hidden');
+        else el.setAttribute('aria-hidden', 'true');
+      });
+      texts.forEach((el, k) => el.classList.toggle('is-active', k === index));
+      tabs.forEach((el, k) => {
+        el.classList.toggle('is-active', k === index);
+        el.setAttribute('aria-selected', k === index ? 'true' : 'false');
+      });
+      start();
+    };
+
+    root.querySelector('[data-res-prev]')?.addEventListener('click', () => show(index - 1));
+    root.querySelector('[data-res-next]')?.addEventListener('click', () => show(index + 1));
+    tabs.forEach((tab, k) => tab.addEventListener('click', () => show(k)));
+    root.querySelector('[role="tablist"]')?.addEventListener('keydown', (e) => {
+      const key = (e as KeyboardEvent).key;
+      if (key === 'ArrowRight' || key === 'ArrowLeft') {
+        e.preventDefault();
+        show(index + (key === 'ArrowRight' ? 1 : -1));
+        tabs[index].focus();
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(
+        ([entry]) => {
+          onScreen = entry.isIntersecting;
+          if (onScreen) start();
+          else stop();
+        },
+        { threshold: 0.25 },
+      ).observe(root);
+    } else {
+      onScreen = true;
+      start();
+    }
+  }
+</script>

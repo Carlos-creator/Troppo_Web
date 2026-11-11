@@ -1,85 +1,133 @@
 ---
-// Hero principal — titular + brújula animada + card destacada
+// Hero principal. Estructura (de arriba hacia abajo):
+//   1. Logo Troppo beige grande y centrado
+//   2. Título (izquierda) + brújula animada con LiDAR sweep (derecha)
+//   3. Texto descriptivo centrado
+//   4. Subtítulo del proyecto universitario
+//   5. Tarjeta de la Feria → enlace a la sección #feria
 ---
 
 <section class="hero" id="top">
   <div class="wrap hero-inner">
-    <div>
-      <div class="hero-tag">
-        <span class="dot"></span>
-        34.ª Feria de Software USM · 13 de noviembre
-      </div>
+    <img
+      class="hero-logo"
+      src="/images/logo/logo_troppo_beige_recortado.png"
+      alt="Troppo"
+      width="3330"
+      height="613"
+    />
+
+    <div class="hero-main">
+      <!-- En escritorio el título va en 4 líneas con cortes fijos (.h1-br);
+           en móvil los cortes se ocultan y el texto se ajusta solo. -->
       <h1>
-        <em>Simulamos</em> el futuro del tráfico<br />
-         antes de aplicar <em>soluciones</em>.
+        Software de <em>optimización<br class="h1-br" /> y monitoreo</em> de la<br class="h1-br" />
+        semaforización<br class="h1-br" /> del tráfico
       </h1>
-      <p>
-        Un gemelo digital del tráfico en el acceso a San Antonio, entrenado con
-        redes neuronales de grafos y aprendizaje por refuerzo, para probar
-        políticas de semaforización sin arriesgar una sola maniobra en terreno.
-      </p>
-      <div class="hero-ctas">
-        <a href="#demo" class="btn-primary">Ver la simulación</a>
+
+      <div class="hero-visual">
+        <div class="lidar-sweep" aria-hidden="true">
+          <span class="ring"></span>
+          <span class="ring"></span>
+          <span class="ring"></span>
+        </div>
+        <img
+          class="compass-big"
+          src="/images/logo/logo_light_sinfondo.png"
+          alt=""
+          aria-hidden="true"
+          width="420"
+          height="420"
+          draggable="false"
+        />
       </div>
     </div>
 
-    <div class="hero-visual">
-      <div class="lidar-sweep" aria-hidden="true">
-        <span class="ring"></span>
-        <span class="ring"></span>
-        <span class="ring"></span>
-      </div>
-      <div class="lidar-scanner" aria-hidden="true">
-        <div class="scanner-arm"></div>
-        <div class="scanner-blip">
-          <div class="blip-ring"></div>
-          <div class="blip-dot"></div>
-        </div>
-        <div class="scanner-hud">DETECTADO</div>
-      </div>
-      <img
-        class="compass-big"
-        src="/images/logo/logo_light_sinfondo.png"
-        alt=""
-        aria-hidden="true"
-        width="420"
-        height="420"
-        draggable="false"
-      />
-    </div>
+    <p class="hero-desc">
+      Troppo permite diseñar y evaluar semaforización inteligente mediante
+      simulación e inteligencia artificial, y monitorear la red mediante un
+      gemelo digital alimentado por datos simulados de sensores IoT.
+    </p>
+
+    <p class="hero-sub">
+      Un proyecto universitario orientado a resolver desafíos de congestión y gestión vial
+    </p>
+
+    <!-- Misma tarjeta de la Feria (sin cambios de diseño), ahora enlace a
+         la sección de la Feria al final de la página -->
+    <a class="hero-tag" href="#feria">
+      <span class="dot"></span>
+      34.ª Feria de Software USM · 13 de noviembre
+    </a>
   </div>
 </section>
 
 <style>
   .hero {
     /* Gradient: arriba más denso para que el h1 se lea claro contra
-       el biome, y hacia el bottom afloja para que el paisaje se vea
-       nítido (matcheando la nitidez de la sección Desafio que sigue). */
+       el biome, y hacia el bottom afloja. En el último tramo empieza la
+       transición hacia Problema (0.55 → 0.42), que la banda superior de
+       Problem.astro continúa hasta el cream. */
     background: linear-gradient(
       180deg,
       rgba(4, 69, 89, 0.78) 0%,
       rgba(4, 69, 89, 0.68) 40%,
-      rgba(4, 69, 89, 0.55) 100%
+      rgba(4, 69, 89, 0.55) 72%,
+      rgba(4, 69, 89, 0.42) 100%
     );
     color: var(--cream);
     position: relative;
-    /* overflow visible en Y para que el detector LiDAR (scanner-arm, blip,
-       HUD) pueda extenderse desde la brújula hacia abajo dentro de Desafio.
+    /* overflow visible en Y para que las ondas de click (ripples) puedan
+       extenderse desde la brújula hacia abajo dentro de Desafio.
        Se mantiene clip horizontal para no generar scroll lateral. */
     overflow-x: clip;
     overflow-y: visible;
-    /* z-index elevado para que los elementos del scanner que se extienden
-       hacia abajo rendericen por encima del gradiente de Desafio. */
+    /* z-index elevado para que esas ondas rendericen por encima del
+       gradiente de Desafio. */
     z-index: 4;
-    padding: 100px 0 120px;
+    /* 150px arriba: separa todo el bloque del Home de la barra fija */
+    padding: 150px 0 120px;
   }
   .hero-inner {
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 40px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    text-align: center;
     position: relative;
     z-index: 2;
+  }
+  /* 1. Logo grande centrado (PNG recortado a su bbox, aspect ~5.43) */
+  .hero-logo {
+    display: block;
+    width: min(440px, 80%);
+    height: auto;
+    margin-bottom: 44px;
+  }
+  /* 2. Título a la izquierda (todo el ancho libre) + brújula a la derecha */
+  .hero-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 40px;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+  }
+  /* 3. Texto descriptivo centrado, a lo ancho */
+  .hero-desc {
+    margin: 28px auto 0;
+    max-width: 940px;
+    font-size: 19px;
+    line-height: 1.6;
+  }
+  /* 4. Subtítulo del proyecto universitario (secundario al h1) */
+  .hero-sub {
+    margin: 36px auto 18px;
+    max-width: none;
+    font-family: var(--font-title);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.35;
+    color: var(--cream);
   }
   .hero-tag {
     display: inline-flex;
@@ -91,7 +139,6 @@
     border: 1px solid rgba(97, 225, 230, 0.4);
     border-radius: 100px;
     padding: 8px 16px;
-    margin-bottom: 28px;
   }
   .hero-tag .dot {
     width: 6px;
@@ -99,13 +146,16 @@
     border-radius: 50%;
     background: var(--lime);
   }
+  /* Título en 4 líneas en escritorio (cortes fijos con .h1-br). El tamaño
+     baja proporcionalmente al ancho (tope 56px) para que cada línea quepa
+     en su columna en pantallas más angostas. */
   h1 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: 56px;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: clamp(34px, calc((100vw - 404px) / 12.5), 56px);
     line-height: 1.08;
     letter-spacing: -0.5px;
-    max-width: 560px;
+    text-wrap: balance;
   }
   h1 em {
     font-style: italic;
@@ -117,20 +167,6 @@
     color: rgba(255, 248, 234, 0.78);
     max-width: 460px;
   }
-  .hero-ctas {
-    display: flex;
-    gap: 16px;
-    margin-top: 36px;
-    align-items: center;
-  }
-  .btn-primary {
-    background: var(--lime);
-    color: var(--navy-deep);
-    font-weight: 700;
-    font-size: 15px;
-    padding: 15px 28px;
-    border-radius: 100px;
-  }
   .btn-ghost {
     color: var(--cream);
     font-weight: 600;
@@ -138,11 +174,11 @@
     padding: 15px 10px;
     border-bottom: 1px solid rgba(255, 248, 234, 0.4);
   }
+  /* Brújula más chica (antes 420px) para compartir fila con el título */
   .hero-visual {
     position: relative;
-    height: 420px;
-    /* Eje Y compartido: brújula, lidar-sweep y scanner-arm todos pivotan aquí.
-       En mobile se sobrescribe para empujar la brújula hacia arriba. */
+    height: 300px;
+    /* Eje Y compartido: brújula y lidar-sweep pivotan aquí. */
     --compass-cy: 50%;
   }
   .compass-big {
@@ -150,8 +186,8 @@
     top: var(--compass-cy);
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 420px;
-    height: 420px;
+    width: 300px;
+    height: 300px;
     opacity: 0.6;
     animation: spin 60s linear infinite;
     z-index: 1;
@@ -170,8 +206,8 @@
     position: absolute;
     top: var(--compass-cy);
     left: 50%;
-    width: 420px;
-    height: 420px;
+    width: 300px;
+    height: 300px;
     transform: translate(-50%, -50%);
     pointer-events: none;
     z-index: 0;
@@ -215,99 +251,6 @@
     animation-duration: 1.8s;
   }
 
-  /* ---------- LIDAR SCANNER (hover) ---------- */
-  /* Al pasar el mouse sobre el hero, aparece un brazo que sigue al cursor
-     y un blip pulsante en el punto detectado. Efecto radar activo. */
-  .lidar-scanner {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 250ms ease;
-    z-index: 3;
-  }
-  .lidar-scanner.active {
-    opacity: 1;
-  }
-  .scanner-arm {
-    position: absolute;
-    top: var(--compass-cy);
-    left: 50%;
-    height: 1.5px;
-    width: 0;
-    background: linear-gradient(
-      to right,
-      rgba(97, 225, 230, 0) 0%,
-      rgba(97, 225, 230, 0.15) 20%,
-      rgba(97, 225, 230, 0.9) 100%
-    );
-    transform-origin: left center;
-    box-shadow: 0 0 8px rgba(97, 225, 230, 0.4);
-    will-change: transform, width;
-  }
-  .scanner-blip {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 20px;
-    height: 20px;
-    transform: translate(-50%, -50%);
-    will-change: top, left;
-  }
-  .blip-ring {
-    position: absolute;
-    inset: 0;
-    border: 1.5px solid rgba(97, 225, 230, 0.75);
-    border-radius: 50%;
-    animation: blip-pulse 1.1s ease-out infinite;
-  }
-  .blip-dot {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 6px;
-    height: 6px;
-    background: var(--cyan);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 10px var(--cyan);
-  }
-  @keyframes blip-pulse {
-    0% {
-      transform: scale(0.4);
-      opacity: 0.9;
-    }
-    100% {
-      transform: scale(2);
-      opacity: 0;
-    }
-  }
-  .scanner-hud {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 4px 10px;
-    font-family: var(--font-sans);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    color: var(--cyan);
-    /* Glassmorphism — se ve la brújula a través del recuadro */
-    background: rgba(4, 69, 89, 0.28);
-    backdrop-filter: blur(10px) saturate(140%);
-    -webkit-backdrop-filter: blur(10px) saturate(140%);
-    border: 1px solid rgba(97, 225, 230, 0.3);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    white-space: nowrap;
-    /* Posicionado debajo del cursor (antes tapaba la brújula por arriba) */
-    transform: translate(14px, 20px);
-    will-change: top, left;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .lidar-sweep .ring {
       animation: none;
@@ -316,12 +259,7 @@
     .compass-big {
       animation: none;
     }
-    .blip-ring {
-      animation: none;
-    }
   }
-  /* En touch el scanner también funciona (finger tracking) — se activa
-     con touchstart/touchmove. Ver script abajo. */
 
   /* ---------- CLICK RIPPLES ---------- */
   /* Impacto tipo agua: flash brillante + 3 ondas concéntricas escalonadas.
@@ -398,12 +336,20 @@
     }
   }
   @media (max-width: 860px) {
-    .hero-inner {
+    .hero-logo { width: min(280px, 80%); margin-bottom: 32px; }
+    .hero-main {
       grid-template-columns: 1fr;
+      gap: 0;
+      text-align: center;
     }
     h1 {
       font-size: 38px;
+      margin: 0 auto;
     }
+    .h1-br { display: none; }
+    .hero { padding-top: 120px; }
+    .hero-desc { margin-top: 8px; font-size: 17px; }
+    .hero-sub { font-size: 18px; margin-top: 28px; }
     /* Alto suficiente para la brújula sola en mobile */
     .hero-visual {
       height: 320px;
@@ -419,134 +365,11 @@
 </style>
 
 <script>
-  // LiDAR scanner: la zona de detección ahora cubre TODA la sección
-  // Hero (no sólo la brújula). El brazo sigue pivotando desde el centro
-  // de la brújula pero se extiende a cualquier parte del hero. Esto
-  // duplica (y más) el área x/y del detector.
-  const hero = document.querySelector<HTMLElement>('.hero');
+  // Ripples al hacer click sobre la brújula — impacto de agua con
+  // múltiples ondas concéntricas.
   const heroVisual = document.querySelector<HTMLElement>('.hero-visual');
-  const scanner = heroVisual?.querySelector<HTMLElement>('.lidar-scanner');
-  const arm = scanner?.querySelector<HTMLElement>('.scanner-arm');
-  const blip = scanner?.querySelector<HTMLElement>('.scanner-blip');
-  const hud = scanner?.querySelector<HTMLElement>('.scanner-hud');
 
-  if (hero && heroVisual && scanner && arm && blip && hud) {
-    let ticking = false;
-    let latestX = 0;
-    let latestY = 0;
-
-    // El centro Y de la brújula viene de la CSS var --compass-cy (50% desktop,
-    // 32% mobile). Se cachea y se re-lee en resize para no llamar
-    // getComputedStyle en cada frame.
-    let compassCyRatio = 0.5;
-    const readCompassCy = () => {
-      const raw = getComputedStyle(heroVisual).getPropertyValue('--compass-cy').trim();
-      const parsed = parseFloat(raw);
-      compassCyRatio = Number.isNaN(parsed) ? 0.5 : parsed / 100;
-    };
-    readCompassCy();
-    window.addEventListener('resize', readCompassCy);
-
-    const update = () => {
-      const rect = heroVisual.getBoundingClientRect();
-      const centerX = rect.width / 2;
-      const centerY = rect.height * compassCyRatio;
-      const dx = latestX - centerX;
-      const dy = latestY - centerY;
-
-      // Brazo desde el centro hacia el cursor
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const angleDeg = (Math.atan2(dy, dx) * 180) / Math.PI;
-      arm.style.width = `${distance}px`;
-      arm.style.transform = `translate(0, -50%) rotate(${angleDeg}deg)`;
-
-      // Blip en la posición del cursor
-      blip.style.left = `${latestX}px`;
-      blip.style.top = `${latestY}px`;
-
-      // HUD con coordenadas simuladas — sensación "sensor real"
-      const coordX = Math.round(dx);
-      const coordY = Math.round(dy);
-      hud.style.left = `${latestX}px`;
-      hud.style.top = `${latestY}px`;
-      hud.textContent = `DETECTADO · X${coordX >= 0 ? '+' : ''}${coordX} Y${coordY >= 0 ? '+' : ''}${coordY}`;
-
-      ticking = false;
-    };
-
-    const updatePosition = (clientX: number, clientY: number) => {
-      const rect = heroVisual.getBoundingClientRect();
-      latestX = clientX - rect.left;
-      latestY = clientY - rect.top;
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(update);
-    };
-
-    // ---- MOUSE ----
-    // Zona detectora extendida: desde el top del Hero hasta apenas
-    // encima del eyebrow "¿Tienes algún desafío…" en Desafio. El scanner
-    // se activa mientras el cursor esté dentro de esa banda vertical.
-    const desafioEyebrow = document.querySelector<HTMLElement>('.desafio-eyebrow');
-
-    const isInDetectorZone = (clientY: number) => {
-      const heroRect = hero.getBoundingClientRect();
-      if (clientY < heroRect.top) return false;
-      if (desafioEyebrow) {
-        const eyebrowRect = desafioEyebrow.getBoundingClientRect();
-        // 14px de aire encima del eyebrow para que no lo tape el HUD
-        return clientY < eyebrowRect.top - 14;
-      }
-      return clientY < heroRect.bottom;
-    };
-
-    document.addEventListener('mousemove', (e) => {
-      if (isInDetectorZone(e.clientY)) {
-        scanner.classList.add('active');
-        updatePosition(e.clientX, e.clientY);
-      } else {
-        scanner.classList.remove('active');
-      }
-    });
-
-    // ---- TOUCH ----
-    // Finger tracking en mobile: mientras el dedo pasa sobre el hero
-    // (incluso durante scroll — touchmove es passive, no bloquea el scroll)
-    // el scanner sigue el dedo. Se desactiva con delay al levantar el dedo
-    // para que no parpadee.
-    let touchFadeTimer = 0;
-
-    hero.addEventListener(
-      'touchstart',
-      (e) => {
-        window.clearTimeout(touchFadeTimer);
-        scanner.classList.add('active');
-        const t = e.touches[0];
-        if (t) updatePosition(t.clientX, t.clientY);
-      },
-      { passive: true },
-    );
-
-    hero.addEventListener(
-      'touchmove',
-      (e) => {
-        const t = e.touches[0];
-        if (t) updatePosition(t.clientX, t.clientY);
-      },
-      { passive: true },
-    );
-
-    hero.addEventListener(
-      'touchend',
-      () => {
-        touchFadeTimer = window.setTimeout(() => {
-          scanner.classList.remove('active');
-        }, 900);
-      },
-      { passive: true },
-    );
-
-    // Ripples al hacer click — impacto de agua con multiples ondas concentricas.
+  if (heroVisual) {
     const spawnRipple = (x: number, y: number, delay: number, klass: string) => {
       window.setTimeout(() => {
         const el = document.createElement('span');

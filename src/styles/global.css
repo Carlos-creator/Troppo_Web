@@ -3,22 +3,39 @@
    Variables de marca, reset y tipografía base
    ============================================================ */
 
-/* Fuente oficial de marca — self-hosted.
-   Arsenica by Zetafonts (versión Trial, licencia CC-BY-NC).
-   Uso permitido en proyectos no comerciales con atribución.
-   Fuente original: https://www.zetafonts.com/arsenica */
+/* Fuente de títulos — TeX Gyre Heros (self-hosted).
+   Clon libre de Helvetica (derivado de URW Nimbus Sans), elegido como
+   sustituto porque Helvetica tiene licencia comercial y no puede
+   garantizarse en Windows/Android. Licencia GUST Font License
+   (ver /fonts/tex-gyre-heros/GUST-FONT-LICENSE.txt).
+   Sólo se cargan los 4 estilos usados: 400, 400 italic, 700, 700 italic.
+   El navegador descarga cada archivo únicamente si algún texto lo usa. */
 @font-face {
-  font-family: 'Arsenica';
-  src: url('/fonts/ArsenicaTrial-Regular.ttf') format('truetype');
+  font-family: 'TeX Gyre Heros';
+  src: url('/fonts/tex-gyre-heros/texgyreheros-regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Arsenica';
-  src: url('/fonts/ArsenicaTrial-Bold.ttf') format('truetype');
+  font-family: 'TeX Gyre Heros';
+  src: url('/fonts/tex-gyre-heros/texgyreheros-italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TeX Gyre Heros';
+  src: url('/fonts/tex-gyre-heros/texgyreheros-bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TeX Gyre Heros';
+  src: url('/fonts/tex-gyre-heros/texgyreheros-bolditalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
   font-display: swap;
 }
 
@@ -37,20 +54,27 @@
      (líneas, glow, pins, botones) — esos deben mantener --cyan. */
   --cyan-ink: #0A6B76;
 
-  /* Tipografías
-     - --font-brand: Arsenica Trial (Zetafonts, CC-BY-NC). Solo para el
-       wordmark TROPPO — no usar en texto largo.
-     - --font-serif: Fraunces para titulares y elementos serif del sitio.
-     - --font-sans: Montserrat para texto general.
-     - --font-title: Helvetica para etiquetas técnicas. */
-  --font-brand: 'Arsenica', 'Fraunces', 'Georgia', serif;
-  --font-serif: 'Fraunces', 'Georgia', serif;
+  /* Tipografías (manual de identidad)
+     - --font-title: TeX Gyre Heros (sustituto de Helvetica).
+         · H1/H2 → 700 (sus <em> de acento → 700 italic)
+         · Subtítulos H3/H4 → 400; títulos de tarjeta y nombres → 700
+         · Cifras y numeraciones destacadas → 700
+       Sólo existen los pesos 400 y 700: no usar 500/600 con esta familia.
+     - --font-sans: Montserrat para texto general (400) y texto
+       destacado (500/600/700, italic 500). Cargada desde Google Fonts.
+     Los fallbacks sólo actúan si el archivo self-hosted no carga. */
   --font-sans: 'Montserrat', system-ui, -apple-system, sans-serif;
-  --font-title: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-title: 'TeX Gyre Heros', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   /* Layout */
   --wrap-max: 1180px;
   --wrap-padding: 32px;
+
+  /* Encabezados de sección (todas menos el Home): el TÍTULO (nombre de
+     la sección, p. ej. "VISTA DE RESULTADOS") es el elemento grande y el
+     SUBTÍTULO (la frase debajo) el secundario. */
+  --sec-title-size: 38px;
+  --sec-subtitle-size: 24px;
 }
 
 *,
@@ -107,5 +131,48 @@ button {
 @media (max-width: 860px) {
   :root {
     --wrap-padding: 20px;
+    --sec-title-size: 30px;
+    --sec-subtitle-size: 20px;
   }
+}
+
+/* ============================================================
+   Jerarquía de encabezados de sección
+   - .sec-dark / .sec-light en el <section> fijan los colores según
+     su fondo (azul / claro).
+   - .sec-title: título de la sección, escritura normal (mayúsculas y
+     minúsculas según redacción), negrita, color normal del fondo.
+   - .sec-subtitle: subtítulo en MAYÚSCULAS, sin negrita; las palabras
+     destacadas (<em>) usan el color de acento del fondo.
+   Los componentes sólo definen layout (márgenes, alineación); la
+   tipografía y el color de estos encabezados viven aquí.
+   ============================================================ */
+.sec-dark {
+  --sec-text: var(--cream);  /* #FFF8EA */
+  --sec-accent: var(--cyan); /* #61E1E6 */
+}
+.sec-light {
+  --sec-text: var(--navy);       /* #044559 */
+  --sec-accent: var(--cyan-ink); /* #0A6B76, acento sobre fondos claros */
+}
+.sec-title {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: var(--sec-title-size);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--sec-text);
+}
+.sec-subtitle {
+  font-family: var(--font-title);
+  font-weight: 400;
+  font-size: var(--sec-subtitle-size);
+  line-height: 1.35;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--sec-text);
+}
+.sec-subtitle em {
+  font-style: italic;
+  color: var(--sec-accent);
 }

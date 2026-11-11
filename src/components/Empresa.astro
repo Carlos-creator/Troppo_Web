@@ -1,19 +1,21 @@
 ---
-// Sección 8 rúbrica — "Zona empresa" (parte MVV)
-// Contiene Misión + Visión side-by-side y luego los 5 Valores en grid.
-// El componente Team.astro sigue debajo con el equipo (fotos + correos).
+// Sección 8 rúbrica — "Nosotros" (antes "Zona empresa"): una única sección continua (mismo
+// fondo) con cuatro bloques en este orden:
+//   1. Equipo (Team.astro)          2. Colaboradores (Team.astro)
+//   3. Propósito y dirección (Misión + Visión)   4. Los 5 valores
+import Team from './Team.astro';
 
 const valores = [
   {
     num: '01',
     titulo: 'Innovación',
-    desc: 'Integramos simulación de tráfico, inteligencia artificial y monitoreo en vivo para transformar la forma en que se evalúan y gestionan las decisiones de movilidad.',
+    desc: 'Troppo integra simulación de tráfico, inteligencia artificial y monitoreo en vivo para transformar la forma en que se evalúan y gestionan las decisiones de movilidad.',
     icon: 'spark',
   },
   {
     num: '02',
     titulo: 'Precisión',
-    desc: 'Damos sustento en datos reales y validación, calibrando el programa a medida de cada corredor.',
+    desc: 'Cada implementación se sustenta en datos reales y validación, y el programa se calibra a medida de cada zona de estudio.',
     icon: 'target',
   },
   {
@@ -31,20 +33,32 @@ const valores = [
   {
     num: '05',
     titulo: 'Sustentabilidad operacional',
-    desc: 'Al optimizar el flujo reducimos el combustible quemado en detención y la huella de la operación logística.',
+    desc: 'Optimizar el flujo reduce el combustible quemado en detención y la huella de la operación logística.',
     icon: 'leaf',
   },
 ];
 ---
 
-<section class="empresa" id="empresa">
+<section class="empresa sec-dark" id="empresa">
   <div class="wrap">
     <header class="empresa-head">
-      <div class="empresa-eyebrow">ZONA EMPRESA</div>
-      <h2>¿Quiénes somos, hacia dónde vamos, cómo trabajamos?</h2>
+      <div class="empresa-eyebrow sec-title">Nosotros</div>
+      <h2 class="sec-subtitle">El equipo detrás de Troppo</h2>
     </header>
 
-    <!-- Misión + Visión lado a lado -->
+    <!-- 1. Equipo -->
+    <Team />
+
+    <!-- 2. Colaboradores -->
+    <div class="bloque-head" data-reveal>
+      <div class="bloque-eyebrow sec-subtitle">COLABORADORES</div>
+    </div>
+    <Team grupo="colaboradores" />
+
+    <!-- 3. Propósito y dirección: Misión + Visión lado a lado -->
+    <div class="bloque-head" data-reveal>
+      <div class="bloque-eyebrow sec-subtitle">PROPÓSITO Y DIRECCIÓN</div>
+    </div>
     <div class="mv-grid">
       <article class="mv-card mv-mision" data-reveal>
         <div class="mv-label">
@@ -61,7 +75,7 @@ const valores = [
         </div>
         <p>
           Optimizar la gestión del tráfico portuario mediante
-          <strong>simulación bimodal</strong> y
+          <strong>simulación</strong> y
           <strong>análisis inteligente en tiempo real</strong>, entregando a
           entidades importantes herramientas basadas en datos que reduzcan
           tiempos de espera, mejoren el flujo vehicular y respalden decisiones
@@ -89,10 +103,9 @@ const valores = [
       </article>
     </div>
 
-    <!-- Valores -->
+    <!-- 4. Valores -->
     <div class="valores-head" data-reveal>
-      <div class="valores-eyebrow">LOS 5 VALORES QUE NOS GUÍAN</div>
-      <h3>Lo que hacemos cuando nadie está mirando.</h3>
+      <div class="valores-eyebrow sec-subtitle">LOS 5 VALORES QUE NOS GUÍAN</div>
     </div>
     <div class="valores-grid">
       {
@@ -147,9 +160,14 @@ const valores = [
 </section>
 
 <style>
+  /* Fondo navy único para toda la zona (antes cream aquí y navy en el
+     equipo): equipo, colaboradores, propósito y valores se leen como una
+     sola sección. Es el mismo fondo que tenía la sección del equipo, así
+     sus tarjetas quedan exactamente igual. */
   .empresa {
     padding: 110px 0 120px;
-    background: rgba(255, 248, 234, 0.72);
+    background: rgba(3, 53, 68, 0.84);
+    color: var(--cream);
     position: relative;
     overflow: hidden;
   }
@@ -162,22 +180,10 @@ const valores = [
     text-align: center;
   }
   .empresa-eyebrow {
-    font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    color: var(--cyan-ink);
-    opacity: 1;
     margin-bottom: 14px;
   }
   .empresa-head h2 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: 38px;
-    line-height: 1.18;
-    color: var(--navy);
     margin: 0;
-    letter-spacing: -0.3px;
   }
 
   /* ---- MISIÓN + VISIÓN ---- */
@@ -188,36 +194,61 @@ const valores = [
     max-width: 1080px;
     margin: 0 auto;
   }
+  /* Tarjetas de vidrio sobre el fondo navy de la zona: mismo lenguaje
+     que las tarjetas de equipo y las de "¿Qué ofrece Troppo?" (fondo
+     cream casi transparente, borde cream sutil, halo cyan en la esquina
+     al hacer hover, borde cyan + sombra profunda en hover). */
   .mv-card {
-    /* Ambas cards (misión y visión) usan el mismo gradient sutil cyan
-       para verse con la misma transparencia/textura. */
-    background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), #fff);
-    border: 1px solid rgba(97, 225, 230, 0.28);
+    background: rgba(255, 248, 234, 0.045);
+    border: 1px solid rgba(255, 248, 234, 0.14);
     border-radius: 20px;
     padding: 38px 40px;
-    box-shadow: 0 10px 28px rgba(4, 69, 89, 0.06);
     position: relative;
-    transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 400ms ease;
+    overflow: hidden;
+    transition:
+      transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
+      background 400ms ease,
+      border-color 400ms ease,
+      box-shadow 400ms ease;
   }
+  .mv-card::before,
+  .valor-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      120% 90% at 100% 0%,
+      rgba(97, 225, 230, 0.14) 0%,
+      transparent 55%
+    );
+    opacity: 0;
+    transition: opacity 500ms ease;
+    pointer-events: none;
+  }
+  .mv-card:hover::before,
+  .valor-card:hover::before { opacity: 1; }
   .mv-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 18px 40px rgba(4, 69, 89, 0.12);
+    background: rgba(97, 225, 230, 0.055);
+    border-color: rgba(97, 225, 230, 0.4);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.25);
   }
   .mv-label {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     padding: 6px 14px 6px 6px;
-    background: rgba(97, 225, 230, 0.14);
-    border: 1px solid rgba(97, 225, 230, 0.35);
+    background: rgba(97, 225, 230, 0.10);
+    border: 1px solid rgba(97, 225, 230, 0.22);
     border-radius: 100px;
     font-family: var(--font-sans);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 1.6px;
-    color: var(--navy);
+    color: var(--cream);
     text-transform: uppercase;
     margin-bottom: 20px;
+    position: relative;
   }
   .mv-label-icon {
     width: 22px;
@@ -229,47 +260,35 @@ const valores = [
     box-sizing: border-box;
   }
   .mv-card p {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-size: 17px;
     line-height: 1.55;
-    color: var(--navy);
+    color: rgba(255, 248, 234, 0.82);
     margin: 0;
-    font-weight: 400;
+    font-weight: 500;
+    position: relative;
   }
   .mv-card strong {
     font-weight: 700;
-    color: var(--navy);
+    color: var(--cream);
   }
   .mv-card em {
     font-style: italic;
-    color: var(--cyan-ink);
+    color: var(--cyan);
     font-weight: 500;
   }
 
 
-  /* ---- VALORES ---- */
+  /* ---- SUBTÍTULOS DE BLOQUE (Colaboradores, Propósito y dirección,
+     Valores) — mismo estilo para los tres ---- */
+  .bloque-head,
   .valores-head {
-    max-width: 640px;
+    max-width: 900px;
     margin: 76px auto 40px;
     text-align: center;
   }
-  .valores-eyebrow {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2.2px;
-    color: var(--cyan-ink);
-    opacity: 1;
-    margin-bottom: 10px;
-  }
-  .valores-head h3 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: 28px;
-    line-height: 1.2;
-    color: var(--navy);
-    margin: 0;
-  }
+
+  /* ---- VALORES ---- */
   .valores-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -278,14 +297,14 @@ const valores = [
     margin: 0 auto;
   }
   .valor-card {
-    /* Gradient cyan sutil → blanco + border cyan + barra cyan-ink
-       arriba, siguiendo el mismo lenguaje del resto del sitio. */
-    background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), #fff);
-    border: 1px solid rgba(97, 225, 230, 0.28);
-    border-top: 4px solid var(--cyan-ink);
+    background: rgba(255, 248, 234, 0.045);
+    border: 1px solid rgba(255, 248, 234, 0.14);
+    /* Se mantiene la barra superior de acento, en cyan para el fondo navy */
+    border-top: 4px solid var(--cyan);
     border-radius: 4px 4px 20px 20px;
     padding: 24px 22px 26px;
-    box-shadow: 0 10px 28px rgba(4, 69, 89, 0.06);
+    position: relative;
+    overflow: hidden;
     transition:
       transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
       background 400ms ease,
@@ -294,38 +313,43 @@ const valores = [
   }
   .valor-card:hover {
     transform: translateY(-4px);
-    background: rgba(97, 225, 230, 0.08);
-    border-color: rgba(97, 225, 230, 0.42);
-    box-shadow: 0 14px 32px rgba(4, 69, 89, 0.12);
+    background: rgba(97, 225, 230, 0.055);
+    border-color: rgba(97, 225, 230, 0.4);
+    border-top-color: var(--cyan);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.25);
   }
   .valor-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 14px;
+    position: relative;
   }
   .valor-num {
-    font-family: var(--font-serif);
+    font-family: var(--font-title);
     font-size: 22px;
-    color: var(--cyan-ink);
-    font-weight: 600;
+    color: var(--cyan);
+    font-weight: 700;
     line-height: 1;
   }
   .valor-icon-wrap {
     width: 40px;
     height: 40px;
     border-radius: 10px;
-    background: rgba(97, 225, 230, 0.14);
-    border: 1px solid rgba(97, 225, 230, 0.30);
+    background: rgba(97, 225, 230, 0.10);
+    border: 1px solid rgba(97, 225, 230, 0.22);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--navy);
-    transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: var(--cyan);
+    transition:
+      transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      background 400ms ease,
+      border-color 400ms ease;
   }
   .valor-card:hover .valor-icon-wrap {
     transform: scale(1.08) rotate(-3deg);
-    background: rgba(97, 225, 230, 0.24);
+    background: rgba(97, 225, 230, 0.18);
     border-color: var(--cyan);
   }
   .valor-icon { width: 22px; height: 22px; }
@@ -333,15 +357,17 @@ const valores = [
     font-family: var(--font-title);
     font-size: 15px;
     font-weight: 700;
-    color: var(--navy);
+    color: var(--cream);
     margin: 0 0 8px;
     letter-spacing: 0.2px;
+    position: relative;
   }
   .valor-card p {
     font-size: 13px;
     line-height: 1.55;
-    color: rgba(21, 27, 32, 0.72);
+    color: rgba(255, 248, 234, 0.78);
     margin: 0;
+    position: relative;
   }
 
   /* ---- REVEAL ---- */
@@ -359,8 +385,6 @@ const valores = [
   @media (max-width: 960px) {
     .mv-grid { grid-template-columns: 1fr; }
     .valores-grid { grid-template-columns: repeat(2, 1fr); }
-    .empresa-head h2 { font-size: 28px; }
-    .valores-head h3 { font-size: 22px; }
     .mv-card { padding: 28px 26px; }
     .mv-card p { font-size: 15px; }
   }
@@ -375,28 +399,19 @@ const valores = [
 </style>
 
 <script>
+  import { revealOnScroll } from '../scripts/reveal';
   // Se re-anima cada vez que los items vuelven al viewport
-  const items = document.querySelectorAll<HTMLElement>('.empresa [data-reveal]');
+  // Excluye las tarjetas del equipo/colaboradores (.member): su reveal
+  // lo maneja el script de Team.astro.
+  const items = document.querySelectorAll<HTMLElement>('.empresa [data-reveal]:not(.member)');
   if (items.length) {
-    const timers = new WeakMap<Element, number>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e, i) => {
-          const prev = timers.get(e.target);
-          if (prev) window.clearTimeout(prev);
-          if (e.isIntersecting) {
-            const t = window.setTimeout(() => {
-              e.target.classList.add('revealed');
-              timers.delete(e.target);
-            }, i * 90);
-            timers.set(e.target, t);
-          } else {
-            e.target.classList.remove('revealed');
-          }
-        });
-      },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0.12 },
-    );
-    items.forEach((el) => observer.observe(el));
+    // Histéresis: salida 48px sobre la pantalla (> 24px del translateY
+    // oculto) para que la tarjeta no vuelva a entrar al ocultarse.
+    revealOnScroll(items, {
+      enterMargin: '0px 0px -10% 0px',
+      threshold: 0.12,
+      exitMargin: '48px 0px -10% 0px',
+      staggerMs: 90,
+    });
   }
 </script>

@@ -1,22 +1,23 @@
 ---
-// Dashboard mockup — laptop + phone que "se encienden" al entrar al viewport.
-// Muestra la app real de Troppo (basado en sumo_v2) con:
-//   - Laptop: panel de simulaciones activas + KPIs + lista de ejecuciones
-//   - Phone: notificación de Troppo + vista compacta del dashboard
-//   - Animaciones: tapa se abre, pantallas se prenden, notif slide-down,
-//     contenido aparece con stagger.
+// Sección "¿Cómo se ve?" — laptop que "se enciende" al entrar al viewport
+// y muestra en su pantalla un video real de la interfaz de Troppo
+// (public/videos/interfaz_troppo.mp4, 1920×1080, zona útil 1920×946) en bucle, silenciado y
+// sin controles: es sólo demostrativo.
+//   - Animaciones: tapa se abre, splash con el logo, aparece el video.
+// Sección de fondo claro (beige).
 ---
 
-<section class="dashboard-section">
+<section class="dashboard-section sec-light">
   <div class="wrap">
     <div class="dash-head">
-      <div class="eyebrow">VISTA DE RESULTADOS</div>
-      <h2>Una interfaz que se adapta a quien la usa.</h2>
+      <div class="eyebrow sec-title">¿Cómo se ve?</div>
+      <h2 class="sec-subtitle">Herramientas integradas para gestionar la red vial.</h2>
       <p>
-        El panel de Troppo está pensado para verse cómodo en cualquier
-        dispositivo, del escritorio del analista al móvil de quien opera
-        en terreno. Simulaciones, métricas y recomendaciones en un mismo
-        lugar.
+        La aplicación de Troppo reúne las herramientas necesarias para
+        configurar y ejecutar simulaciones, analizar resultados, iniciar
+        procesos de optimización con IA y monitorear la red vial mediante el
+        gemelo digital. Está diseñada para <strong>instalarse y ejecutarse en
+        los computadores del cliente</strong>.
       </p>
     </div>
 
@@ -28,157 +29,30 @@
           <div class="rd-display">
             <!-- Boot splash: logo Troppo beige sobre cyan oscuro que
                  aparece al "encender" el laptop y se desvanece para
-                 revelar la app. -->
+                 revelar el video. -->
             <div class="rd-boot" aria-hidden="true">
               <img src="/images/logo/logo_troppo_beige_grande.png" alt="" />
             </div>
-            <div class="rd-app">
-              <!-- Rail izquierdo con íconos -->
-              <aside class="rd-rail">
-                <span class="rd-mark"></span>
-                <i class="on"></i>
-                <i></i>
-                <i></i>
-                <i></i>
-                <i></i>
-              </aside>
-
-              <!-- Panel principal -->
-              <div class="rd-main">
-                <div class="rd-top">
-                  <div class="rd-title">
-                    <span class="rd-h">Simulaciones activas</span>
-                    <span class="rd-subtle">SUMO v2 · Puerto San Antonio</span>
-                  </div>
-                  <span class="rd-live">
-                    <span class="rd-live-dot"></span>EN VIVO · 04:16
-                  </span>
-                </div>
-
-                <div class="rd-kpis">
-                  <div class="rd-kpi">
-                    <b>3.240</b>
-                    <span>vehículos activos</span>
-                  </div>
-                  <div class="rd-kpi">
-                    <b>2.6<small>s</small></b>
-                    <span>espera promedio</span>
-                  </div>
-                  <div class="rd-kpi rd-kpi-hl">
-                    <b>−44%</b>
-                    <span>reducción CO₂</span>
-                  </div>
-                </div>
-
-                <div class="rd-list">
-                  <div class="rd-row rd-good">
-                    <div class="rd-row-head">
-                      <span class="rd-tag">FLUJO IA</span>
-                      <span class="rd-id">run-2026-011</span>
-                      <span class="rd-time">04:12</span>
-                    </div>
-                    <p class="rd-row-title">Corredor logístico — optimización activa</p>
-                    <p class="rd-row-svcs">rotonda · acceso norte · vía central</p>
-                    <div class="rd-progress"><span style="width:82%"></span></div>
-                  </div>
-
-                  <div class="rd-row rd-warn">
-                    <div class="rd-row-head">
-                      <span class="rd-tag">CONTINGENCIA</span>
-                      <span class="rd-id">run-2026-010</span>
-                      <span class="rd-time">03:58</span>
-                    </div>
-                    <p class="rd-row-title">Ruta Norte — accidente, redirigiendo</p>
-                    <p class="rd-row-svcs">ruta norte · corredor · ruta sur</p>
-                    <div class="rd-progress"><span style="width:46%"></span></div>
-                  </div>
-
-                  <div class="rd-row rd-good">
-                    <div class="rd-row-head">
-                      <span class="rd-tag">BIMODAL</span>
-                      <span class="rd-id">run-2026-009</span>
-                      <span class="rd-time">03:41</span>
-                    </div>
-                    <p class="rd-row-title">Rotonda Central — prioridad carga</p>
-                    <p class="rd-row-svcs">corredor · vía central</p>
-                    <div class="rd-progress"><span style="width:91%"></span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!-- Video de la interfaz de Troppo: demostración en bucle,
+                 silenciado, sin controles ni interacción. Se carga y
+                 reproduce sólo cuando la sección se acerca al viewport. -->
+            <video
+              class="rd-video"
+              src="/videos/interfaz_troppo.mp4"
+              muted
+              loop
+              playsinline
+              preload="none"
+              disablepictureinpicture
+              disableremoteplayback
+              controlslist="nodownload nofullscreen noremoteplayback noplaybackrate"
+              tabindex="-1"
+              aria-hidden="true"
+            ></video>
           </div>
         </div>
         <div class="rd-hinge"></div>
         <div class="rd-base"></div>
-      </div>
-
-      <!-- ================= PHONE ================= -->
-      <div class="rd-phone" aria-hidden="true">
-        <div class="rd-phone-screen">
-          <!-- Boot splash: mismo logo Troppo beige sobre cyan oscuro
-               al "encender" el celular. -->
-          <div class="rd-boot rd-boot-phone" aria-hidden="true">
-            <img src="/images/logo/logo_troppo_beige_grande.png" alt="" />
-          </div>
-          <span class="rd-island"></span>
-
-          <div class="rd-notif">
-            <span class="rd-notif-mark"></span>
-            <span class="rd-notif-body">
-              <div class="rd-notif-head">
-                <b>Troppo</b>
-                <span class="rd-notif-time">ahora</span>
-              </div>
-              <span class="rd-notif-msg">Diagnóstico completado — optimización aplicada, +42% flujo</span>
-            </span>
-          </div>
-
-          <div class="rd-status">
-            <span>9:41</span>
-            <span class="rd-batt"></span>
-          </div>
-          <div class="rd-head">
-            <span class="rd-brand">TROPPO</span>
-            <span class="rd-h1">Panel operador</span>
-          </div>
-
-          <div class="rd-pkpi">
-            <span><b>3.240</b>veh</span>
-            <span><b>2.6s</b>espera</span>
-            <span class="hl"><b>−44%</b>CO₂</span>
-          </div>
-
-          <div class="rd-plist">
-            <div class="rd-prow rd-good">
-              <div class="rd-prow-head">
-                <span class="rd-ptag">FLUJO IA</span>
-                <span class="rd-ptime">04:12</span>
-              </div>
-              <p class="rd-prow-title">Corredor logístico</p>
-              <p class="rd-prow-svcs">run-2026-011 · 82%</p>
-            </div>
-            <div class="rd-prow rd-warn">
-              <div class="rd-prow-head">
-                <span class="rd-ptag">CONTINGENCIA</span>
-                <span class="rd-ptime">03:58</span>
-              </div>
-              <p class="rd-prow-title">Ruta Norte redirigiendo</p>
-              <p class="rd-prow-svcs">run-2026-010 · 46%</p>
-            </div>
-            <div class="rd-prow rd-good">
-              <div class="rd-prow-head">
-                <span class="rd-ptag">BIMODAL</span>
-                <span class="rd-ptime">03:41</span>
-              </div>
-              <p class="rd-prow-title">Rotonda prioridad carga</p>
-              <p class="rd-prow-svcs">run-2026-009 · 91%</p>
-            </div>
-          </div>
-
-          <div class="rd-tabs">
-            <i class="on"></i><i></i><i></i><i></i>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -187,33 +61,20 @@
 <style>
   .dashboard-section {
     padding: 110px 0;
-    background: rgba(3, 53, 68, 0.84);
-    color: var(--cream);
+    background: rgba(255, 248, 234, 0.72);
+    color: var(--ink);
   }
   .dash-head {
     max-width: 640px;
     margin-bottom: 60px;
   }
-  .eyebrow {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--cyan);
-    opacity: 0.9;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
   h2 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: 38px;
     margin-top: 14px;
-    line-height: 1.2;
-    color: var(--cream);
   }
   .dash-head p {
     margin-top: 16px;
     font-size: 15px;
-    color: rgba(255, 248, 234, 0.75);
+    color: rgba(21, 27, 32, 0.75);
     max-width: 520px;
   }
 
@@ -222,9 +83,10 @@
      ======================================================== */
   .rd-stage {
     position: relative;
-    max-width: 960px;
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 40px 190px 40px 0;
+    /* Sin celular: el laptop queda centrado y sin reserva lateral */
+    padding: 40px 0;
     perspective: 1100px;
     perspective-origin: 50% 35%;
   }
@@ -248,7 +110,9 @@
   .rd-laptop {
     position: relative;
     z-index: 1;
-    width: min(680px, 100%);
+    /* Grande para que la interfaz del video se lea bien; nunca más ancho
+       que el contenedor (en pantallas chicas ocupa el 100%). */
+    width: min(1060px, 100%);
     margin: 0 auto;
     filter: drop-shadow(0 30px 40px rgba(4, 69, 89, 0.18));
   }
@@ -277,7 +141,25 @@
     overflow: hidden;
     background: #0b0d10;
     border-radius: 2px;
-    aspect-ratio: 16 / 10;
+    /* La grabación (1920×1080) trae franjas negras propias: 82px arriba y
+       52px abajo. La pantalla toma la proporción de la zona útil
+       (1920×946) para que el video la llene sin franjas ni recortes
+       laterales. */
+    aspect-ratio: 1920 / 946;
+  }
+  /* Video demostrativo de la interfaz: ancho completo y desplazado hacia
+     arriba lo justo para que las franjas queden fuera (overflow hidden del
+     display). Sin controles ni interacción (pointer-events: none). */
+  .rd-video {
+    position: absolute;
+    left: 0;
+    top: calc(-82 / 946 * 100%);
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    display: block;
+    pointer-events: none;
+    user-select: none;
   }
   .rd-display::after {
     /* Overlay sutil de reflejo en pantalla */
@@ -289,9 +171,9 @@
     z-index: 6;
   }
 
-  /* ============ BOOT SPLASH (laptop + phone) ============
+  /* ============ BOOT SPLASH (laptop) ============
      Logo Troppo beige sobre cyan bien oscuro. Aparece cuando "se
-     enciende" el dispositivo y se desvanece para revelar la app. */
+     enciende" el dispositivo y se desvanece para revelar el video. */
   .rd-boot {
     position: absolute;
     inset: 0;
@@ -323,21 +205,6 @@
     72%  { opacity: 1; }
     100% { opacity: 0; }
   }
-
-  /* Splash del PHONE: arranca YA visible (opacity: 1) para que cuando
-     el .rd-phone empieza su fade-in (t=700ms) el splash aparezca junto
-     con el device, evitando el flash del 'Panel operador' que se veía
-     antes de que el splash apareciera. Solo animamos el fade-OUT. */
-  .rd-boot-phone {
-    opacity: 1;
-  }
-  .rd-stage:not(.pre):not(.exiting) .rd-boot-phone {
-    animation: rd-boot-phone-out 700ms ease 1900ms forwards;
-  }
-  @keyframes rd-boot-phone-out {
-    0%   { opacity: 1; }
-    100% { opacity: 0; }
-  }
   .rd-hinge {
     height: 8px;
     background: linear-gradient(#a3a8ad, #c6cacd 45%, #9ba1a6);
@@ -362,450 +229,6 @@
     border-radius: 0 0 6px 6px;
   }
 
-  /* ---------------- App inside laptop ---------------- */
-  .rd-app {
-    display: grid;
-    grid-template-columns: 50px 1fr;
-    background: var(--navy);
-    height: 100%;
-    font-family: var(--font-sans);
-  }
-  .rd-rail {
-    background: var(--navy-deep);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 0;
-    border-right: 1px solid rgba(255, 248, 234, 0.08);
-  }
-  .rd-mark {
-    width: 22px;
-    height: 22px;
-    border-radius: 7px;
-    background: var(--cyan);
-    margin-bottom: 8px;
-    box-shadow: 0 0 12px rgba(97, 225, 230, 0.5);
-  }
-  .rd-rail i {
-    width: 22px;
-    height: 4px;
-    border-radius: 2px;
-    background: rgba(255, 248, 234, 0.18);
-    transition: background 200ms ease;
-  }
-  .rd-rail i.on {
-    background: var(--lime);
-    box-shadow: 0 0 6px rgba(209, 235, 120, 0.5);
-  }
-  .rd-main {
-    padding: 16px 20px;
-    min-width: 0;
-    color: var(--cream);
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  .rd-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 14px;
-  }
-  .rd-title {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .rd-h {
-    font-family: var(--font-serif);
-    font-size: 17px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1;
-  }
-  .rd-subtle {
-    font-size: 10px;
-    color: rgba(255, 248, 234, 0.5);
-    letter-spacing: 0.4px;
-  }
-  .rd-live {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 9.5px;
-    font-weight: 700;
-    letter-spacing: 1.3px;
-    color: var(--cyan);
-    padding: 4px 8px;
-    border: 1px solid rgba(97, 225, 230, 0.35);
-    border-radius: 100px;
-  }
-  .rd-live-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--cyan);
-    box-shadow: 0 0 6px var(--cyan);
-    animation: rd-pulse 1.4s ease-in-out infinite;
-  }
-  @keyframes rd-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.7); }
-  }
-
-  .rd-kpis {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-  .rd-kpi {
-    background: rgba(255, 248, 234, 0.04);
-    border: 1px solid rgba(255, 248, 234, 0.08);
-    border-radius: 8px;
-    padding: 10px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .rd-kpi b {
-    font-family: var(--font-serif);
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--cream);
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-  }
-  .rd-kpi b small {
-    font-size: 12px;
-    color: rgba(255, 248, 234, 0.55);
-  }
-  .rd-kpi span {
-    font-size: 9.5px;
-    color: rgba(255, 248, 234, 0.55);
-    letter-spacing: 0.3px;
-  }
-  .rd-kpi-hl b {
-    color: var(--lime);
-  }
-
-  .rd-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex: 1;
-    min-height: 0;
-  }
-  .rd-row {
-    background: rgba(255, 248, 234, 0.04);
-    border-left: 3px solid var(--lime);
-    border-radius: 6px;
-    padding: 9px 12px;
-  }
-  .rd-row.rd-warn { border-left-color: #ffc93c; }
-  .rd-row-head {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 9px;
-    letter-spacing: 1px;
-    font-weight: 700;
-  }
-  .rd-tag {
-    color: var(--lime);
-    padding: 2px 6px;
-    background: rgba(209, 235, 120, 0.12);
-    border-radius: 3px;
-  }
-  .rd-warn .rd-tag {
-    color: #ffc93c;
-    background: rgba(255, 201, 60, 0.12);
-  }
-  .rd-id {
-    color: rgba(255, 248, 234, 0.5);
-    font-family: var(--font-sans);
-  }
-  .rd-time {
-    color: rgba(255, 248, 234, 0.5);
-    margin-left: auto;
-    font-variant-numeric: tabular-nums;
-  }
-  .rd-row-title {
-    font-size: 12px;
-    color: var(--cream);
-    font-weight: 500;
-    margin-top: 5px;
-  }
-  .rd-row-svcs {
-    font-size: 10px;
-    color: rgba(255, 248, 234, 0.5);
-    margin-top: 2px;
-  }
-  .rd-progress {
-    margin-top: 8px;
-    height: 3px;
-    background: rgba(255, 248, 234, 0.08);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .rd-progress span {
-    display: block;
-    height: 100%;
-    background: var(--lime);
-    border-radius: 2px;
-  }
-  .rd-warn .rd-progress span { background: #ffc93c; }
-
-  /* ========================================================
-     PHONE
-     ======================================================== */
-  .rd-phone {
-    position: absolute;
-    right: 20px;
-    bottom: 30px;
-    width: 190px;
-    z-index: 2;
-    filter: drop-shadow(0 22px 35px rgba(4, 69, 89, 0.28));
-  }
-  .rd-phone::before,
-  .rd-phone::after {
-    content: '';
-    position: absolute;
-    background: #0b0d10;
-    border-radius: 2px 0 0 2px;
-  }
-  .rd-phone::before {
-    left: -2px;
-    top: 100px;
-    width: 2px;
-    height: 26px;
-  }
-  .rd-phone::after {
-    right: -2px;
-    top: 130px;
-    width: 2px;
-    height: 40px;
-    border-radius: 0 2px 2px 0;
-  }
-  .rd-phone-screen {
-    position: relative;
-    aspect-ratio: 9 / 19;
-    background: var(--navy-deep);
-    border: 5px solid #0b0d10;
-    border-radius: 28px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    color: var(--cream);
-    font-family: var(--font-sans);
-  }
-  .rd-phone-screen::after {
-    /* reflejo sutil */
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(140deg, rgba(255, 255, 255, 0.06) 0%, transparent 40%);
-    pointer-events: none;
-    z-index: 6;
-    border-radius: inherit;
-  }
-  .rd-island {
-    position: absolute;
-    top: 7px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 65px;
-    height: 15px;
-    background: #0b0d10;
-    border-radius: 100px;
-    z-index: 7;
-  }
-
-  .rd-notif {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    right: 8px;
-    z-index: 8;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 10px;
-    background: rgba(21, 27, 32, 0.92);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(97, 225, 230, 0.28);
-    border-radius: 14px;
-    transform: translateY(-90px);
-    opacity: 0;
-  }
-  .rd-notif-mark {
-    width: 20px;
-    height: 20px;
-    border-radius: 6px;
-    background: var(--cyan);
-    box-shadow: 0 0 8px rgba(97, 225, 230, 0.5);
-    flex-shrink: 0;
-  }
-  .rd-notif-body {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.25;
-    min-width: 0;
-    gap: 2px;
-    flex: 1;
-  }
-  .rd-notif-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 6px;
-  }
-  .rd-notif-body b {
-    font-size: 10.5px;
-    font-weight: 700;
-    color: var(--cream);
-    letter-spacing: 0.2px;
-  }
-  .rd-notif-time {
-    font-size: 8.5px;
-    color: rgba(255, 248, 234, 0.5);
-    font-weight: 500;
-    letter-spacing: 0.3px;
-  }
-  .rd-notif-msg {
-    font-size: 9px;
-    color: rgba(255, 248, 234, 0.75);
-    line-height: 1.35;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .rd-status {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 30px 20px 4px;
-    font-size: 10px;
-    font-weight: 700;
-  }
-  .rd-batt {
-    width: 22px;
-    height: 10px;
-    border: 1.5px solid var(--cream);
-    border-radius: 3px;
-    opacity: 0.5;
-    position: relative;
-  }
-  .rd-batt::after {
-    content: '';
-    position: absolute;
-    top: 1px;
-    left: 1px;
-    height: 6px;
-    width: 15px;
-    background: var(--cream);
-    border-radius: 1px;
-  }
-  .rd-head {
-    padding: 8px 14px 6px;
-  }
-  .rd-brand {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: var(--cyan);
-    font-family: var(--font-sans);
-  }
-  .rd-h1 {
-    display: block;
-    font-family: var(--font-serif);
-    font-size: 17px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    margin-top: 2px;
-  }
-
-  .rd-pkpi {
-    display: flex;
-    gap: 6px;
-    padding: 4px 14px 10px;
-    font-size: 8.5px;
-    color: rgba(255, 248, 234, 0.55);
-  }
-  .rd-pkpi span {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-  }
-  .rd-pkpi b {
-    font-family: var(--font-serif);
-    font-size: 13px;
-    color: var(--cream);
-    font-weight: 600;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-  }
-  .rd-pkpi .hl b { color: var(--lime); }
-
-  .rd-plist {
-    flex: 1;
-    padding: 4px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    min-height: 0;
-  }
-  .rd-prow {
-    background: rgba(255, 248, 234, 0.04);
-    border-left: 2px solid var(--lime);
-    border-radius: 5px;
-    padding: 6px 8px;
-  }
-  .rd-prow.rd-warn { border-left-color: #ffc93c; }
-  .rd-prow-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 7.5px;
-    letter-spacing: 0.5px;
-    font-weight: 700;
-  }
-  .rd-ptag {
-    color: var(--lime);
-  }
-  .rd-warn .rd-ptag { color: #ffc93c; }
-  .rd-ptime {
-    color: rgba(255, 248, 234, 0.5);
-    font-variant-numeric: tabular-nums;
-  }
-  .rd-prow-title {
-    font-size: 10px;
-    margin-top: 3px;
-    color: var(--cream);
-    font-weight: 500;
-  }
-  .rd-prow-svcs {
-    font-size: 8.5px;
-    color: rgba(255, 248, 234, 0.5);
-    margin-top: 1px;
-  }
-  .rd-tabs {
-    display: flex;
-    justify-content: space-around;
-    padding: 8px 22px 14px;
-    border-top: 1px solid rgba(255, 248, 234, 0.08);
-    margin-top: 4px;
-  }
-  .rd-tabs i {
-    width: 16px;
-    height: 3px;
-    border-radius: 2px;
-    background: rgba(255, 248, 234, 0.2);
-  }
-  .rd-tabs i.on { background: var(--cyan); }
-
   /* ========================================================
      ANIMACIONES — usa transitions con delays (más robusto que
      @keyframes + fill:both para persistir el estado final).
@@ -813,15 +236,7 @@
      Al remover .pre, las transitions llevan al estado visible.
      ======================================================== */
 
-  /* Definir transitions en el estado normal */
-  .rd-app,
-  .rd-phone,
-  .rd-row,
-  .rd-prow,
-  .rd-notif,
-  .rd-lid {
-    transition: opacity 500ms ease-out, transform 500ms cubic-bezier(0.4, 0.05, 0.25, 1);
-  }
+  /* Transición de la tapa en el estado normal */
   .rd-lid {
     transition: transform 1400ms cubic-bezier(0.4, 0.05, 0.25, 1);
     transform: rotateX(0deg);
@@ -835,29 +250,9 @@
   .rd-stage.exiting .rd-lid {
     transform: rotateX(-92deg);
   }
-  .rd-stage.pre .rd-app,
-  .rd-stage.pre .rd-phone,
-  .rd-stage.pre .rd-row,
-  .rd-stage.pre .rd-prow,
-  .rd-stage.exiting .rd-app,
-  .rd-stage.exiting .rd-phone,
-  .rd-stage.exiting .rd-row,
-  .rd-stage.exiting .rd-prow {
-    opacity: 0;
-  }
-  .rd-stage.pre .rd-notif,
-  .rd-stage.exiting .rd-notif {
-    opacity: 0;
-    transform: translateY(-90px);
-  }
 
   /* Snap instantáneo sólo en el mount inicial (.pre) */
-  .rd-stage.pre .rd-lid,
-  .rd-stage.pre .rd-app,
-  .rd-stage.pre .rd-phone,
-  .rd-stage.pre .rd-row,
-  .rd-stage.pre .rd-prow,
-  .rd-stage.pre .rd-notif {
+  .rd-stage.pre .rd-lid {
     transition-duration: 0s;
   }
 
@@ -865,38 +260,8 @@
   .rd-stage:not(.pre):not(.exiting) .rd-lid {
     transition-delay: 300ms;
   }
-  .rd-stage:not(.pre):not(.exiting) .rd-app {
-    transition-delay: 1300ms;
-  }
-  .rd-stage:not(.pre):not(.exiting) .rd-phone {
-    transition-delay: 700ms;
-  }
-  .rd-stage:not(.pre):not(.exiting) .rd-notif {
-    transition-delay: 2100ms;
-    transition-duration: 700ms;
-  }
-  .rd-stage:not(.pre):not(.exiting) .rd-list .rd-row:nth-child(1) { transition-delay: 1600ms; }
-  .rd-stage:not(.pre):not(.exiting) .rd-list .rd-row:nth-child(2) { transition-delay: 1750ms; }
-  .rd-stage:not(.pre):not(.exiting) .rd-list .rd-row:nth-child(3) { transition-delay: 1900ms; }
-  .rd-stage:not(.pre):not(.exiting) .rd-plist .rd-prow:nth-child(1) { transition-delay: 2400ms; }
-  .rd-stage:not(.pre):not(.exiting) .rd-plist .rd-prow:nth-child(2) { transition-delay: 2550ms; }
-  .rd-stage:not(.pre):not(.exiting) .rd-plist .rd-prow:nth-child(3) { transition-delay: 2700ms; }
 
-  /* Delays de SALIDA (.exiting) — orden inverso, más rápido:
-     primero desaparece la notif, después las filas del phone, el phone,
-     las filas del laptop, la app del laptop, y finalmente se cierra la tapa */
-  .rd-stage.exiting .rd-notif {
-    transition-delay: 0ms;
-    transition-duration: 400ms;
-  }
-  .rd-stage.exiting .rd-plist .rd-prow:nth-child(3) { transition-delay: 80ms; }
-  .rd-stage.exiting .rd-plist .rd-prow:nth-child(2) { transition-delay: 160ms; }
-  .rd-stage.exiting .rd-plist .rd-prow:nth-child(1) { transition-delay: 240ms; }
-  .rd-stage.exiting .rd-phone { transition-delay: 320ms; }
-  .rd-stage.exiting .rd-list .rd-row:nth-child(3) { transition-delay: 180ms; }
-  .rd-stage.exiting .rd-list .rd-row:nth-child(2) { transition-delay: 260ms; }
-  .rd-stage.exiting .rd-list .rd-row:nth-child(1) { transition-delay: 340ms; }
-  .rd-stage.exiting .rd-app { transition-delay: 420ms; }
+  /* Cierre (.exiting): la tapa se cierra */
   .rd-stage.exiting .rd-lid {
     transition-delay: 550ms;
     transition-duration: 900ms;
@@ -904,17 +269,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .rd-stage.pre .rd-lid,
-    .rd-stage.pre .rd-app,
-    .rd-stage.pre .rd-phone,
-    .rd-stage.pre .rd-row,
-    .rd-stage.pre .rd-prow,
-    .rd-stage.pre .rd-notif,
-    .rd-stage.exiting .rd-lid,
-    .rd-stage.exiting .rd-app,
-    .rd-stage.exiting .rd-phone,
-    .rd-stage.exiting .rd-row,
-    .rd-stage.exiting .rd-prow,
-    .rd-stage.exiting .rd-notif {
+    .rd-stage.exiting .rd-lid {
       transform: none;
       opacity: 1;
     }
@@ -926,50 +281,12 @@
     .rd-stage {
       padding: 20px 0 0;
     }
-    .rd-phone {
-      position: static;
-      margin: 30px auto 0;
-      width: 230px;
-    }
     .rd-stage::after { display: none; }
-    h2 { font-size: 30px; }
-    .rd-h { font-size: 15px; }
-    .rd-kpi b { font-size: 16px; }
-  }
-
-  /* Ajuste extra para pantallas angostas (~<480px): la UI dentro del
-     laptop se comprime todavía más para que las 3 KPIs y las filas
-     quepan sin cortarse por la derecha. */
-  @media (max-width: 480px) {
-    .rd-app {
-      grid-template-columns: 32px 1fr;
-    }
-    .rd-rail {
-      padding: 10px 0;
-      gap: 7px;
-    }
-    .rd-mark { width: 16px; height: 16px; margin-bottom: 5px; }
-    .rd-rail i { width: 14px; height: 3px; }
-    .rd-main { padding: 10px 10px; gap: 10px; }
-    .rd-top { gap: 8px; }
-    .rd-h { font-size: 13px; }
-    .rd-subtle { font-size: 8.5px; }
-    .rd-live { font-size: 8px; padding: 3px 6px; letter-spacing: 1px; }
-    .rd-live-dot { width: 4px; height: 4px; }
-    .rd-kpis { gap: 6px; }
-    .rd-kpi { padding: 7px 8px; }
-    .rd-kpi b { font-size: 13.5px; }
-    .rd-kpi b small { font-size: 9.5px; }
-    .rd-kpi span { font-size: 8px; }
-    .rd-row { padding: 7px 9px; }
-    .rd-row-head { font-size: 8px; }
-    .rd-tag { padding: 1px 4px; }
-    .rd-row-title { font-size: 10.5px; margin-top: 4px; }
-    .rd-row-svcs { font-size: 9px; }
   }
 </style>
 
 <script>
+  import { observeReveal } from '../scripts/reveal';
   // Modelo: .rd-stage arranca con clase .pre (oculto instantáneamente).
   // Cuando entra al viewport, se remueve .pre → CSS transitions se disparan
   // con sus delays escalonados hacia el estado natural (visible).
@@ -977,7 +294,122 @@
   // Este enfoque es más robusto que @keyframes con fill:both porque las
   // transitions naturalmente persisten al estado final (no dependen de que
   // el navegador respete correctamente el fill mode contra la cascada).
+  //
+  // Video: queda detenido en su primer fotograma mientras el laptop se
+  // abre y arranca recién cuando termina la apertura: la transición de la
+  // tapa (transitionend) Y el splash del logo (animationend). Sin tiempos
+  // fijos. Al cerrarse el laptop se pausa; si el visitante vuelve, sigue
+  // desde donde quedó (no se reinicia).
   const stage = document.querySelector<HTMLElement>('.rd-stage');
+  const lid = stage?.querySelector<HTMLElement>('.rd-lid');
+  const boot = stage?.querySelector<HTMLElement>('.rd-boot');
+  const video = stage?.querySelector<HTMLVideoElement>('.rd-video');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- Control del video ----
+  let opened = false; // true cuando la apertura del laptop terminó
+  let cycle = 0; // identifica cada apertura (descarta eventos viejos)
+  let cleanupOpen: (() => void) | null = null;
+  let fallbackArmed = false;
+
+  const play = () => {
+    video?.play().catch(armFallback);
+  };
+  const sync = () => {
+    if (!video) return;
+    if (opened && !document.hidden) {
+      if (video.paused) play();
+    } else if (!video.paused) {
+      video.pause();
+    }
+  };
+  // Si el navegador bloquea el autoplay (p. ej. modo ahorro de energía),
+  // la demostración arranca con la primera interacción del visitante en
+  // cualquier parte de la página, sin mostrar controles.
+  function armFallback() {
+    if (fallbackArmed || !video) return;
+    fallbackArmed = true;
+    const events = ['pointerdown', 'touchstart', 'keydown', 'scroll'] as const;
+    const resume = () => {
+      if (!opened) return;
+      video.play().then(() => {
+        events.forEach((ev) => window.removeEventListener(ev, resume));
+        fallbackArmed = false;
+      }).catch(() => {});
+    };
+    events.forEach((ev) => window.addEventListener(ev, resume, { passive: true }));
+  }
+
+  // Apertura: espera a que terminen la tapa y el splash del logo.
+  const onOpenStart = () => {
+    cleanupOpen?.();
+    opened = false;
+    sync();
+    if (!lid || !boot || reducedMotion) {
+      // Sin animación (movimiento reducido): no hay eventos que esperar.
+      opened = true;
+      sync();
+      return;
+    }
+    const myCycle = ++cycle;
+    let lidDone = false;
+    let bootDone = false;
+    const check = () => {
+      if (myCycle !== cycle || !lidDone || !bootDone) return;
+      cleanupOpen?.();
+      opened = true;
+      sync();
+    };
+    const onLid = (e: TransitionEvent) => {
+      if (e.target === lid && e.propertyName === 'transform') { lidDone = true; check(); }
+    };
+    const onBoot = (e: AnimationEvent) => {
+      if (e.target === boot) { bootDone = true; check(); }
+    };
+    lid.addEventListener('transitionend', onLid);
+    boot.addEventListener('animationend', onBoot);
+    cleanupOpen = () => {
+      lid.removeEventListener('transitionend', onLid);
+      boot.removeEventListener('animationend', onBoot);
+      cleanupOpen = null;
+    };
+  };
+  // Cierre: pausa el video (conserva la posición) e invalida la apertura.
+  const onClose = () => {
+    cycle++;
+    cleanupOpen?.();
+    opened = false;
+    sync();
+  };
+
+  if (video) {
+    video.muted = true;
+    // Si algo lo pausa (teclas multimedia, sistema) mientras está abierto,
+    // se reanuda: el visitante no puede detener la demostración.
+    video.addEventListener('pause', () => {
+      if (opened && !document.hidden) play();
+    });
+    document.addEventListener('visibilitychange', sync);
+    // Precarga cuando la sección se acerca (el archivo pesa ~37 MB): así el
+    // primer fotograma ya está listo mientras el laptop se abre. Se observa
+    // el escenario (sin transform) y no el video: con la tapa cerrada
+    // (rotateX) el video no ocupa área y el observer no lo detectaría.
+    if ('IntersectionObserver' in window) {
+      const preloadIO = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) return;
+          video.preload = 'auto';
+          video.load();
+          preloadIO.disconnect();
+        },
+        { rootMargin: '800px 0px' },
+      );
+      preloadIO.observe(stage ?? video);
+    } else {
+      video.preload = 'auto';
+    }
+  }
+
   if (stage) {
     // Mount: aplicar .pre para snap-hidden inmediato antes del primer paint
     stage.classList.add('pre');
@@ -986,25 +418,30 @@
       // Observer bidireccional: al entrar quita .pre/.exiting → coreografía
       // de apertura. Al salir agrega .exiting → coreografía de cierre inversa.
       // No hacemos unobserve — queremos que reaccione en cada scroll pasada.
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              stage.classList.remove('pre', 'exiting');
-            } else {
-              // Sólo animamos el cierre si ya se había abierto (skip primer render)
-              if (!stage.classList.contains('pre')) {
-                stage.classList.add('exiting');
-              }
-            }
-          });
+      // Histéresis: abre al superar el 20% visible (como antes) y cierra
+      // cuando baja del 20% dentro de una zona 60px más amplia por arriba
+      // y por abajo. El cierre sigue viéndose (con el escenario aún
+      // parcialmente visible), pero quedarse cerca del límite ya no
+      // reinicia la coreografía: hay que mover el scroll ≥60px.
+      // .rd-stage no tiene transform propio (sólo sus hijos).
+      observeReveal([stage], {
+        enterMargin: '0px',
+        threshold: 0.2,
+        exitMargin: '60px 0px 60px 0px',
+        onEnter: () => {
+          stage.classList.remove('pre', 'exiting');
+          onOpenStart();
         },
-        { threshold: 0.2 }
-      );
-      observer.observe(stage);
+        onExit: () => {
+          // Sólo animamos el cierre si ya se había abierto (skip primer render)
+          if (!stage.classList.contains('pre')) stage.classList.add('exiting');
+          onClose();
+        },
+      });
     } else {
       // Fallback: mostrar inmediatamente sin observer
       stage.classList.remove('pre');
+      onOpenStart();
     }
   }
 </script>

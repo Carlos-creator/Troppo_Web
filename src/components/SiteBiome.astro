@@ -5,36 +5,13 @@
 // ZONAS (activadas por trigger de sección, no por porcentaje de scroll):
 //   1. Norte     → desde el top de la página
 //   2. Centro    → desde #nosotros (Values) hasta antes de #pitch (Video)
-//   3. Sur templado (lluvia) → desde #pitch (Video) hasta antes de #equipo (Team)
-//   4. Sur extremo (nieve)   → desde #equipo (Team) hasta el final
+//   3. Sur templado → desde #pitch (Video) hasta antes de #equipo (Team)
+//   4. Sur extremo   → desde #equipo (Team) hasta el final
+// Las zonas del sur no tienen efecto de clima (la lluvia y la nieve se
+// retiraron); sólo cambian las imágenes de fondo.
 //
 // Se monta una sola vez en Base.astro. Filtro cyan Troppo aplicado a
 // todas las imágenes.
-
-// Genera N gotas de lluvia con posiciones y velocidades pseudo-random
-const RAIN_DROPS = Array.from({ length: 45 }, (_, i) => {
-  const seed = (i * 137) % 100;
-  return {
-    left: (seed * 1.13) % 100,
-    delay: (seed * 0.017) % 1.6,
-    duration: 0.65 + ((seed * 0.007) % 0.55),
-    height: 10 + ((seed * 0.13) % 14),
-  };
-});
-
-// Genera N copos de nieve
-const SNOW_FLAKES = Array.from({ length: 55 }, (_, i) => {
-  const seed = (i * 163) % 100;
-  return {
-    left: (seed * 1.03) % 100,
-    delay: (seed * 0.09) % 7,
-    duration: 7 + ((seed * 0.11) % 8),
-    size: 3 + ((seed * 0.06) % 5),
-    sway: 15 + ((seed * 0.3) % 30),
-    swayDir: i % 2 === 0 ? 1 : -1,
-    blur: (seed % 3) * 0.4,
-  };
-});
 
 // Gaviotas en cyan oscuro (navy) para contrastar con secciones cream.
 // Cada gaviota tiene su propio flapDur (duración de aleteo) ligeramente
@@ -57,7 +34,7 @@ const GULLS = [
 </div>
 
 <!-- Capa FRONTAL — overlays climáticos SOBRE las secciones para que
-     gaviotas, lluvia y nieve siempre se vean. pointer-events:none. -->
+     el sol y las gaviotas siempre se vean. pointer-events:none. -->
 <div class="sb-front" aria-hidden="true">
 
   <!-- Sol (Norte) — recorre un arco desde arriba-izquierda hasta
@@ -94,41 +71,13 @@ const GULLS = [
     ))}
   </div>
 
-  <!-- Lluvia (Sur templado) — gotas individuales, no líneas continuas -->
-  <div class="sb-weather sb-w-rain" data-w="rain">
-    {RAIN_DROPS.map((d) => (
-      <span
-        class="rain-drop"
-        style={`left: ${d.left}%; animation-delay: -${d.delay}s; animation-duration: ${d.duration}s; height: ${d.height}px;`}
-      ></span>
-    ))}
-  </div>
-
-  <!-- Nieve (Sur extremo) — copos circulares con leve balanceo -->
-  <div class="sb-weather sb-w-snow" data-w="snow">
-    {SNOW_FLAKES.map((f) => (
-      <span
-        class="snow-flake"
-        style={`left: ${f.left}%; animation-delay: -${f.delay}s; animation-duration: ${f.duration}s; width: ${f.size}px; height: ${f.size}px; --sway: ${f.sway * f.swayDir}px; filter: blur(${f.blur}px);`}
-      ></span>
-    ))}
-  </div>
-
-</div>
-
-<!-- Indicador ambiental de zona — chip flotante bottom-left con icono
-     climático (PNG desde /public/images/clima). Se cambió del label
-     textual regional a icono para que se sienta ambiental. -->
-<div class="sb-hud" aria-hidden="true">
-  <img class="sb-hud-label" data-hud-label src="/images/clima/sol.png" alt="" />
 </div>
 
 <script>
   interface BiomeZone {
     id: string;
     dir: string;
-    label: string;
-    weather: 'sun' | 'gulls' | 'rain' | 'snow';
+    weather: 'sun' | 'gulls' | null; // null = sin efecto de clima
     images: string[];
   }
 
@@ -136,29 +85,25 @@ const GULLS = [
     {
       id: 'norte',
       dir: 'norte',
-      label: '/images/clima/sol.png',
       weather: 'sun',
       images: ['astronomia', 'desierto', 'fauna', 'morro_de_arica'],
     },
     {
       id: 'centro',
       dir: 'centro',
-      label: '/images/clima/nublado_sol.png',
       weather: 'gulls',
       images: ['Playa', 'Puerto', 'PuertoSA', 'Valparaiso', 'paisaje_centro', 'playa2'],
     },
     {
       id: 'sur-templado',
       dir: 'sur',
-      label: '/images/clima/lluvia.png',
-      weather: 'rain',
+      weather: null,
       images: ['faro_sur', 'paisaje_cabana'],
     },
     {
       id: 'sur-extremo',
       dir: 'sur',
-      label: '/images/clima/nieve.png',
-      weather: 'snow',
+      weather: null,
       images: ['Volcan', 'Antartica'],
     },
   ];
@@ -168,8 +113,8 @@ const GULLS = [
   // Centro empieza recién en PorQueTroppo para dar más aire al Norte.
   const TRIGGERS = {
     centroStart: 'porque-troppo', // PorQueTroppo → empieza Centro
-    surTempladoStart: 'pitch',    // Video → empieza lluvia
-    surExtremoStart: 'equipo',    // Team → empieza nieve
+    surTempladoStart: 'pitch',    // Video → empieza Sur templado
+    surExtremoStart: 'equipo',    // Team → empieza Sur extremo
   };
 
   const sbBack = document.querySelector<HTMLElement>('.sb-back');
@@ -177,7 +122,6 @@ const GULLS = [
   const bgA = sbBack?.querySelector<HTMLElement>('.sb-bg-a');
   const bgB = sbBack?.querySelector<HTMLElement>('.sb-bg-b');
   const weathers = Array.from(sbFront?.querySelectorAll<HTMLElement>('.sb-weather') ?? []);
-  const hudLabel = document.querySelector<HTMLElement>('[data-hud-label]');
 
   if (sbBack && sbFront && bgA && bgB && weathers.length) {
     // Precargar todas las imágenes
@@ -208,21 +152,11 @@ const GULLS = [
       currentBgLayer = nextLayer;
     };
 
-    const setWeather = (weatherName: string) => {
+    const setWeather = (weatherName: string | null) => {
       weathers.forEach((w) => {
         if (w.dataset.w === weatherName) w.classList.add('visible');
         else w.classList.remove('visible');
       });
-    };
-
-    const setHudLabel = (label: string) => {
-      if (!hudLabel) return;
-      hudLabel.classList.add('swapping');
-      window.setTimeout(() => {
-        // El label ahora es la ruta a un PNG en /images/clima
-        (hudLabel as HTMLImageElement).src = label;
-        hudLabel.classList.remove('swapping');
-      }, 250);
     };
 
     const activateZone = (idx: number) => {
@@ -232,7 +166,6 @@ const GULLS = [
       currentImageIdx = 0;
       setImage(zone, currentImageIdx);
       setWeather(zone.weather);
-      setHudLabel(zone.label);
       window.clearInterval(rotationTimer);
       if (zone.images.length > 1) {
         rotationTimer = window.setInterval(() => {
@@ -349,15 +282,9 @@ const GULLS = [
   }
   .sb-weather.visible { opacity: 1; }
 
-  /* Sol, gaviotas y nieve permanecen POR DELANTE de las secciones */
+  /* Sol y gaviotas permanecen POR DELANTE de las secciones */
   .sb-w-sun,
-  .sb-w-gulls,
-  .sb-w-snow { z-index: 5; }
-
-  /* La lluvia se manda POR DETRÁS de las secciones — se ve tenue a
-     través de los fondos semi-transparentes y ya no compite visualmente
-     con el texto. */
-  .sb-w-rain { z-index: -1; }
+  .sb-w-gulls { z-index: 5; }
 
   /* --- Sol (Norte) — arco de día ---
      El orbe recorre un arco desde arriba-izquierda hasta la esquina
@@ -477,100 +404,13 @@ const GULLS = [
     to   { transform: translateX(-8vw) translateY(25px); }
   }
 
-  /* --- Lluvia (Sur templado) — gotas visibles sobre cream y navy ---
-     Uso un azul medio-oscuro que contraste sobre secciones cream + sombra
-     dark sutil para reforzar el borde. Ancho aumentado a 2.5px. */
-  .rain-drop {
-    position: absolute;
-    top: -25px;
-    width: 2.5px;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(50, 100, 155, 0.55) 35%,
-      rgba(30, 75, 130, 0.9) 100%
-    );
-    border-radius: 0 0 3px 3px;
-    animation-name: rain-drop-fall;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    transform: rotate(10deg);
-    will-change: transform;
-    /* Doble box-shadow: dark para verse sobre cream, light glow para
-       reforzar sobre navy. Combinación resistente a cualquier fondo. */
-    box-shadow:
-      0 0 2px rgba(0, 0, 0, 0.35),
-      0 0 4px rgba(150, 200, 235, 0.4);
-  }
-  @keyframes rain-drop-fall {
-    from { transform: rotate(10deg) translateY(0); }
-    to   { transform: rotate(10deg) translateY(calc(100vh + 40px)); }
-  }
-
-  /* --- Nieve (Sur extremo) — copos con leve balanceo --- */
-  .snow-flake {
-    position: absolute;
-    top: -15px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    animation-name: snow-flake-fall;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    will-change: transform;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
-  }
-  @keyframes snow-flake-fall {
-    0%   { transform: translateY(0) translateX(0); opacity: 0.85; }
-    25%  { transform: translateY(25vh) translateX(var(--sway)); }
-    50%  { transform: translateY(50vh) translateX(0); opacity: 1; }
-    75%  { transform: translateY(75vh) translateX(var(--sway)); }
-    100% { transform: translateY(calc(100vh + 20px)) translateX(0); opacity: 0.7; }
-  }
-
-  /* ============ INDICADOR AMBIENTAL (icono clima PNG) ============ */
-  .sb-hud {
-    position: fixed;
-    left: 20px;
-    bottom: 46px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 46px;
-    height: 46px;
-    background: rgba(21, 27, 32, 0.55);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 50%;
-    border: 1px solid rgba(97, 225, 230, 0.28);
-    z-index: 90;
-    pointer-events: none;
-  }
-  img.sb-hud-label {
-    display: block;
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
-    transition: opacity 250ms ease, transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  img.sb-hud-label.swapping {
-    opacity: 0;
-    transform: scale(0.6);
-  }
-
   @media (max-width: 860px) {
-    .sb-hud {
-      left: 12px;
-      bottom: 40px;
-      width: 38px;
-      height: 38px;
-    }
-    img.sb-hud-label { width: 24px; height: 24px; }
     .sb-sun-orb { width: 160px; height: 160px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .sb-bg, .sb-weather, .sb-hud-label { transition: none; }
-    .sb-sun-orb, .sb-sun-rays, .sb-w-gulls .gull, .rain-drop, .snow-flake {
+    .sb-bg, .sb-weather { transition: none; }
+    .sb-sun-orb, .sb-sun-rays, .sb-w-gulls .gull {
       animation: none;
     }
     /* Con reduced-motion el sol queda estático en el zenit (posición

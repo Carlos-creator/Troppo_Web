@@ -8,224 +8,233 @@
 //   3. Centro Histórico de Valparaíso — 5 puntos (pentágono irregular)
 ---
 
-<section class="scalability" id="escalable">
+<section class="scalability sec-dark" id="escalable">
   <div class="wrap">
     <div class="scal-grid">
       <div class="scal-copy">
-        <div class="eyebrow">ESCALABLE</div>
-        <h2>Funciona en cualquier zona del país.</h2>
+        <div class="eyebrow sec-title">Escalabilidad</div>
+        <h2 class="sec-subtitle">Troppo puede adaptarse a distintas zonas y ciudades.</h2>
         <p class="scal-lead">
-          El modelo no está atado a San Antonio. Hacemos un estudio previo del
-          terreno, extraemos la red vial desde OpenStreetMap y calibramos con
-          datos locales. <strong>El polígono se ajusta a la forma real</strong> —
-          triángulo, cuadrilátero, o irregular con más puntos.
+          Troppo puede extenderse a distintas zonas del país mediante un proceso
+          de adaptación realizado por su equipo de desarrollo. Cada
+          implementación considera las características de la red vial y el
+          alcance del proyecto, para configurar la plataforma de acuerdo con las
+          necesidades del cliente.
         </p>
         <ul class="scal-steps">
           <li>
             <span class="step-n">01</span>
             <div>
-              <strong>Estudio previo</strong>
-              <p>Análisis del terreno, red vial y patrones de demanda.</p>
+              <strong>Evaluación del territorio</strong>
+              <p>Se analizan las características de la zona de estudio, su red vial y el alcance de la implementación requerida.</p>
             </div>
           </li>
           <li>
             <span class="step-n">02</span>
             <div>
-              <strong>Delimitación libre</strong>
-              <p>Sobre el mapa se marca la zona con los puntos necesarios.</p>
+              <strong>Adaptación de la plataforma</strong>
+              <p>El equipo de Troppo prepara la representación de la zona y configura la plataforma para trabajar con las características del territorio seleccionado.</p>
             </div>
           </li>
           <li>
             <span class="step-n">03</span>
             <div>
-              <strong>Calibración local</strong>
-              <p>Datos históricos, flota real y semaforización existente.</p>
+              <strong>Información y calibración</strong>
+              <p>La calibración requiere información local, como datos de demanda, flota y semaforización. Estos antecedentes deben ser proporcionados por el cliente; seleccionar una zona no genera automáticamente esos datos.</p>
             </div>
           </li>
         </ul>
       </div>
 
-      <div class="scal-viewport">
-        <svg
-          class="scal-map"
-          viewBox="0 0 800 500"
-          preserveAspectRatio="xMidYMid meet"
-          aria-label="Demostración de delimitación en distintas zonas del país"
-        >
-          <defs>
-            <pattern id="scalBlocks" width="120" height="90" patternUnits="userSpaceOnUse">
-              <rect x="10" y="10" width="40" height="30" fill="rgba(4, 69, 89, 0.08)" rx="2" />
-              <rect x="60" y="10" width="50" height="30" fill="rgba(4, 69, 89, 0.06)" rx="2" />
-              <rect x="10" y="50" width="55" height="35" fill="rgba(4, 69, 89, 0.05)" rx="2" />
-              <rect x="75" y="50" width="35" height="35" fill="rgba(4, 69, 89, 0.07)" rx="2" />
-            </pattern>
-            <linearGradient id="scalOcean" x1="0" x2="1" y1="0" y2="0.5">
-              <stop offset="0" stop-color="#022a37" />
-              <stop offset="1" stop-color="#044559" />
-            </linearGradient>
-            <!-- Clip que restringe el escaneo + vehículos a la forma del polígono -->
-            <clipPath id="zoneAnalysisClip">
-              <polygon class="analysis-clip-poly" points="" />
-            </clipPath>
-            <!-- Haz del scanner LiDAR (banda cyan) -->
-            <linearGradient id="scanBeam" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" stop-color="rgba(97,225,230,0)" />
-              <stop offset="0.45" stop-color="rgba(97,225,230,0.35)" />
-              <stop offset="0.5" stop-color="rgba(97,225,230,0.85)" />
-              <stop offset="0.55" stop-color="rgba(97,225,230,0.35)" />
-              <stop offset="1" stop-color="rgba(97,225,230,0)" />
-            </linearGradient>
-          </defs>
+      <figure class="scal-figure">
+        <div class="scal-viewport">
+          <svg
+            class="scal-map"
+            viewBox="0 0 800 500"
+            preserveAspectRatio="xMidYMid meet"
+            aria-label="Demostración de delimitación en distintas zonas del país"
+          >
+            <defs>
+              <pattern id="scalBlocks" width="120" height="90" patternUnits="userSpaceOnUse">
+                <rect x="10" y="10" width="40" height="30" fill="rgba(4, 69, 89, 0.08)" rx="2" />
+                <rect x="60" y="10" width="50" height="30" fill="rgba(4, 69, 89, 0.06)" rx="2" />
+                <rect x="10" y="50" width="55" height="35" fill="rgba(4, 69, 89, 0.05)" rx="2" />
+                <rect x="75" y="50" width="35" height="35" fill="rgba(4, 69, 89, 0.07)" rx="2" />
+              </pattern>
+              <linearGradient id="scalOcean" x1="0" x2="1" y1="0" y2="0.5">
+                <stop offset="0" stop-color="#022a37" />
+                <stop offset="1" stop-color="#044559" />
+              </linearGradient>
+              <!-- Clip que restringe el escaneo + vehículos a la forma del polígono -->
+              <clipPath id="zoneAnalysisClip">
+                <polygon class="analysis-clip-poly" points="" />
+              </clipPath>
+              <!-- Haz del scanner LiDAR (banda cyan) -->
+              <linearGradient id="scanBeam" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="rgba(97,225,230,0)" />
+                <stop offset="0.45" stop-color="rgba(97,225,230,0.35)" />
+                <stop offset="0.5" stop-color="rgba(97,225,230,0.85)" />
+                <stop offset="0.55" stop-color="rgba(97,225,230,0.35)" />
+                <stop offset="1" stop-color="rgba(97,225,230,0)" />
+              </linearGradient>
+            </defs>
 
-          <!-- ================= ZONA 1: USM SAN JOAQUÍN ================= -->
-          <g class="zone-map" data-zone="usm">
-            <rect x="0" y="0" width="800" height="500" fill="#f0eadc" />
-            <rect x="0" y="0" width="800" height="500" fill="url(#scalBlocks)" />
+            <!-- ================= ZONA 1: USM SAN JOAQUÍN ================= -->
+            <g class="zone-map" data-zone="usm">
+              <rect x="0" y="0" width="800" height="500" fill="#f0eadc" />
+              <rect x="0" y="0" width="800" height="500" fill="url(#scalBlocks)" />
 
-            <!-- Línea 5 Metro -->
-            <line x1="90" y1="0" x2="90" y2="500" stroke="#88b04b" stroke-width="2.5" stroke-dasharray="8 6" opacity="0.7" />
-            <text x="95" y="24" fill="#88b04b" font-family="Montserrat" font-size="8" font-weight="700" letter-spacing="0.5">METRO L5</text>
+              <!-- Línea 5 Metro -->
+              <line x1="90" y1="0" x2="90" y2="500" stroke="#88b04b" stroke-width="2.5" stroke-dasharray="8 6" opacity="0.7" />
+              <text x="95" y="24" fill="#88b04b" font-size="8" font-weight="700" letter-spacing="0.5">METRO L5</text>
 
-            <!-- Vicuña Mackenna (vertical principal) -->
-            <line x1="145" y1="0" x2="145" y2="500" stroke="#151B20" stroke-width="12" />
-            <line x1="145" y1="0" x2="145" y2="500" stroke="#FFF8EA" stroke-width="1.5" stroke-dasharray="10 8" opacity="0.55" />
-            <text x="160" y="24" fill="#044559" font-family="Montserrat" font-size="8" font-weight="700" letter-spacing="0.5">AV. VICUÑA MACKENNA</text>
+              <!-- Vicuña Mackenna (vertical principal) -->
+              <line x1="145" y1="0" x2="145" y2="500" stroke="#151B20" stroke-width="12" />
+              <line x1="145" y1="0" x2="145" y2="500" stroke="#FFF8EA" stroke-width="1.5" stroke-dasharray="10 8" opacity="0.55" />
+              <text x="160" y="24" fill="#044559" font-size="8" font-weight="700" letter-spacing="0.5">AV. VICUÑA MACKENNA</text>
 
-            <!-- Cruces horizontales -->
-            <line x1="145" y1="180" x2="800" y2="180" stroke="#151B20" stroke-width="7" />
-            <line x1="145" y1="180" x2="800" y2="180" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="8 6" opacity="0.55" />
-            <line x1="145" y1="380" x2="800" y2="380" stroke="#151B20" stroke-width="7" />
-            <line x1="145" y1="380" x2="800" y2="380" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="8 6" opacity="0.55" />
+              <!-- Cruces horizontales -->
+              <line x1="145" y1="180" x2="800" y2="180" stroke="#151B20" stroke-width="7" />
+              <line x1="145" y1="180" x2="800" y2="180" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="8 6" opacity="0.55" />
+              <line x1="145" y1="380" x2="800" y2="380" stroke="#151B20" stroke-width="7" />
+              <line x1="145" y1="380" x2="800" y2="380" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="8 6" opacity="0.55" />
 
-            <!-- Cruce vertical -->
-            <line x1="500" y1="180" x2="500" y2="500" stroke="#151B20" stroke-width="6" />
-            <line x1="700" y1="0" x2="700" y2="500" stroke="#151B20" stroke-width="6" />
+              <!-- Cruce vertical -->
+              <line x1="500" y1="180" x2="500" y2="500" stroke="#151B20" stroke-width="6" />
+              <line x1="700" y1="0" x2="700" y2="500" stroke="#151B20" stroke-width="6" />
 
-            <!-- Campus USM (rounded rect) -->
-            <rect x="240" y="205" width="360" height="150" fill="rgba(97, 225, 230, 0.12)" stroke="#61E1E6" stroke-width="1.5" stroke-dasharray="5 4" rx="6" />
-            <text x="420" y="278" fill="#044559" font-family="Montserrat" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">USM CAMPUS</text>
-            <text x="420" y="295" fill="#044559" font-family="Montserrat" font-size="9" font-weight="600" text-anchor="middle" opacity="0.65">SAN JOAQUÍN</text>
+              <!-- Campus USM (rounded rect) -->
+              <rect x="240" y="205" width="360" height="150" fill="rgba(97, 225, 230, 0.12)" stroke="#61E1E6" stroke-width="1.5" stroke-dasharray="5 4" rx="6" />
+              <text x="420" y="278" fill="#044559" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">USM CAMPUS</text>
+              <text x="420" y="295" fill="#044559" font-size="9" font-weight="600" text-anchor="middle" opacity="0.65">SAN JOAQUÍN</text>
 
-            <text x="795" y="176" fill="#044559" font-size="8" text-anchor="end" opacity="0.55" font-family="Montserrat" font-weight="600">Blanco Encalada</text>
-            <text x="795" y="376" fill="#044559" font-size="8" text-anchor="end" opacity="0.55" font-family="Montserrat" font-weight="600">Salvador Sanfuentes</text>
-          </g>
-
-          <!-- ================= ZONA 2: PUERTO SAN ANTONIO ================= -->
-          <g class="zone-map" data-zone="sanantonio">
-            <rect x="0" y="0" width="800" height="500" fill="url(#scalOcean)" />
-            <path d="M 220 0 Q 195 90, 230 180 Q 195 260, 240 340 Q 210 420, 250 500 L 800 500 L 800 0 Z" fill="#f0eadc" />
-            <rect x="220" y="0" width="580" height="500" fill="url(#scalBlocks)" opacity="0.6" />
-
-            <!-- Terminales del puerto -->
-            <g opacity="0.7">
-              <rect x="240" y="45" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
-              <rect x="240" y="65" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
-              <rect x="240" y="85" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
-              <rect x="273" y="55" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
-              <rect x="273" y="75" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
+              <text x="795" y="176" fill="#044559" font-size="8" text-anchor="end" opacity="0.55" font-weight="600">Blanco Encalada</text>
+              <text x="795" y="376" fill="#044559" font-size="8" text-anchor="end" opacity="0.55" font-weight="600">Salvador Sanfuentes</text>
             </g>
 
-            <!-- Corredor logístico -->
-            <line x1="230" y1="260" x2="800" y2="260" stroke="#151B20" stroke-width="15" />
-            <line x1="230" y1="260" x2="800" y2="260" stroke="#FFF8EA" stroke-width="1.5" stroke-dasharray="12 8" opacity="0.55" />
+            <!-- ================= ZONA 2: PUERTO SAN ANTONIO ================= -->
+            <g class="zone-map" data-zone="sanantonio">
+              <rect x="0" y="0" width="800" height="500" fill="url(#scalOcean)" />
+              <path d="M 220 0 Q 195 90, 230 180 Q 195 260, 240 340 Q 210 420, 250 500 L 800 500 L 800 0 Z" fill="#f0eadc" />
+              <rect x="220" y="0" width="580" height="500" fill="url(#scalBlocks)" opacity="0.6" />
 
-            <!-- Ruta 78 (vertical) -->
-            <line x1="620" y1="0" x2="620" y2="500" stroke="#151B20" stroke-width="9" />
-            <line x1="620" y1="0" x2="620" y2="500" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="10 8" opacity="0.55" />
+              <!-- Terminales del puerto -->
+              <g opacity="0.7">
+                <rect x="240" y="45" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
+                <rect x="240" y="65" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
+                <rect x="240" y="85" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
+                <rect x="273" y="55" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
+                <rect x="273" y="75" width="30" height="16" fill="#044559" opacity="0.5" rx="1" />
+              </g>
 
-            <!-- Rutas secundarias -->
-            <line x1="230" y1="130" x2="800" y2="130" stroke="#151B20" stroke-width="6" opacity="0.85" />
-            <line x1="240" y1="400" x2="800" y2="400" stroke="#151B20" stroke-width="6" opacity="0.85" />
+              <!-- Corredor logístico -->
+              <line x1="230" y1="260" x2="800" y2="260" stroke="#151B20" stroke-width="15" />
+              <line x1="230" y1="260" x2="800" y2="260" stroke="#FFF8EA" stroke-width="1.5" stroke-dasharray="12 8" opacity="0.55" />
 
-            <text x="30" y="45" fill="#61E1E6" opacity="0.55" font-size="10" letter-spacing="1" font-family="Montserrat" font-weight="700">OCÉANO PACÍFICO</text>
-            <text x="245" y="35" fill="#044559" font-size="8" font-weight="700" font-family="Montserrat" letter-spacing="0.5">PUERTO SAN ANTONIO</text>
-            <text x="795" y="252" fill="#044559" font-size="8" text-anchor="end" font-weight="700" font-family="Montserrat" letter-spacing="0.5">CORREDOR LOGÍSTICO</text>
-            <text x="628" y="20" fill="#044559" font-size="8" font-weight="700" font-family="Montserrat" opacity="0.7">RUTA 78</text>
-          </g>
+              <!-- Ruta 78 (vertical) -->
+              <line x1="620" y1="0" x2="620" y2="500" stroke="#151B20" stroke-width="9" />
+              <line x1="620" y1="0" x2="620" y2="500" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="10 8" opacity="0.55" />
 
-          <!-- ================= ZONA 3: CENTRO VALPARAÍSO ================= -->
-          <g class="zone-map" data-zone="valparaiso">
-            <rect x="0" y="0" width="800" height="500" fill="url(#scalOcean)" />
-            <!-- Bahía irregular (Valparaíso frente al mar) -->
-            <path d="M 0 0 L 800 0 L 800 90 Q 640 150, 500 100 Q 340 60, 180 130 Q 90 170, 0 140 Z" fill="url(#scalOcean)" />
-            <path d="M 0 140 Q 90 170, 180 130 Q 340 60, 500 100 Q 640 150, 800 90 L 800 500 L 0 500 Z" fill="#f0eadc" />
-            <rect x="0" y="140" width="800" height="360" fill="url(#scalBlocks)" opacity="0.5" />
+              <!-- Rutas secundarias -->
+              <line x1="230" y1="130" x2="800" y2="130" stroke="#151B20" stroke-width="6" opacity="0.85" />
+              <line x1="240" y1="400" x2="800" y2="400" stroke="#151B20" stroke-width="6" opacity="0.85" />
 
-            <!-- Calles irregulares del casco histórico -->
-            <path d="M 60 200 Q 180 190, 300 220 T 550 240 L 750 270" stroke="#151B20" stroke-width="7" fill="none" />
-            <path d="M 60 200 Q 180 190, 300 220 T 550 240 L 750 270" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="8 6" fill="none" opacity="0.55" />
-
-            <path d="M 40 320 L 250 310 Q 400 305, 500 340 L 780 370" stroke="#151B20" stroke-width="6" fill="none" />
-            <path d="M 40 320 L 250 310 Q 400 305, 500 340 L 780 370" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="8 6" fill="none" opacity="0.55" />
-
-            <path d="M 90 440 L 780 440" stroke="#151B20" stroke-width="6" />
-
-            <!-- Verticales cerros -->
-            <line x1="220" y1="140" x2="220" y2="500" stroke="#151B20" stroke-width="5" opacity="0.8" />
-            <line x1="450" y1="140" x2="450" y2="500" stroke="#151B20" stroke-width="5" opacity="0.8" />
-            <line x1="620" y1="140" x2="620" y2="500" stroke="#151B20" stroke-width="5" opacity="0.8" />
-
-            <!-- Plaza Sotomayor -->
-            <circle cx="380" cy="285" r="26" fill="rgba(209, 235, 120, 0.35)" stroke="#88b04b" stroke-width="1.5" opacity="0.7" />
-            <text x="380" y="288" fill="#044559" font-family="Montserrat" font-size="7" font-weight="700" text-anchor="middle" opacity="0.75">PLAZA</text>
-
-            <text x="30" y="50" fill="#61E1E6" opacity="0.55" font-size="10" letter-spacing="1" font-family="Montserrat" font-weight="700">BAHÍA DE VALPARAÍSO</text>
-            <text x="795" y="200" fill="#044559" font-size="8" text-anchor="end" font-weight="700" font-family="Montserrat" opacity="0.7">Cochrane</text>
-            <text x="795" y="300" fill="#044559" font-size="8" text-anchor="end" font-weight="700" font-family="Montserrat" opacity="0.7">Prat</text>
-            <text x="795" y="435" fill="#044559" font-size="8" text-anchor="end" font-weight="700" font-family="Montserrat" opacity="0.7">Blanco</text>
-          </g>
-
-          <!-- Polígono compartido (dinámico) -->
-          <polygon class="scal-polygon" points="" fill="rgba(209, 235, 120, 0.20)" stroke="#D1EB78" stroke-width="2.5" stroke-dasharray="8 5" />
-
-          <!-- Capa de análisis (scanner + vehículos) — clipped al polígono -->
-          <g class="analysis-layer" clip-path="url(#zoneAnalysisClip)">
-            <!-- Haz del scanner (translateY animado) -->
-            <rect class="scan-beam" x="0" y="0" width="800" height="60" fill="url(#scanBeam)" />
-            <!-- Grid overlay (patrón sutil que aparece durante análisis) -->
-            <g class="scan-grid">
-              <!-- Líneas horizontales y verticales cyan tenues -->
+              <text x="30" y="45" fill="#61E1E6" opacity="0.55" font-size="10" letter-spacing="1" font-weight="700">OCÉANO PACÍFICO</text>
+              <text x="245" y="35" fill="#044559" font-size="8" font-weight="700" letter-spacing="0.5">PUERTO SAN ANTONIO</text>
+              <text x="795" y="252" fill="#044559" font-size="8" text-anchor="end" font-weight="700" letter-spacing="0.5">RUTA LOGÍSTICA</text>
+              <text x="628" y="20" fill="#044559" font-size="8" font-weight="700" opacity="0.7">RUTA 78</text>
             </g>
-            <!-- Vehículos animados dentro de la zona -->
-            <g class="analysis-vehicles"></g>
-          </g>
 
-          <!-- Corner brackets en cada vértice del polígono (fuera del clip) -->
-          <g class="scal-brackets"></g>
+            <!-- ================= ZONA 3: CENTRO VALPARAÍSO ================= -->
+            <g class="zone-map" data-zone="valparaiso">
+              <rect x="0" y="0" width="800" height="500" fill="url(#scalOcean)" />
+              <!-- Bahía irregular (Valparaíso frente al mar) -->
+              <path d="M 0 0 L 800 0 L 800 90 Q 640 150, 500 100 Q 340 60, 180 130 Q 90 170, 0 140 Z" fill="url(#scalOcean)" />
+              <path d="M 0 140 Q 90 170, 180 130 Q 340 60, 500 100 Q 640 150, 800 90 L 800 500 L 0 500 Z" fill="#f0eadc" />
+              <rect x="0" y="140" width="800" height="360" fill="url(#scalBlocks)" opacity="0.5" />
 
-          <!-- Puntos colocados (dinámico) -->
-          <g class="scal-points"></g>
+              <!-- Calles irregulares del casco histórico -->
+              <path d="M 60 200 Q 180 190, 300 220 T 550 240 L 750 270" stroke="#151B20" stroke-width="7" fill="none" />
+              <path d="M 60 200 Q 180 190, 300 220 T 550 240 L 750 270" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="8 6" fill="none" opacity="0.55" />
 
-          <!-- Ripples (dinámico) -->
-          <g class="scal-ripples"></g>
+              <path d="M 40 320 L 250 310 Q 400 305, 500 340 L 780 370" stroke="#151B20" stroke-width="6" fill="none" />
+              <path d="M 40 320 L 250 310 Q 400 305, 500 340 L 780 370" stroke="#FFF8EA" stroke-width="1" stroke-dasharray="8 6" fill="none" opacity="0.55" />
 
-          <!-- Cursor -->
-          <g class="scal-cursor" transform="translate(40, 40)">
-            <path
-              d="M 0 0 L 14 12 L 8 13 L 12 21 L 9 22 L 5 14 L 0 18 Z"
-              fill="#151B20"
-              stroke="#FFF8EA"
-              stroke-width="1.5"
-              stroke-linejoin="round"
-            />
-          </g>
-        </svg>
+              <path d="M 90 440 L 780 440" stroke="#151B20" stroke-width="6" />
 
-        <!-- HUD principal + nombre de zona -->
-        <div class="scal-hud">
-          <span class="scal-hud-dot"></span>
-          <span data-hud="text">ESPERANDO</span>
+              <!-- Verticales cerros -->
+              <line x1="220" y1="140" x2="220" y2="500" stroke="#151B20" stroke-width="5" opacity="0.8" />
+              <line x1="450" y1="140" x2="450" y2="500" stroke="#151B20" stroke-width="5" opacity="0.8" />
+              <line x1="620" y1="140" x2="620" y2="500" stroke="#151B20" stroke-width="5" opacity="0.8" />
+
+              <!-- Plaza Sotomayor -->
+              <circle cx="380" cy="285" r="26" fill="rgba(209, 235, 120, 0.35)" stroke="#88b04b" stroke-width="1.5" opacity="0.7" />
+              <text x="380" y="288" fill="#044559" font-size="7" font-weight="700" text-anchor="middle" opacity="0.75">PLAZA</text>
+
+              <text x="30" y="50" fill="#61E1E6" opacity="0.55" font-size="10" letter-spacing="1" font-weight="700">BAHÍA DE VALPARAÍSO</text>
+              <text x="795" y="200" fill="#044559" font-size="8" text-anchor="end" font-weight="700" opacity="0.7">Cochrane</text>
+              <text x="795" y="300" fill="#044559" font-size="8" text-anchor="end" font-weight="700" opacity="0.7">Prat</text>
+              <text x="795" y="435" fill="#044559" font-size="8" text-anchor="end" font-weight="700" opacity="0.7">Blanco</text>
+            </g>
+
+            <!-- Polígono compartido (dinámico) -->
+            <polygon class="scal-polygon" points="" fill="rgba(209, 235, 120, 0.20)" stroke="#D1EB78" stroke-width="2.5" stroke-dasharray="8 5" />
+
+            <!-- Capa de análisis (scanner + vehículos) — clipped al polígono -->
+            <g class="analysis-layer" clip-path="url(#zoneAnalysisClip)">
+              <!-- Haz del scanner (translateY animado) -->
+              <rect class="scan-beam" x="0" y="0" width="800" height="60" fill="url(#scanBeam)" />
+              <!-- Grid overlay (patrón sutil que aparece durante análisis) -->
+              <g class="scan-grid">
+                <!-- Líneas horizontales y verticales cyan tenues -->
+              </g>
+              <!-- Vehículos animados dentro de la zona -->
+              <g class="analysis-vehicles"></g>
+            </g>
+
+            <!-- Corner brackets en cada vértice del polígono (fuera del clip) -->
+            <g class="scal-brackets"></g>
+
+            <!-- Puntos colocados (dinámico) -->
+            <g class="scal-points"></g>
+
+            <!-- Ripples (dinámico) -->
+            <g class="scal-ripples"></g>
+
+            <!-- Cursor -->
+            <g class="scal-cursor" transform="translate(40, 40)">
+              <path
+                d="M 0 0 L 14 12 L 8 13 L 12 21 L 9 22 L 5 14 L 0 18 Z"
+                fill="#151B20"
+                stroke="#FFF8EA"
+                stroke-width="1.5"
+                stroke-linejoin="round"
+              />
+            </g>
+          </svg>
+
+          <!-- HUD principal + nombre de zona -->
+          <div class="scal-hud">
+            <span class="scal-hud-dot"></span>
+            <span data-hud="text">ESPERANDO</span>
+          </div>
+          <div class="scal-zone-name">
+            <span data-zone-name="name">—</span>
+            <small data-zone-name="sub">—</small>
+          </div>
         </div>
-        <div class="scal-zone-name">
-          <span data-zone-name="name">—</span>
-          <small data-zone-name="sub">—</small>
-        </div>
-      </div>
+        <figcaption class="scal-caption">Ilustración representativa</figcaption>
+      </figure>
     </div>
   </div>
 </section>
 
 <style>
+  /* Textos del mapa SVG: siguen la fuente de texto global (antes era un
+     atributo font-family="Montserrat" fijo en cada <text>). */
+  .scal-map text {
+    font-family: var(--font-sans);
+  }
   .scalability {
     padding: 110px 0;
     background: rgba(3, 53, 68, 0.84);
@@ -237,21 +246,8 @@
     gap: 48px;
     align-items: center;
   }
-  .eyebrow {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--cyan);
-    opacity: 0.9;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
   h2 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: 34px;
     margin-top: 14px;
-    line-height: 1.2;
-    color: var(--cream);
   }
   .scal-lead {
     margin-top: 18px;
@@ -259,10 +255,6 @@
     color: rgba(255, 248, 234, 0.75);
     line-height: 1.55;
     max-width: 480px;
-  }
-  .scal-lead strong {
-    color: var(--cream);
-    font-weight: 700;
   }
   .scal-steps {
     list-style: none;
@@ -279,9 +271,9 @@
     align-items: start;
   }
   .step-n {
-    font-family: var(--font-serif);
+    font-family: var(--font-title);
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--cyan);
     line-height: 1;
     padding-top: 2px;
@@ -302,6 +294,19 @@
   }
 
   /* Viewport */
+  /* Figura (mapa animado) + leyenda discreta debajo */
+  .scal-figure {
+    margin: 0;
+  }
+  .scal-caption {
+    margin-top: 10px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-style: italic;
+    letter-spacing: 0.3px;
+    color: rgba(255, 248, 234, 0.6);
+    text-align: right;
+  }
   .scal-viewport {
     position: relative;
     background: var(--navy);
@@ -448,9 +453,9 @@
     transition: opacity 300ms ease;
   }
   .scal-zone-name span {
-    font-family: var(--font-serif);
+    font-family: var(--font-title);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--cream);
     letter-spacing: 0.3px;
   }
@@ -470,7 +475,6 @@
   @media (max-width: 860px) {
     .scal-grid { grid-template-columns: 1fr; gap: 32px; }
     .scal-viewport { aspect-ratio: 4 / 3; }
-    h2 { font-size: 26px; }
 
     /* HUD y zone-name apilados verticalmente para no chocar en pantalla
        angosta. Antes ambos estaban en top:16 y colisionaban. */
@@ -554,7 +558,7 @@
     },
     {
       id: 'sanantonio',
-      name: 'Corredor Logístico',
+      name: 'Zona Logística',
       sub: 'Puerto San Antonio · 4 vértices',
       startCursor: { x: 300, y: 30 },
       points: [
@@ -731,7 +735,9 @@
     text.setAttribute('x', String(x));
     text.setAttribute('y', String(y));
     text.setAttribute('fill', '#033544');
-    text.setAttribute('font-family', 'Montserrat, sans-serif');
+    // Creado por JS: no recibe el atributo de scope de Astro, así que la
+    // fuente global se asigna inline.
+    text.style.fontFamily = 'var(--font-sans)';
     text.setAttribute('font-size', '10');
     text.setAttribute('font-weight', '700');
     text.setAttribute('text-anchor', 'middle');

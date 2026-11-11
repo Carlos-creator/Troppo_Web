@@ -13,7 +13,7 @@ const audiencias = [
     tag: 'Autoridades portuarias',
     titulo: 'Puertos nacionales',
     dolor: 'Accesos viales saturados, ventanas de operación que colapsan y presión por reducir tiempos de espera de la carga.',
-    solucion: 'Lograremos simular políticas de semaforización y turnos de ingreso antes de aplicar, con evidencia cuantificable para justificar cada cambio.',
+    solucion: 'Podrás simular políticas de semaforización y turnos de ingreso antes de aplicarlos, con evidencia cuantificable para justificar cada cambio.',
     ejemplos: 'San Antonio · Valparaíso · Coronel · Iquique',
   },
   {
@@ -21,34 +21,27 @@ const audiencias = [
     tag: 'Municipalidades',
     titulo: 'Gobiernos locales',
     dolor: 'Puntos negros de congestión urbana, capacidad para modificar semaforización pero sin herramientas para probar el impacto real.',
-    solucion: 'Podremos evaluar intervenciones en cruces críticos sin exponer al ciudadano a experimentos en terreno.',
-    ejemplos: 'Nudos viales · Corredores · Zonas escolares',
+    solucion: 'Podrás evaluar intervenciones en cruces críticos sin exponer a la ciudadanía a experimentos en terreno.',
+    ejemplos: 'Nudos viales · Avenidas principales · Zonas escolares',
   },
   {
     icono: 'logistics',
-    tag: 'Operadores logísticos',
-    titulo: 'Entidades grandes con corredores propios',
+    tag: 'Organizaciones privadas',
+    titulo: 'Entidades grandes con rutas propias',
     dolor: 'Flotas de carga con rutas fijas, complicaciones que se traducen directamente en costos operacionales y OPEX inflado.',
-    solucion: 'Conseguiremos optimizar corredores propios coordinando la flota con la red pública, midiendo el impacto por escenario.',
+    solucion: 'Podrás optimizar tus rutas propias coordinando la flota con la red pública, midiendo el impacto por escenario.',
     ejemplos: 'Mineras · Retail · Zonas francas · Parques industriales',
   },
 ];
 ---
 
-<section class="paraq" id="para-quien">
+<section class="paraq sec-dark" id="para-quien">
   <div class="wrap">
     <header class="paraq-head">
-      <div class="paraq-eyebrow" data-vh>
-        <span class="eyebrow-mark" aria-hidden="true"></span>
-        ¿PARA QUIÉN ES TROPPO?
+      <div class="paraq-eyebrow sec-title" data-vh>
+        Clientes potenciales
       </div>
-      <h2 data-vh>Para cualquier entidad con congestión en una zona crítica y <em>capacidad de decidir sobre ella.</em></h2>
-      <p data-vh>
-        No importa el tamaño ni el rubro: si tienes potestad para modificar
-        semaforización, ordenar accesos o coordinar flotas en una zona
-        congestionada, Troppo te sirve para
-        <strong>probar antes de aplicar</strong>.
-      </p>
+      <h2 class="sec-subtitle" data-vh>Para cualquier entidad con congestión en una zona crítica y <em>capacidad de decidir sobre ella.</em></h2>
     </header>
 
     <div class="paraq-grid">
@@ -151,51 +144,10 @@ const audiencias = [
   .paraq-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 14px;
-    font-family: var(--font-sans);
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    color: var(--cyan);
-    text-transform: uppercase;
     margin-bottom: 24px;
   }
-  .paraq-eyebrow .eyebrow-mark {
-    display: inline-block;
-    width: 0;
-    height: 2px;
-    background: var(--cyan);
-    box-shadow: 0 0 8px rgba(97, 225, 230, 0.6);
-    border-radius: 2px;
-    transition: width 900ms cubic-bezier(0.16, 1, 0.3, 1) 100ms;
-  }
-  .paraq-eyebrow.revealed .eyebrow-mark { width: 42px; }
   .paraq-head h2 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: 40px;
-    line-height: 1.2;
-    color: var(--cream);
     margin: 0;
-    letter-spacing: -0.4px;
-  }
-  .paraq-head h2 em {
-    font-style: italic;
-    color: var(--cyan);
-  }
-  .paraq-head p {
-    margin: 22px auto 0;
-    font-size: 16px;
-    line-height: 1.65;
-    color: rgba(255, 248, 234, 0.85);
-    max-width: 580px;
-    padding-left: 18px;
-    border-left: 2px solid rgba(97, 225, 230, 0.4);
-    text-align: left;
-  }
-  .paraq-head strong {
-    color: var(--cream);
-    font-weight: 700;
   }
   /* Reveal escalonado del header */
   .paraq [data-vh] {
@@ -211,10 +163,14 @@ const audiencias = [
   }
 
   /* ---- GRID ---- */
+  /* Cada tarjeta ocupa 6 filas del grid y las comparte (subgrid): así
+     icono, etiqueta, título, "Dolor", "Con Troppo" y ejemplos quedan a
+     la misma altura en las tres tarjetas aunque los textos difieran. */
   .paraq-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
+    column-gap: 22px;
+    row-gap: 0;
     max-width: 1180px;
     margin: 0 auto;
   }
@@ -223,8 +179,11 @@ const audiencias = [
     border: 1px solid rgba(255, 248, 234, 0.14);
     border-radius: 18px;
     padding: 34px 30px 30px;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-row: span 6;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+    align-content: start;
     transition:
       transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
       background 400ms ease,
@@ -287,9 +246,9 @@ const audiencias = [
     z-index: 1;
   }
   .pq-audience h3 {
-    font-family: var(--font-serif);
+    font-family: var(--font-title);
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--cream);
     margin: 0 0 20px;
     line-height: 1.25;
@@ -347,8 +306,13 @@ const audiencias = [
   /* --- MOBILE --- */
   @media (max-width: 960px) {
     .paraq-grid { grid-template-columns: 1fr; gap: 16px; max-width: 480px; }
-    .paraq-head h2 { font-size: 26px; }
-    .pq-audience { padding: 28px 24px; }
+    /* Una sola columna: no hace falta alinear entre tarjetas */
+    .pq-audience {
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      grid-row: auto;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -358,29 +322,18 @@ const audiencias = [
 </style>
 
 <script>
+  import { revealOnScroll } from '../scripts/reveal';
   // Se re-anima cada vez que los items vuelven al viewport
   const items = document.querySelectorAll<HTMLElement>('.paraq [data-reveal]');
   if (items.length) {
-    const timers = new WeakMap<Element, number>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e, i) => {
-          const prev = timers.get(e.target);
-          if (prev) window.clearTimeout(prev);
-          if (e.isIntersecting) {
-            const t = window.setTimeout(() => {
-              e.target.classList.add('revealed');
-              timers.delete(e.target);
-            }, i * 130);
-            timers.set(e.target, t);
-          } else {
-            e.target.classList.remove('revealed');
-          }
-        });
-      },
-      { rootMargin: '0px 0px -12% 0px', threshold: 0.15 },
-    );
-    items.forEach((el) => observer.observe(el));
+    // Histéresis: salida 48px sobre la pantalla (> 24px del translateY
+    // oculto) para que la tarjeta no vuelva a entrar al ocultarse.
+    revealOnScroll(items, {
+      enterMargin: '0px 0px -12% 0px',
+      threshold: 0.15,
+      exitMargin: '48px 0px -12% 0px',
+      staggerMs: 130,
+    });
   }
 
   // Reveal escalonado del header (eyebrow → h2 → párrafo). Re-animatable.
@@ -391,15 +344,12 @@ const audiencias = [
     paraqHeadItems.forEach((el, i) => {
       el.style.transitionDelay = `${i * 140}ms`;
     });
-    const paraqHeadObs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add('revealed');
-          else e.target.classList.remove('revealed');
-        });
-      },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0.2 },
-    );
-    paraqHeadItems.forEach((el) => paraqHeadObs.observe(el));
+    // Histéresis: salida 28px sobre la pantalla (> 14px del translateY
+    // oculto) para que el encabezado no vuelva a entrar al ocultarse.
+    revealOnScroll(paraqHeadItems, {
+      enterMargin: '0px 0px -10% 0px',
+      threshold: 0.2,
+      exitMargin: '28px 0px -10% 0px',
+    });
   }
 </script>

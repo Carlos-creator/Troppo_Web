@@ -1,29 +1,12 @@
 ---
-// Sección 9 rúbrica — "Cierre"
-//
-// Rediseñado: menos bloques apilados, jerarquía visual clara.
-// Estructura: hero-line del cierre → CTA hero card grande con los 2
-// botones + hook line integrado → footer con datos del evento + mapa
-// en una sola tarjeta horizontal.
+// Sección de la 34.ª Feria de Software USM — datos del evento + mapa.
+// Contenido idéntico a la tarjeta que antes estaba al final de la
+// sección de cierre (FinalCTA, ya eliminada). Va después del CTA
+// principal (Desafio), al final de la página.
 ---
 
-<section class="final" id="contacto">
+<section class="feria" id="feria">
   <div class="wrap">
-
-    <!-- Hero-line del cierre -->
-    <header class="final-lead">
-      <div class="final-eyebrow">HORA DE DECIDIR</div>
-      <h2>
-        El futuro de la movilidad se decide
-        <em>antes de llegar a la calle.</em>
-      </h2>
-      <p>
-        La congestión no tiene por qué enfrentarse mediante ensayo y error.
-        Con Troppo, las decisiones pueden probarse, medirse y optimizarse en un
-        entorno digital antes de llevarlas a la realidad.
-      </p>
-    </header>
-
     <!-- Datos del evento + mapa (tarjeta horizontal única) -->
     <div class="final-event">
       <div class="event-info">
@@ -60,57 +43,26 @@
         ></iframe>
       </div>
     </div>
-
   </div>
 </section>
 
 <style>
-  .final {
+  /* Fondo navy 0.85 (el de la antigua sección .final). Los primeros
+     160px son un degradado que arranca en el navy 0.68 con que termina
+     Desafio (CTA) y llega al 0.85: la unión entre ambas secciones no
+     tiene corte. Más abajo el color es el 0.85 de siempre. */
+  .feria {
     padding: 110px 0 130px;
-    background: rgba(4, 69, 89, 0.85);
+    background: linear-gradient(
+      180deg,
+      rgba(4, 69, 89, 0.68) 0,
+      rgba(4, 69, 89, 0.85) 160px
+    );
     color: var(--cream);
     position: relative;
     overflow: hidden;
   }
   .wrap { position: relative; z-index: 1; }
-
-  /* ============ HEAD ============ */
-  .final-lead {
-    max-width: 780px;
-    margin: 0 auto 56px;
-    text-align: center;
-  }
-  .final-eyebrow {
-    font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    color: var(--cyan);
-    opacity: 0.9;
-    margin-bottom: 14px;
-  }
-  .final-lead h2 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: 46px;
-    line-height: 1.13;
-    color: var(--cream);
-    margin: 0;
-    letter-spacing: -0.6px;
-  }
-  .final-lead h2 em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    color: var(--cyan);
-    font-weight: 500;
-  }
-  .final-lead p {
-    margin: 22px auto 0;
-    font-size: 16px;
-    line-height: 1.65;
-    color: rgba(255, 248, 234, 0.78);
-    max-width: 640px;
-  }
 
   /* ============ EVENT INFO + MAP (tarjeta horizontal) ============ */
   .final-event {
@@ -153,9 +105,9 @@
     50% { opacity: 0.35; transform: scale(0.75); }
   }
   .event-info h4 {
-    font-family: var(--font-serif);
+    font-family: var(--font-title);
     font-size: 24px;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--cream);
     margin: 0;
     line-height: 1.2;
@@ -223,10 +175,7 @@
 
   /* --- MOBILE --- */
   @media (max-width: 860px) {
-    .final { padding: 80px 0 100px; }
-    .final-lead { margin-bottom: 44px; }
-    .final-lead h2 { font-size: 30px; }
-    .final-lead p { font-size: 14.5px; }
+    .feria { padding: 80px 0 100px; }
     .final-event {
       grid-template-columns: 1fr;
     }

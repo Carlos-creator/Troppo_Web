@@ -9,14 +9,13 @@ import Values from '@components/Values.astro';
 import PorQueTroppo from '@components/PorQueTroppo.astro';
 import ParaQuien from '@components/ParaQuien.astro';
 import HowItWorks from '@components/HowItWorks.astro';
-import FlujoParalelo from '@components/FlujoParalelo.astro';
 import Dashboard from '@components/Dashboard.astro';
-import Simulation from '@components/Simulation.astro';
+import Resultados from '@components/Resultados.astro';
 import Scalability from '@components/Scalability.astro';
 import Video from '@components/Video.astro';
-import Team from '@components/Team.astro';
 import Empresa from '@components/Empresa.astro';
-import FinalCTA from '@components/FinalCTA.astro';
+import Feria from '@components/Feria.astro';
+import Contacto from '@components/Contacto.astro';
 import Footer from '@components/Footer.astro';
 ---
 
@@ -25,20 +24,20 @@ import Footer from '@components/Footer.astro';
   <Header />
   <main>
     <Hero />
-    <Desafio />
     <Problem />
     <Values />
     <PorQueTroppo />
-    <ParaQuien />
     <HowItWorks />
-    <FlujoParalelo />
     <Dashboard />
-    <Simulation />
+    <Resultados />
+    <ParaQuien />
     <Scalability />
     <Video />
     <Empresa />
-    <Team />
-    <FinalCTA />
+    <!-- Contacto → CTA principal (único) → Feria de Software -->
+    <Contacto />
+    <Desafio />
+    <Feria />
   </main>
   <Footer />
 </Base>

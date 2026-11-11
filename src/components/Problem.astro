@@ -1,101 +1,33 @@
 ---
 // Sección del problema — cifras duras del acceso a San Antonio.
-// Banda cinematográfica arriba: dos fotos del puerto que hacen transición
-// dissolve orgánica (fractalNoise) mientras un filtro cyan de marca las
-// tinta como en el mockup puerto_cyan.png.
+// Banda superior con un degradado que continúa el que empieza al final
+// del Hero y se funde con el fondo cream de la sección. Debajo, ya sobre
+// el cream, el título (eyebrow) y el subtítulo (h2) junto a las cifras.
 ---
 
-<section class="problem" id="problema">
-  <div class="port-band">
-    <svg
-      class="port-svg"
-      viewBox="0 0 1600 500"
-      preserveAspectRatio="xMidYMid slice"
-      xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      aria-hidden="true"
-    >
-      <defs>
-        <!--
-          Filtro turbulent-dissolve:
-          feTurbulence genera ruido fractal → convertimos a alpha por
-          luminancia → animamos el slope para que el umbral suba y baje
-          (0 → 2 → 0) creando el efecto de disolución orgánica entre
-          la imagen SourceGraphic (puerto-1) y feImage (puerto-2).
-        -->
-        <filter id="turbulent-dissolve" x="0%" y="0%" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency=".009" seed="5" />
-          <feColorMatrix type="luminanceToAlpha" />
-          <feComponentTransfer>
-            <feFuncA type="linear" slope="0">
-              <animate
-                attributeName="slope"
-                values="0;0;0;0;0;0.5;1;1.5;2;2;2;2;2;2;1.5;1;0.5;0"
-                dur="14s"
-                repeatCount="indefinite"
-              />
-            </feFuncA>
-          </feComponentTransfer>
-          <feComponentTransfer>
-            <feFuncA type="discrete" tableValues="0 1" />
-          </feComponentTransfer>
-          <feGaussianBlur stdDeviation="1" />
-          <feComposite operator="in" in="SourceGraphic" result="overlay" />
-          <feImage
-            href="/images/puerto/puerto-2.jpg"
-            xlink:href="/images/puerto/puerto-2.jpg"
-            width="1600"
-            height="500"
-            preserveAspectRatio="xMidYMid slice"
-            result="underlay"
-          />
-          <feComposite operator="over" in="overlay" in2="underlay" />
-        </filter>
-      </defs>
+<section class="problem sec-light" id="problema">
+  <!-- Banda de transición Hero → Problema (sólo degradado) -->
+  <div class="port-band" aria-hidden="true"></div>
 
-      <image
-        filter="url(#turbulent-dissolve)"
-        width="1600"
-        height="500"
-        href="/images/puerto/puerto-1.jpg"
-        xlink:href="/images/puerto/puerto-1.jpg"
-        preserveAspectRatio="xMidYMid slice"
-      />
-    </svg>
-
-    <div class="port-overlay" aria-hidden="true"></div>
-
-    <div class="port-caption" aria-hidden="true">
-      <span class="port-loc">PUERTO DE SAN ANTONIO</span>
-      <span class="port-sep"></span>
-      <span class="port-sub">Corredor logístico bajo presión</span>
-    </div>
-
-    <!-- Cartel cinematográfico sobre las fotos: eyebrow + h2
-         principal de la sección. Reemplaza al .problem-head que estaba
-         debajo. Text-shadow + halo radial para legibilidad sobre imagen. -->
-    <div class="port-hero">
-      <span class="port-hero-eyebrow">El punto de partida</span>
-      <h2>
+  <div class="wrap">
+    <!-- Título + subtítulo de la sección, agrupados con las cifras -->
+    <header class="problem-head">
+      <span class="problem-eyebrow sec-title">El problema de la congestión en la red vial</span>
+      <h2 class="sec-subtitle">
         San Antonio mueve el país.
         <em>Y el país espera en la fila.</em>
       </h2>
-    </div>
-  </div>
+    </header>
 
-  <div class="wrap">
     <div class="stat-grid">
       <div class="stat-card">
-        <div class="num" data-count-to="7000" data-suffix="">7.000</div>
-        <p>Camiones circulando por los accesos en un solo día peak.</p>
+        <!-- El "+" queda fuera del contador para que la animación no lo borre -->
+        <div class="num">+<span data-count-to="900000" data-suffix="">900.000</span></div>
+        <p>Camiones al año circulando por los accesos.</p>
       </div>
       <div class="stat-card">
-        <div class="num" data-count-to="9" data-suffix=" hrs">9 hrs</div>
-        <p>Tiempo de espera máximo registrado en los nodos viales críticos.</p>
-      </div>
-      <div class="stat-card">
-        <div class="num" data-count-to="800" data-suffix="+">800+</div>
-        <p>Transportistas de carga pesada que transitan la zona a diario.</p>
+        <div class="num">+<span data-count-to="30" data-suffix=" min">30 min</span></div>
+        <p>De espera por camión.</p>
       </div>
     </div>
 
@@ -104,10 +36,8 @@
       <div class="stat-nacional-eyebrow">Impacto sistémico · Escala nacional</div>
       <div class="stat-nacional-num">
         <span class="nac-currency">$</span>
-        <span class="nac-num" data-count-to="50" data-suffix="">50</span>
-        <span class="nac-dash">–</span>
-        <span class="nac-num" data-count-to="100" data-suffix="">100</span>
-        <em>mil millones de pesos chilenos</em>
+        <span class="nac-num" data-count-to="11000" data-suffix="">11.000</span>
+        <em>millones de pesos chilenos</em>
       </div>
       <p>
         Es lo que pierde el sector portuario chileno <strong>cada año</strong> por
@@ -115,187 +45,68 @@
       </p>
     </div>
 
-    <!-- Bridge hacia sección 3: por qué surge Troppo -->
-    <div class="stat-bridge">
-      <p>
-        Pero saber qué medida realmente resuelve el problema no es simple.
-        Cambiar la programación de los semáforos o invertir en nueva infraestructura
-        son <strong>decisiones costosas</strong>, y probarlas directamente en
-        terreno, <strong>riesgoso</strong>.
-      </p>
-      <p class="stat-bridge-hook">
-        Por eso surge la necesidad de
-        <em>evaluar alternativas antes de implementarlas.</em>
-      </p>
-    </div>
+    <!-- Cierre de la sección: texto libre (sin caja) -->
+    <p class="problem-close">
+      Evaluar alternativas antes de implementar cambios es clave: las decisiones
+      sobre semáforos e infraestructura son <strong>costosas y riesgosas</strong>.
+    </p>
   </div>
 </section>
 
 <style>
+  /* El fondo cream empieza DEBAJO de la banda superior (--band-h): así
+     el degradado de la banda se apoya directamente sobre el bioma, igual
+     que el Hero, y la transición Hero → Problema no tiene corte. */
   .problem {
+    --band-h: clamp(160px, 18vw, 240px);
     padding: 0 0 110px;
-    background: rgba(255, 248, 234, 0.72);
+    background:
+      linear-gradient(rgba(255, 248, 234, 0.72), rgba(255, 248, 234, 0.72))
+      0 var(--band-h) / 100% 100% no-repeat;
   }
 
-  /* ------- BANDA CINEMATOGRÁFICA DEL PUERTO ------- */
+  /* ------- BANDA SUPERIOR: TRANSICIÓN DESDE EL HERO ------- */
+  /* Degradado sin cortes: el aclarado empieza ya en el último tramo del
+     Hero (navy 0.55 → 0.42, ver Hero.astro); aquí arranca en ese mismo
+     navy 0.42 y se funde con el cream 0.72 del fondo de la sección. */
   .port-band {
     position: relative;
     width: 100%;
-    height: clamp(380px, 48vw, 600px);
-    overflow: hidden;
-    background: var(--navy-deep);
-    margin-bottom: 72px;
-  }
-  .port-svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    /* Duotone cyan de marca — approximación con filter chain:
-       grayscale → sepia (tono cálido base) → hue-rotate hacia cyan →
-       saturate para reforzar → brightness para ajustar densidad. */
-    filter:
-      grayscale(1)
-      contrast(1.12)
-      sepia(1)
-      hue-rotate(155deg)
-      saturate(1.9)
-      brightness(0.92);
-    will-change: filter;
-  }
-  /* Gradiente cyan/navy encima y fade a cream abajo para blend suave con
-     el fondo cream de la sección */
-  /* Overlay que fade la banda del puerto hacia el fondo de la sección
-     (cream 0.72). La zona de fade se hace amplia (desde 60% a 100%)
-     para que la transición se sienta orgánica y no como un corte. */
-  .port-overlay {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(
-        180deg,
-        rgba(4, 69, 89, 0.28) 0%,
-        rgba(4, 69, 89, 0.38) 42%,
-        rgba(4, 69, 89, 0.22) 62%,
-        rgba(255, 248, 234, 0.45) 84%,
-        rgba(255, 248, 234, 0.72) 100%
-      );
-    pointer-events: none;
-  }
-  /* Caption inferior con dot pulsante — sensación "en vivo" */
-  .port-caption {
-    position: absolute;
-    top: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 9px 18px;
-    background: rgba(21, 27, 32, 0.65);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 100px;
-    border: 1px solid rgba(97, 225, 230, 0.3);
-    font-family: var(--font-sans);
-    font-size: 10.5px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: var(--cream);
-    z-index: 2;
-    white-space: nowrap;
-  }
-  .port-loc {
-    color: var(--cyan);
-  }
-  .port-sep {
-    width: 4px;
-    height: 4px;
-    background: var(--cyan);
-    border-radius: 50%;
-    box-shadow: 0 0 6px var(--cyan);
-    animation: port-dot-pulse 1.6s ease-in-out infinite;
-  }
-  .port-sub {
-    color: rgba(255, 248, 234, 0.7);
-    font-weight: 500;
-    letter-spacing: 1.2px;
-    text-transform: none;
-    font-size: 11px;
-  }
-  @keyframes port-dot-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.35; transform: scale(0.7); }
-  }
-
-  /* ------- CARTEL SOBRE LAS FOTOS ------- */
-  /* Contenedor centrado vertical/horizontal con halo radial oscuro detrás
-     para legibilidad del texto sobre la imagen del puerto. */
-  .port-hero {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -52%);
-    z-index: 2;
-    text-align: center;
-    padding: 30px 40px;
-    max-width: 900px;
-    width: calc(100% - 48px);
-  }
-  .port-hero::before {
-    content: '';
-    position: absolute;
-    inset: -40px -80px;
-    background: radial-gradient(
-      ellipse at center,
-      rgba(3, 30, 40, 0.55) 0%,
-      rgba(3, 30, 40, 0.28) 45%,
-      transparent 72%
+    height: var(--band-h);
+    background: linear-gradient(
+      180deg,
+      rgba(4, 69, 89, 0.42) 0%,
+      rgba(255, 248, 234, 0.72) 100%
     );
-    z-index: -1;
-    pointer-events: none;
   }
-  .port-hero-eyebrow {
+  /* ------- CARTEL SOBRE EL DEGRADADO ------- */
+  /* Contenedor centrado vertical/horizontal con halo radial oscuro detrás
+     para legibilidad del texto. */
+  /* ------- TÍTULO + SUBTÍTULO (sobre el cream) -------
+     Mismo tamaño y jerarquía que antes; colores de sección clara
+     (navy + acento cyan-ink) en vez de los de texto sobre foto. */
+  .problem-head {
+    /* ancho completo: el título de sección (38px) cabe en una línea */
+    max-width: none;
+    margin: 0 auto;
+    padding-top: 8px;
+    text-align: center;
+  }
+  .problem-eyebrow {
     display: inline-block;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--cyan);
-    padding: 6px 14px;
-    border: 1px solid rgba(97, 225, 230, 0.42);
-    border-radius: 100px;
     margin-bottom: 20px;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-    background: rgba(4, 69, 89, 0.32);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
   }
-  .port-hero h2 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: clamp(28px, 4.2vw, 54px);
-    line-height: 1.14;
-    color: var(--cream);
+  .problem-head h2 {
     margin: 0;
-    text-shadow:
-      0 2px 20px rgba(0, 0, 0, 0.55),
-      0 1px 3px rgba(0, 0, 0, 0.5);
-    letter-spacing: -0.4px;
-  }
-  .port-hero h2 em {
-    font-style: italic;
-    color: var(--cyan);
   }
 
   /* ------- STATS (contenido original) ------- */
   .stat-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    /* 2 indicadores (antes 3): 2 columnas para no dejar un hueco */
+    grid-template-columns: repeat(2, 1fr);
     gap: 28px;
-    margin-top: 56px;
+    margin-top: 48px;
   }
   .stat-card {
     /* Gradient cyan sutil → blanco + barra cyan-ink (oscuro) gruesa
@@ -308,10 +119,10 @@
     box-shadow: 0 10px 28px rgba(4, 69, 89, 0.06);
   }
   .stat-card .num {
-    font-family: var(--font-serif);
+    font-family: var(--font-title);
     font-size: 46px;
     color: var(--navy);
-    font-weight: 500;
+    font-weight: 700;
   }
   .stat-card p {
     margin-top: 10px;
@@ -320,7 +131,7 @@
     max-width: 230px;
   }
 
-  /* ---- BLOQUE NACIONAL (cifra sistémica 50-100mil MM) ---- */
+  /* ---- BLOQUE NACIONAL (cifra sistémica 11.000 MM al año) ---- */
   .stat-nacional {
     margin-top: 72px;
     padding: 40px 46px;
@@ -345,8 +156,8 @@
   }
   .stat-nacional-num {
     margin-top: 14px;
-    font-family: var(--font-serif);
-    font-weight: 500;
+    font-family: var(--font-title);
+    font-weight: 700;
     color: var(--navy);
     line-height: 1;
     letter-spacing: -1.5px;
@@ -368,15 +179,8 @@
     color: var(--navy);
     font-variant-numeric: tabular-nums;
   }
-  .nac-dash {
-    font-size: 44px;
-    color: var(--navy);
-    opacity: 0.55;
-    margin: 0 4px;
-    font-weight: 300;
-  }
   .stat-nacional-num em {
-    font-family: var(--font-serif);
+    font-family: var(--font-title);
     font-style: italic;
     font-size: 30px;
     font-weight: 400;
@@ -396,68 +200,30 @@
     font-weight: 700;
   }
 
-  /* ---- BRIDGE HACIA SECCIÓN 3 ---- */
-  .stat-bridge {
-    margin-top: 42px;
+  /* ---- CIERRE (texto libre, sin contenedor) ---- */
+  .problem-close {
+    margin: 56px auto 0;
     max-width: 760px;
-    /* Mismo tratamiento que las cards de Misión / Visión:
-       gradient cyan sutil → blanco, border cyan, rounded, box-shadow. */
-    padding: 26px 30px;
-    background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), #fff);
-    border: 1px solid rgba(97, 225, 230, 0.28);
-    border-radius: 20px;
-    box-shadow: 0 10px 28px rgba(4, 69, 89, 0.06);
-  }
-  .stat-bridge p {
-    font-size: 15px;
-    color: rgba(21, 27, 32, 0.72);
-    line-height: 1.65;
-  }
-  .stat-bridge p + p {
-    margin-top: 14px;
-  }
-  .stat-bridge strong {
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 19px;
+    line-height: 1.55;
     color: var(--navy);
+  }
+  .problem-close strong {
     font-weight: 700;
-  }
-  .stat-bridge-hook {
-    font-family: var(--font-serif);
-    font-size: 18px !important;
-    color: var(--navy) !important;
-    font-weight: 500;
-    line-height: 1.5 !important;
-  }
-  .stat-bridge-hook em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    color: var(--cyan-ink);
-    font-weight: 500;
   }
 
   @media (max-width: 860px) {
-    .port-band {
-      /* Más alto en mobile porque el h2 grande necesita espacio */
-      height: clamp(320px, 78vw, 480px);
-      margin-bottom: 52px;
+    .problem {
+      --band-h: clamp(120px, 30vw, 160px);
     }
-    .port-caption {
-      font-size: 9.5px;
-      padding: 7px 14px;
-      letter-spacing: 1.5px;
-    }
-    .port-hero {
-      padding: 22px 20px;
-      width: calc(100% - 24px);
-    }
-    .port-hero::before {
-      inset: -20px -30px;
-    }
-    .port-hero-eyebrow {
-      font-size: 10.5px;
+    .problem-eyebrow {
       margin-bottom: 14px;
     }
     .stat-grid {
       grid-template-columns: 1fr;
+      margin-top: 36px;
     }
     .stat-nacional {
       padding: 28px 24px;
@@ -465,24 +231,14 @@
     }
     .nac-currency { font-size: 30px; }
     .nac-num { font-size: 48px; }
-    .nac-dash { font-size: 32px; }
     .stat-nacional-num em { font-size: 22px; margin-left: 6px; }
     .stat-nacional > p { font-size: 14.5px; }
-    .stat-bridge {
-      padding: 18px 20px;
-      margin-top: 32px;
-    }
-    .stat-bridge p { font-size: 14px; }
-    .stat-bridge-hook { font-size: 16px !important; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .port-band .port-svg animate { display: none; }
-    .port-sep { animation: none; }
+    .problem-close { margin-top: 40px; font-size: 16.5px; }
   }
 </style>
 
 <script>
+  import { observeReveal } from '../scripts/reveal';
   // Animación de conteo — re-anima cada vez que el elemento vuelve al
   // viewport (para dar sensación de "vivo" al scrollear ida y vuelta).
   // Cuando el elemento SALE del viewport se resetea a 0; al re-entrar,
@@ -537,20 +293,19 @@
       el.textContent = '0' + suffix;
     };
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const el = entry.target as HTMLElement;
-          if (entry.isIntersecting) {
-            startCount(el);
-          } else {
-            resetCount(el);
-          }
-        });
-      },
-      { threshold: 0.4 },
-    );
-
-    nums.forEach((el) => observer.observe(el));
+    // Histéresis: el conteo arranca al superar el 40% visible y sólo se
+    // reinicia (vuelve a 0) cuando el número sale por completo de la
+    // pantalla (exitThreshold 0). Cruzar el 40% en cualquier sentido ya
+    // no reinicia un contador que está contando o que terminó, y el
+    // reinicio a 0 ocurre fuera de la vista. Sin transform → la zona de
+    // salida puede ser la pantalla misma.
+    observeReveal(nums, {
+      enterMargin: '0px',
+      threshold: 0.4,
+      exitMargin: '0px',
+      exitThreshold: 0,
+      onEnter: (el) => startCount(el),
+      onExit: (el) => resetCount(el),
+    });
   }
 </script>

@@ -4,42 +4,38 @@
 //
 // Layout: grid 2-cols. Cards a la izquierda scrolleables. Mapa de
 // Chile sticky a la derecha con un camión que recorre la costa a medida
-// que el usuario avanza en el scroll. 4 hitos posicionados en ciudades
-// reales:
-//   1. Arica          — Se define el escenario
-//   2. Valparaíso     — Troppo arranca la simulación
-//   3. Concepción     — El tráfico virtual replica la realidad
-//   4. Punta Arenas   — Aparecen los resultados
+// que el usuario avanza en el scroll. 5 hitos con un pin cada uno a lo
+// largo de la ruta (de norte a sur):
+//   1. Define el escenario
+//   2. Ejecuta la simulación
+//   3. Analiza los resultados
+//   4. Optimiza con IA
+//   5. Monitorea y opera en tiempo real
 ---
 
-<section class="how" id="como-funciona">
+<section class="how sec-dark" id="como-funciona">
   <div class="wrap">
     <header class="how-header">
-      <div class="how-eyebrow" data-vh>
-        <span class="eyebrow-mark" aria-hidden="true"></span>
-        EL FLUJO · DE NORTE A SUR
+      <div class="how-eyebrow sec-title" data-vh>
+        ¿Cómo funciona Troppo?
       </div>
-      <h2 data-vh>Del panel al resultado, <em>en pocos minutos.</em></h2>
-      <p data-vh>
-        Definimos qué queremos probar, la IA lo simula en un gemelo digital
-        del tráfico real y nos entrega los resultados en minutos. El proceso
-        recorre el país como una ruta, del panel al resultado.
-      </p>
+      <h2 class="sec-subtitle" data-vh>Del escenario a los resultados,<br /> <em>paso a paso.</em></h2>
     </header>
 
     <div class="how-container" data-road>
-      <!-- Columna izquierda: 4 hito cards apilados -->
+      <!-- Columna izquierda: 5 hito cards apilados -->
       <div class="how-cards">
         <article class="hito hito-1" data-hito="1">
           <div class="hito-header-row">
             <span class="hito-num">01</span>
             <span class="hito-dot"></span>
           </div>
-          <h3>Definimos el escenario</h3>
+          <h3>Define el escenario</h3>
           <p>
-            Desde el panel elegimos qué probar: cambios en semaforización,
-            aumento de flujo, un accidente que bloquea una calle. Cualquier
-            variante que necesitemos evaluar.
+            Desde la aplicación configuras el escenario que quieres evaluar:
+            defines la zona de estudio, los buffers y las rutas que formarán
+            parte de la simulación, junto con las ubicaciones de los semáforos
+            que se evaluarán.
           </p>
         </article>
 
@@ -48,11 +44,11 @@
             <span class="hito-num">02</span>
             <span class="hito-dot"></span>
           </div>
-          <h3>Arrancamos la simulación</h3>
+          <h3>Ejecuta la simulación</h3>
           <p>
-            Armamos el gemelo digital con esas condiciones y activamos la IA
-            que coordina el tráfico en tiempo real, aprendiendo de cada
-            segundo simulado.
+            Con el escenario configurado, ejecutas la simulación para analizar
+            el comportamiento del tránsito bajo las condiciones definidas. El motor de simulación procesa estos parámetros y genera
+            los resultados para su posterior análisis.
           </p>
         </article>
 
@@ -61,11 +57,12 @@
             <span class="hito-num">03</span>
             <span class="hito-dot"></span>
           </div>
-          <h3>El tráfico virtual replica la realidad</h3>
+          <h3>Analiza los resultados</h3>
           <p>
-            Miles de vehículos circulan en el gemelo digital siguiendo la red
-            vial real. La IA prueba distintas políticas de semaforización sin
-            intervenir el corredor en operación.
+            La aplicación presenta las métricas obtenidas en cada ejecución,
+            como los tiempos de espera y los niveles de congestión. Estos
+            resultados permiten comparar escenarios, evaluar alternativas y
+            seleccionar las configuraciones que conviene implementar.
           </p>
         </article>
 
@@ -74,16 +71,32 @@
             <span class="hito-num">04</span>
             <span class="hito-dot"></span>
           </div>
-          <h3>Aparecen los resultados</h3>
+          <h3>Optimiza con IA</h3>
           <p>
-            Cuánto se reduce la espera, cuánto CO₂ se ahorra, qué política
-            funciona mejor. Todo antes de aplicar el cambio en terreno.
+            A partir del escenario configurado y de las ejecuciones de
+            simulación, puedes iniciar el entrenamiento de la IA. El modelo
+            evalúa alternativas y recomienda ubicaciones de semáforos orientadas
+            a reducir la congestión.
+          </p>
+        </article>
+
+        <article class="hito hito-5" data-hito="5">
+          <div class="hito-header-row">
+            <span class="hito-num">05</span>
+            <span class="hito-dot"></span>
+          </div>
+          <h3>Monitorea y opera en tiempo real</h3>
+          <p>
+            Una vez implementadas las mejoras en terreno, el gemelo digital
+            permite monitorear el estado de la red vial en tiempo real. El
+            operador puede supervisar el tránsito e intervenir en la operación
+            semafórica cuando las condiciones lo requieran.
           </p>
         </article>
       </div>
 
       <!-- Columna derecha: Chile map FULL HEIGHT (no sticky) — se
-           extiende a lo largo de toda la sección para acompañar los 4
+           extiende a lo largo de toda la sección para acompañar los 5
            hitos. El camión baja proporcional al scroll. -->
       <div class="how-map-column">
         <!-- Silueta de Chile como mask-image (fondo cyan) -->
@@ -119,7 +132,13 @@
             <circle cx="135" cy="960" r="7" class="pin-dot" />
             <circle cx="135" cy="960" r="3.5" class="pin-core" />
           </g>
+          <!-- Pin 4 añadido para el 5.º hito: punto de la ruta en y=1400 -->
           <g class="city-pin pin-4" data-pin="4">
+            <circle cx="172" cy="1400" r="14" class="pin-halo" />
+            <circle cx="172" cy="1400" r="7" class="pin-dot" />
+            <circle cx="172" cy="1400" r="3.5" class="pin-core" />
+          </g>
+          <g class="city-pin pin-5" data-pin="5">
             <circle cx="200" cy="1780" r="14" class="pin-halo" />
             <circle cx="200" cy="1780" r="7" class="pin-dot" />
             <circle cx="200" cy="1780" r="3.5" class="pin-core" />
@@ -142,9 +161,13 @@
 </section>
 
 <style>
+  /* Fondo navy (mismo que Values / Zona Empresa). Encabezado y tarjetas
+     usan el lenguaje de las secciones azules; el mapa de Chile (silueta,
+     ruta, pins y camión) se mantiene sin cambios. */
   .how {
     padding: 110px 0 130px;
-    background: rgba(255, 248, 234, 0.72);
+    background: rgba(3, 53, 68, 0.84);
+    color: var(--cream);
     position: relative;
     overflow: hidden;
   }
@@ -159,53 +182,10 @@
   .how-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 14px;
-    font-family: var(--font-sans);
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    color: var(--cyan-ink);
-    text-transform: uppercase;
     margin-bottom: 24px;
   }
-  .how-eyebrow .eyebrow-mark {
-    display: inline-block;
-    width: 0;
-    height: 2px;
-    background: var(--cyan-ink);
-    box-shadow: 0 0 8px rgba(10, 107, 118, 0.45);
-    border-radius: 2px;
-    transition: width 900ms cubic-bezier(0.16, 1, 0.3, 1) 100ms;
-  }
-  .how-eyebrow.revealed .eyebrow-mark { width: 42px; }
   .how h2 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: 44px;
-    line-height: 1.15;
-    color: var(--navy);
     margin: 0;
-    letter-spacing: -0.4px;
-  }
-  .how h2 em {
-    font-style: italic;
-    color: var(--cyan-ink);
-  }
-  .how-header > p {
-    margin: 22px auto 0;
-    font-size: 16px;
-    line-height: 1.65;
-    color: rgba(21, 27, 32, 0.75);
-    max-width: 560px;
-    /* Gradient cyan sutil → blanco + barra cyan-ink (oscuro) gruesa
-       ARRIBA como acento distintivo del bloque. */
-    padding: 22px 26px;
-    background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), #fff);
-    border: 1px solid rgba(97, 225, 230, 0.28);
-    border-top: 4px solid var(--cyan-ink);
-    border-radius: 4px 4px 20px 20px;
-    box-shadow: 0 10px 28px rgba(4, 69, 89, 0.06);
-    text-align: left;
   }
   /* Reveal escalonado del header */
   .how [data-vh] {
@@ -235,22 +215,22 @@
   .how-cards {
     display: flex;
     flex-direction: column;
-    /* space-between distribuye las 4 cards uniformemente en la altura
-       del container. La 1era arriba (Arica), la 4ta abajo (Punta Arenas). */
+    /* space-between distribuye las 5 cards uniformemente en la altura
+       del container. La 1era arriba (norte), la 5ta abajo (sur). */
     justify-content: space-between;
     gap: 80px;
     padding: 20px 0 40px;
     min-height: 1400px;
   }
   .hito {
-    /* Gradient cyan sutil → blanco (mismo lenguaje que las cards
-       de Misión / Visión y el resto de bloques descriptivos). */
-    background: linear-gradient(180deg, rgba(97, 225, 230, 0.06), #fff);
-    border: 1px solid rgba(97, 225, 230, 0.28);
+    /* Tarjeta de vidrio sobre navy (mismo lenguaje que las tarjetas de
+       "¿Qué ofrece Troppo?" y de la Zona Empresa). */
+    background: rgba(255, 248, 234, 0.045);
+    border: 1px solid rgba(255, 248, 234, 0.14);
     border-radius: 16px;
     padding: 26px 28px 28px;
     box-shadow:
-      0 10px 28px rgba(4, 69, 89, 0.06),
+      0 10px 28px rgba(0, 0, 0, 0.12),
       0 0 0 0 rgba(97, 225, 230, 0);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
@@ -262,13 +242,14 @@
     transition:
       opacity 850ms ease,
       transform 950ms cubic-bezier(0.16, 1, 0.3, 1),
+      background 400ms ease,
       box-shadow 400ms ease,
       border-color 400ms ease;
   }
-  /* Los hitos 1 y 3 "vuelan" desde la izquierda con rotación negativa;
+  /* Los hitos 1, 3 y 5 "vuelan" desde la izquierda con rotación negativa;
      los 2 y 4 desde la derecha con rotación positiva. Al revelarse
      aterrizan en su posición final. Estado estático después del reveal. */
-  .hito-1, .hito-3 {
+  .hito-1, .hito-3, .hito-5 {
     transform: translateX(-160px) rotate(-4deg);
   }
   .hito-2, .hito-4 {
@@ -279,40 +260,7 @@
     transform: translateX(0) rotate(0deg);
   }
 
-  /* ---- BRILLO 1: sweep diagonal ambiente ----
-     Franja cyan diagonal que atraviesa la card cada X segundos. Cada
-     card usa animation-delay distinto para que no brillen sincronizadas. */
-  .hito::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -60%;
-    width: 55%;
-    height: 100%;
-    background: linear-gradient(
-      110deg,
-      transparent 0%,
-      rgba(97, 225, 230, 0.14) 40%,
-      rgba(97, 225, 230, 0.35) 50%,
-      rgba(97, 225, 230, 0.14) 60%,
-      transparent 100%
-    );
-    transform: skewX(-18deg);
-    pointer-events: none;
-    z-index: 1;
-    animation: hito-sweep 7s ease-in-out infinite;
-  }
-  @keyframes hito-sweep {
-    0%, 100% { transform: translateX(0) skewX(-18deg); opacity: 0; }
-    45%      { opacity: 1; }
-    55%      { opacity: 1; }
-    100%     { transform: translateX(340%) skewX(-18deg); opacity: 0; }
-  }
-  .hito-2::before { animation-delay: 1.4s; }
-  .hito-3::before { animation-delay: 2.8s; }
-  .hito-4::before { animation-delay: 4.2s; }
-
-  /* ---- BRILLO 2: halo cyan pulsante en la esquina superior ----
+  /* ---- BRILLO: halo cyan pulsante en la esquina superior ----
      Un punto de luz cyan suave que pulsa cerca del número del hito. */
   .hito::after {
     content: '';
@@ -338,6 +286,7 @@
   .hito-2::after { animation-delay: 1s; }
   .hito-3::after { animation-delay: 2s; }
   .hito-4::after { animation-delay: 3s; }
+  .hito-5::after { animation-delay: 4s; }
 
   /* Contenido por encima de los efectos */
   .hito-header-row,
@@ -349,13 +298,11 @@
 
   /* ---- HOVER: refuerzo del brillo ---- */
   .hito:hover {
+    background: rgba(97, 225, 230, 0.055);
     box-shadow:
-      0 14px 32px rgba(4, 69, 89, 0.14),
+      0 14px 32px rgba(0, 0, 0, 0.25),
       0 0 0 3px rgba(97, 225, 230, 0.28);
     border-color: rgba(97, 225, 230, 0.55);
-  }
-  .hito:hover::before {
-    animation-duration: 2.2s;
   }
   .hito:hover::after {
     animation-duration: 1.4s;
@@ -368,10 +315,10 @@
     margin-bottom: 8px;
   }
   .hito-num {
-    font-family: var(--font-serif);
+    font-family: var(--font-title);
     font-size: 32px;
-    color: var(--navy);
-    font-weight: 500;
+    color: var(--cream);
+    font-weight: 700;
     line-height: 1;
     text-shadow: 0 0 8px rgba(97, 225, 230, 0.3);
     animation: hito-num-glow 3s ease-in-out infinite;
@@ -383,31 +330,32 @@
   .hito-2 .hito-num { animation-delay: 0.75s; }
   .hito-3 .hito-num { animation-delay: 1.5s; }
   .hito-4 .hito-num { animation-delay: 2.25s; }
+  .hito-5 .hito-num { animation-delay: 3s; }
   .hito-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: rgba(4, 69, 89, 0.25);
+    background: rgba(255, 248, 234, 0.3);
   }
   .hito h3 {
     font-family: var(--font-title);
     font-size: 18px;
     font-weight: 700;
-    color: var(--navy);
+    color: var(--cream);
     margin: 0 0 10px;
     letter-spacing: 0.2px;
   }
   .hito p {
     font-size: 14px;
     line-height: 1.6;
-    color: rgba(21, 27, 32, 0.72);
+    color: rgba(255, 248, 234, 0.78);
     margin: 0;
   }
 
   /* ============ CHILE MAP COLUMN ============
      La columna del mapa se ESTIRA para ocupar toda la altura del
      container (align-items: stretch en el grid). Así el mapa acompaña
-     a los 4 hitos: Arica arriba, Punta Arenas abajo. */
+     a los 5 hitos: el 1.º arriba (norte), el 5.º abajo (sur). */
   .how-map-column {
     position: relative;
     min-height: 100%;
@@ -535,18 +483,20 @@
     }
     /* En mobile la fly-in desde los costados se ve pobre — hitos usan
        slide vertical sutil. Overrides sobrescriben los transform de
-       .hito-1/2/3/4 con selectors más específicos. */
+       .hito-1/2/3/4/5 con selectors más específicos. */
     .hito.hito-1,
     .hito.hito-2,
     .hito.hito-3,
-    .hito.hito-4 {
+    .hito.hito-4,
+    .hito.hito-5 {
       max-width: 100%;
       transform: translateY(24px) rotate(0deg);
     }
     .hito.hito-1.revealed,
     .hito.hito-2.revealed,
     .hito.hito-3.revealed,
-    .hito.hito-4.revealed {
+    .hito.hito-4.revealed,
+    .hito.hito-5.revealed {
       transform: translateY(0) rotate(0deg);
     }
     /* En mobile el mapa se convierte en telón de fondo transparente
@@ -581,17 +531,15 @@
     /* Camión visible por encima de las cards mientras baja Chile */
     .chile-truck { z-index: 3; }
     .chile-truck.active { opacity: 0.95; }
-    /* Cards más translúcidas en mobile para que se vea Chile detrás.
-       Baja el alpha del fondo y el blur mantiene la lectura del texto. */
+    /* En mobile la silueta de Chile queda detrás de las cards: vidrio
+       navy más denso + blur para que el texto cream se siga leyendo y
+       Chile se adivine detrás. */
     .hito {
-      /* Mobile: mantener el mismo gradient pero con más transparencia
-         para dejar respirar al mapa de Chile detrás. */
-      background: linear-gradient(180deg, rgba(97, 225, 230, 0.05), rgba(255, 255, 255, 0.6));
+      background: rgba(3, 53, 68, 0.6);
       border-color: rgba(97, 225, 230, 0.32);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
-    .how h2 { font-size: 30px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -601,14 +549,15 @@
     .hito { opacity: 1; transform: none; }
     .city-pin.active .pin-halo { animation: none; }
     /* Desactivar todos los brillos temáticos */
-    .hito::before, .hito::after { animation: none; display: none; }
+    .hito::after { animation: none; display: none; }
     .hito-num { animation: none; }
   }
 </style>
 
 <script>
+  import { revealOnScroll } from '../scripts/reveal';
   // Controlador del flujo Chile:
-  // - Reveal escalonado de las 4 cards con IntersectionObserver
+  // - Reveal escalonado de las 5 cards con IntersectionObserver
   // - Ruta se dibuja proporcional al scroll dentro de la sección
   // - Camión viaja por la ruta usando getPointAtLength
   // - Pins de ciudad se activan cuando el camión llega
@@ -630,7 +579,9 @@
 
     // Umbrales de "camión pasó por esta ciudad" (0..1 sobre la ruta)
     // Estimados en base a la posición Y de cada pin sobre la longitud total.
-    const PIN_THRESHOLDS = [0.05, 0.35, 0.55, 0.94];
+    // El pin 4 (y=1400) está al 77,5% de la ruta → umbral 0.80 (mismo
+    // margen ~+0.03–0.05 que los demás).
+    const PIN_THRESHOLDS = [0.05, 0.35, 0.55, 0.8, 0.94];
 
     let ticking = false;
     let inView = false;
@@ -706,16 +657,18 @@
     // Reveal por card: se re-anima cada vez que el hito vuelve al
     // viewport. Al salir se quita .revealed para que el fly-in dispare
     // de nuevo al re-entrar.
-    const hitoObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add('revealed');
-          else e.target.classList.remove('revealed');
-        });
-      },
-      { rootMargin: '0px 0px -20% 0px', threshold: 0.15 },
-    );
-    hitos.forEach((h) => hitoObserver.observe(h));
+    // Histéresis específica de los hitos:
+    // - Escritorio: translateX(±160px) + rotate(±4deg). La rotación agranda
+    //   la caja medida ~18px por arriba Y por abajo (tarjeta de hasta 520px),
+    //   así que la zona de salida se amplía en ambos bordes.
+    // - Móvil (≤960px): translateY(24px).
+    // Salida: 48px sobre la pantalla (> 24px y > 18px) y borde inferior en
+    // -12% en vez de -20% (≥ 40px extra en pantallas de 500px o más).
+    revealOnScroll(hitos, {
+      enterMargin: '0px 0px -20% 0px',
+      threshold: 0.15,
+      exitMargin: '48px 0px -12% 0px',
+    });
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
@@ -731,15 +684,12 @@
     howHeadItems.forEach((el, i) => {
       el.style.transitionDelay = `${i * 140}ms`;
     });
-    const howHeadObs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add('revealed');
-          else e.target.classList.remove('revealed');
-        });
-      },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0.2 },
-    );
-    howHeadItems.forEach((el) => howHeadObs.observe(el));
+    // Histéresis: salida 28px sobre la pantalla (> 14px del translateY
+    // oculto) para que el encabezado no vuelva a entrar al ocultarse.
+    revealOnScroll(howHeadItems, {
+      enterMargin: '0px 0px -10% 0px',
+      threshold: 0.2,
+      exitMargin: '28px 0px -10% 0px',
+    });
   }
 </script>

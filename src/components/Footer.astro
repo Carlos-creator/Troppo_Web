@@ -7,8 +7,8 @@
     <div class="foot-top">
       <div class="foot-brand">
         <img
-          src="/images/logo/logo_troppo_beige_grande.png"
-          alt="Troppo — Inteligencia que mueve el tráfico"
+          src="/images/logo/logo_troppo_beige_recortado.png"
+          alt="Troppo"
           class="foot-brand-logo"
         />
       </div>
@@ -96,11 +96,12 @@
     display: flex;
     align-items: center;
   }
-  /* PNG combinado: brújula + wordmark 'TROPPO' + tagline 'Inteligencia
-     que mueve el tráfico'. Aspect ~2.08 (recortado a bbox). */
+  /* Wordmark 'TROPPO' beige con la brújula: logo_troppo_beige.PNG
+     recortado a su bbox (logo_troppo_beige_recortado.png, aspect ~5.43).
+     A 32px de alto mide ~174px, un ancho similar al del logo anterior. */
   .foot-brand-logo {
     display: block;
-    height: 68px;
+    height: 32px;
     width: auto;
     object-fit: contain;
   }
@@ -172,7 +173,7 @@
 
   @media (max-width: 860px) {
     footer { padding: 40px 0 24px; }
-    .foot-brand-logo { height: 54px; }
+    .foot-brand-logo { height: 26px; }
     .foot-top {
       justify-content: center;
       text-align: center;

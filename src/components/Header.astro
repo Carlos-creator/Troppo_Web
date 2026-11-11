@@ -9,13 +9,14 @@
   <div class="pf-inner">
 
     <a href="#top" class="pf-pill pf-brand" aria-label="Troppo — inicio">
-      <img class="pf-brand-logo" src="/images/logo/logo_troppo_azul.png" alt="Troppo" />
+      <img class="pf-brand-logo" src="/images/logo/logo_dark_sinfondo.png" alt="Troppo" />
     </a>
 
     <nav class="pf-pill pf-nav" aria-label="Navegación principal">
-      <a href="#empresa">Nosotros</a>
+      <a href="#ofrece">Qué ofrece Troppo</a>
       <a href="#como-funciona">Cómo funciona</a>
-      <a href="#equipo">Equipo</a>
+      <a href="#para-quien">Clientes potenciales</a>
+      <a href="#empresa">Nosotros</a>
     </nav>
 
     <a href="#contacto" class="pf-pill pf-cta">
@@ -82,15 +83,16 @@
   }
 
   /* ---------- BRAND PILL ----------
-     El PNG ya viene recortado a su bbox (aspect ~4.92), o sea que
-     height controla la altura y width se ajusta solo — el pill queda
-     ceñido al logo sin espacio muerto. */
+     Botón Home con la brújula/estrella de la marca (logo_dark_sinfondo,
+     cuadrado). Mismo alto de pill que antes (44px desktop / 34px mobile,
+     borde incluido); la estrella ocupa casi todo el alto: 38px + 2px de
+     padding vertical. */
   header.pf-header .pf-brand {
-    padding: 8px 18px;
+    padding: 2px 10px;
   }
   header.pf-header .pf-brand-logo {
     display: block;
-    height: 26px;
+    height: 38px;
     width: auto;
     object-fit: contain;
   }
@@ -106,7 +108,9 @@
     align-self: flex-start;
     margin-top: -20px;
     padding: 32px 28px 14px;
-    gap: 24px;
+    /* Separación entre accesos: 34px en escritorio amplio, se reduce de
+       forma proporcional al ancho hasta los 24px originales (≈960px). */
+    gap: clamp(24px, 2.5vw, 34px);
     border-radius: 0 0 28px 28px;
     border-top: none;
     /* Sombra solo bajo el notch — sin sombras laterales que interfieran
@@ -204,8 +208,8 @@
     header.pf-header { top: 12px; padding: 0 16px; }
     header.pf-header .pf-inner { gap: 8px; }
     header.pf-header .pf-nav { display: none; }
-    header.pf-header .pf-brand { padding: 6px 14px; }
-    header.pf-header .pf-brand-logo { height: 20px; }
+    header.pf-header .pf-brand { padding: 1px 8px; }
+    header.pf-header .pf-brand-logo { height: 30px; }
     header.pf-header .pf-cta { padding: 10px 16px; font-size: 13px; }
     header.pf-header .pf-cta-icon { width: 12px; height: 12px; }
   }
